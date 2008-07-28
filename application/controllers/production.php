@@ -64,21 +64,19 @@ class Production extends MY_Controller
             $this->chars[$character]['apikey'], 
             $this->chars[$character]['charid']);
         
-        $data['cols'] = array('Type', 'Requires', 'Available', 'Allows for');
-        $data['sums'] = array(False, False, 0);
-
         $index = 0;
-        
         $q = $this->db->query('
             SELECT
                 typeReq.typeID,
                 typeReq.typeName,
                 typeReq.groupID, 
+                typeGroup.categoryID,
                 CEIL(materials.quantity * (1 + bluePrint.wasteFactor / 100) ) AS quantity, 
                 materials.damagePerJob 
             FROM 
                 TL2MaterialsForTypeWithActivity AS materials 
             INNER JOIN invTypes AS typeReq ON materials.requiredtypeID = typeReq.typeID 
+            INNER JOIN invGroups AS typeGroup ON typeReq.groupID = typeGroup.groupID
             INNER JOIN invBlueprintTypes AS bluePrint ON materials.typeID = bluePrint.blueprintTypeID 
             INNER JOIN eveGraphics AS graphics ON typeReq.graphicID = graphics.graphicID 
             WHERE materials.typeID = ? AND materials.activity = 1 ORDER BY typeReq.typeName;
@@ -95,27 +93,22 @@ class Production extends MY_Controller
             {
                 $perfect = $row->quantity;
                 $data['data'][$index] = array(
-                    $row->typeName,
-                    number_format($perfect),
-                    number_format($materials[$row->typeID]),
-                    floor($materials[$row->typeID] / $perfect)
+                    'typeID' => $row->typeID,
+                    'typeName' => $row->typeName,
+                    'requires' => $perfect,
+                    'requiresPerfect' => $perfect,
+                    'available' => $materials[$row->typeID],
                     );
                 $allowsFor[$index] = floor($materials[$row->typeID] / $perfect);
             }
-            else
+            else if ($row->categoryID == 16)
             {
-                $data['data'][$index] = array(
-                    $row->typeName,
-                    $row->quantity,
-                    '',
-                    '');
+                $data['skillreq'] = $row;
             }
-            $data['icons'][$index] = $row->typeID;
             $index++;
         }
-        $data['sums'][2] = min($allowsFor);
             
-        $template['content'] = $this->load->view('generictable', $data, True);
+        $template['content'] = $this->load->view('production/t1', $data, True);
         $this->load->view('maintemplate', $template);
     }
 }

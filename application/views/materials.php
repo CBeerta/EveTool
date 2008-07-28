@@ -1,6 +1,6 @@
 <div>
 <?php foreach ($groupIDList as $item): ?>
-&#149; <a href="<?php echo site_ur('materials/index/'.$character);?>?groupID=<?php echo $item['groupID']; ?>"><?php echo $item['groupName']; ?></a>
+&#149; <a href="<?php echo site_url('materials/index/'.$character);?>?groupID=<?php echo $item['groupID']; ?>"><?php echo $item['groupName']; ?></a>
 <?php endforeach; ?>
 &#149; <a href="<?php echo site_url('materials/index/'.$character);?>?categoryID=25">Raw Minerals</a>
 </div>
