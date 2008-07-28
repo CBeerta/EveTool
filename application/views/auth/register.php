@@ -1,6 +1,6 @@
 <table>
 <caption>Register a new Account</caption>
-<?php echo form_open('eve/user/register'); ?></td></tr>
+<?php echo form_open('user/register'); ?></td></tr>
 <tr><td>Username:</td><td><?php echo form_input('username'); ?></td></tr>
 <tr><td>Password:</td><td><?php echo form_password('password'); ?></td></tr>
 <tr><td>Email:</td><td><?php echo form_input('email'); ?></td></tr>

@@ -13,8 +13,8 @@ class Apikeys extends MY_Controller
 
         if ($this->validation->run() === False)
         {
-            $data['content'] = $this->load->view('eve/add_apikey', null, True);
-            $this->load->view('eve/maintemplate', $data);
+            $data['content'] = $this->load->view('add_apikey', null, True);
+            $this->load->view('maintemplate', $data);
         }
         else
         {

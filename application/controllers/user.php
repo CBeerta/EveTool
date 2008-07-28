@@ -9,7 +9,7 @@ class User extends MY_Controller {
 
         $data['chars'] = array();
         $data['skillinfo'] = '<p>Please Login!</p>';
-        $this->load->view('eve/header', $data);
+        $this->load->view('header', $data);
     }
 
     function login()
@@ -22,7 +22,7 @@ class User extends MY_Controller {
         if ($this->validation->run() === False)
         {
             $data['content'] = $this->load->view('auth/login', null, True);
-            $this->load->view('eve/maintemplate', $data);
+            $this->load->view('maintemplate', $data);
         }
         else
         {
@@ -34,7 +34,7 @@ class User extends MY_Controller {
             }
             else
             {
-                redirect('eve');
+                redirect();
             }
         }
     }
@@ -52,7 +52,7 @@ class User extends MY_Controller {
         if ($this->validation->run() === False)
         {
             $data['content'] = $this->load->view('auth/register', null, True);
-            $this->load->view('eve/maintemplate', $data);
+            $this->load->view('maintemplate', $data);
         }
         else
         {
@@ -63,7 +63,7 @@ class User extends MY_Controller {
             }
             else
             {
-                redirect('eve');
+                redirect();
             }
         }
     }
@@ -72,7 +72,7 @@ class User extends MY_Controller {
     function logout()
     {
         $this->users->logout();
-        redirect('eve');
+        redirect();
     }
 }
 ?>
