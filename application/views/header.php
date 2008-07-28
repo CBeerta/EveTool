@@ -6,7 +6,7 @@
     <!-- css --> 
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/reset-fonts-grids/reset-fonts-grids.css"> 
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/container/assets/skins/sam/container.css"> 
-    <link rel="stylesheet" type="text/css" href="/files/eve.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo site_url();?>/files/eve.css">
     <!-- js --> 
     <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.5.2/build/yahoo-dom-event/yahoo-dom-event.js&2.5.2/build/container/container-min.js"></script>
     
@@ -20,7 +20,7 @@
                 <p>
                     <?php foreach (array_keys($chars) as $char): ?>
 					<!-- <a href="/eve/<?php echo $tool.'/'.$subtool; ?><?php echo '/'.$char;?>"><img title="<?php echo $char; ?>" src="/files/cache/char/<?php echo $chars[$char]['charid'];?>/64/char.jpg"></a> -->
-					<a href="/eve/overview/index/<?php echo $char;?>"><img title="<?php echo $char; ?>" src="/files/cache/char/<?php echo $chars[$char]['charid'];?>/64/char.jpg"></a>
+					<a href="<?php echo site_url('/overview/skilltree'); ?>/<?php echo $char;?>"><img title="<?php echo $char; ?>" src="/files/cache/char/<?php echo $chars[$char]['charid'];?>/64/char.jpg"></a>
                     <?php endforeach; ?>
                 </p>
             </div>

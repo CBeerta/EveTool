@@ -6,25 +6,25 @@
         <?php if(!empty($character)): ?>
         <h2>Information</h2>
         <ul>
-            <li><a id="nav" href="/eve/transactions/index/<?php echo $character;?>">Transaction List</a>
-            <li><a id="nav" href="/eve/wallet/journal/<?php echo $character;?>">Wallet Journal</a>
-            <li><a id="nav" href="/eve/assets/index/<?php echo $character;?>">Assets</a>
-            <li><a id="nav" href="/eve/materials/index/<?php echo $character;?>">Materials</a>
-            <li><a id="nav" href="/eve/industry/jobs/<?php echo $character;?>">Industry Jobs</a>
-            <li><a id="nav" href="/eve/market/orders/<?php echo $character;?>">Market Orders</a>
+            <li><a id="nav" href="<?php echo site_url('/transactions/index/'.$character);?>">Transaction List</a>
+            <li><a id="nav" href="<?php echo site_url('/wallet/journal/'.$character);?>">Wallet Journal</a>
+            <li><a id="nav" href="<?php echo site_url('/assets/index/'.$character);?>">Assets</a>
+            <li><a id="nav" href="<?php echo site_url('/materials/index/'.$character);?>">Materials</a>
+            <li><a id="nav" href="<?php echo site_url('/industry/jobs/'.$character);?>">Industry Jobs</a>
+            <li><a id="nav" href="<?php echo site_url('/market/orders/'.$character);?>">Market Orders</a>
         </ul>
         <h2>Tools</h2>
         <ul>
-            <li><a id="nav" href="/eve/production/index/<?php echo $character;?>">Production</a>
+            <li><a id="nav" href="<?php echo site_url('/production/index/'.$character);?>">Production</a>
         </ul>
         <br />
         <?php else: ?>&nbsp;<?php endif; ?>
         <br />
         <h2>Configuration</h2>
         <ul>
-            <li><?php echo anchor('eve/overview/config', 'Options', array('id' => 'nav')); ?>
-            <li><?php echo anchor('eve/apikeys/add', 'Add Character', array('id' => 'nav')); ?>
-            <li><?php echo anchor('eve/user/logout', 'Logout', array('id' => 'nav')); ?>
+            <li><?php echo anchor('overview/config', 'Options', array('id' => 'nav')); ?>
+            <li><?php echo anchor('apikeys/add', 'Add Character', array('id' => 'nav')); ?>
+            <li><?php echo anchor('user/logout', 'Logout', array('id' => 'nav')); ?>
         </ul>
         </div>
     </div>

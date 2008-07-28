@@ -1,6 +1,6 @@
 <table>
 <caption>Configuration Settings</caption>
-<?php echo form_open('eve/overview/config'); ?>
+<?php echo form_open('overview/config'); ?>
 
 <tr>
     <td>Region for Price Information</td>

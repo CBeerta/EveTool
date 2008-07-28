@@ -2,22 +2,22 @@
 
 class Overview extends MY_Controller
 {
-    public function news($character = False)
+    public function index($character = False)
     {
         $this->load->helper('cookie');
         if ($_SERVER['HTTP_HOST'] == 'anaea.fra.beerta.de')
         {
 
-            $template['content'] = $this->load->view('eve/todolist', null, True);
+            $template['content'] = $this->load->view('todolist', null, True);
         }
         else
         {
             $template['content'] = 'Here be dragons!';
         }
-        $this->load->view('eve/maintemplate', $template);
+        $this->load->view('maintemplate', $template);
     }
 
-    function index($character = False)
+    function skilltree($character = False)
     {
         if (!in_array($character, array_keys($this->chars)))
         {
@@ -91,8 +91,8 @@ class Overview extends MY_Controller
         }
         $data['training'] = $training;
 
-        $template['content'] = $this->load->view('eve/skilltree', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('skilltree', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 
 
@@ -111,8 +111,8 @@ class Overview extends MY_Controller
         {
             $data['regions'][$row->regionID] = $row->regionName;
         }
-        $template['content'] = $this->load->view('eve/config', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('config', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 }
 

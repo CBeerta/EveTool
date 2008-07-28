@@ -51,8 +51,8 @@ class Industry extends MY_Controller
             }
             $index++;
         }
-        $template['content'] = $this->load->view('eve/jobs', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('jobs', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 }
 

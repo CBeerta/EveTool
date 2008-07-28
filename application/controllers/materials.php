@@ -79,8 +79,8 @@ class Materials extends MY_Controller
         }
         $data['caption'] = 'Materials - Prices from the "'.regionIDToName($regionID).'" region';
 
-        $template['content'] = $this->load->view('eve/materials', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('materials', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 }
 ?>

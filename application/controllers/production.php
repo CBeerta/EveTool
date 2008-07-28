@@ -44,8 +44,8 @@ class Production extends MY_Controller
         }
         $data['blueprints'] = $blueprints;
         
-        $template['content'] = $this->load->view('eve/blueprintfinder', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('blueprintfinder', $data, True);
+        $this->load->view('maintemplate', $template);
         return;
     }
     
@@ -115,8 +115,8 @@ class Production extends MY_Controller
         }
         $data['sums'][2] = min($allowsFor);
             
-        $template['content'] = $this->load->view('eve/generictable', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('generictable', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 }
 

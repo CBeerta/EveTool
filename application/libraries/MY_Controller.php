@@ -18,7 +18,7 @@ class MY_Controller extends Controller
 
         if (!$this->users->isLoggedIn())
         {
-            redirect('eve/user/login');
+            redirect('user/login');
         }
         else
         {
@@ -57,7 +57,7 @@ class MY_Controller extends Controller
         $data['subtool'] = empty($subtool) ? 'index' : $subtool;
         
         $data['chars'] = empty($this->chars) ? array() : $this->chars;
-        $this->load->view('eve/header.php', $data);
+        $this->load->view('header.php', $data);
     }
 }
 

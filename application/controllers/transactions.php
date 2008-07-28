@@ -1,9 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-
 class Transactions extends MY_Controller
 {
-
     /**
      * transactionlist
      *
@@ -31,8 +29,9 @@ class Transactions extends MY_Controller
         $data['highlight'] = $highlight;
 
         $template['title'] = "Transactionlist for {$character}";
-        $template['content'] = $this->load->view('eve/transactionlist', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('transactionlist', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 
 }
+?>

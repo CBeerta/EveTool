@@ -30,8 +30,9 @@ class Wallet extends MY_Controller
         $data['reftypes'] = $this->eveapi->reftypes;
 
         $template['title'] = "Wallet Journal for {$character}";
-        $template['content'] = $this->load->view('eve/walletjournal', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('walletjournal', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 
 }
+?>

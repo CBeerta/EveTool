@@ -40,8 +40,7 @@
 |
 */
 
-$route['eve'] = 'eve/overview/news';
-$route['default_controller'] = "blog";
+$route['default_controller'] = "overview";
 $route['scaffolding_trigger'] = "";
 
 ?>

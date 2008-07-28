@@ -27,8 +27,8 @@ class Assets extends MY_Controller
 
         AssetList::getAssetList($this->eveapi->getAssetList(), $this->chars[$character]['charid']);
         $data['assets'] = AssetList::getAssetsFromDB($this->chars[$character]['charid']);
-        $template['content'] = $this->load->view('eve/assets', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('assets', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 }
 ?>

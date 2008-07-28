@@ -46,9 +46,8 @@ class Market extends MY_Controller
             $data['totalPrice'] += $order['volEntered']*$order['price'];
             $index++;
         }
-        $template['content'] = $this->load->view('eve/market', $data, True);
-        $this->load->view('eve/maintemplate', $template);
+        $template['content'] = $this->load->view('market', $data, True);
+        $this->load->view('maintemplate', $template);
     }
 }
-
 ?>
