@@ -68,6 +68,40 @@ class User extends MY_Controller {
         }
     }
 
+    function recover()
+    {
+        $this->load->library('email');
+        $this->load->helper('message_helper');
+
+        $rules['email'] = "required|valid_email";
+        $this->validation->set_rules($rules);
+        $data['menu'] = array();
+        if ($this->validation->run() === False)
+        {
+            $data['content'] = $this->load->view('auth/recover', null, True);
+            $this->load->view('maintemplate', $data);
+        }
+        else
+        {
+            $email = $this->input->post('email');
+
+            $pw = $this->users->recoverPassword($email);
+            if ($pw)
+            {
+                $this->email->from('admin@beerta.net', 'Password Recovery Agent');
+                $this->email->to($email);
+                $this->email->subject('Password Recovery request');
+                $this->email->message("'You have requested a Password Recovery.\nYour password is: ".$this->users->recoverPassword($email));
+                $this->email->send();
+                msg_forward('Password Recovery', 'Your password has been sent to your mail Account.', site_url('user/login'));
+                exit;
+            }
+            else
+            {
+                msg_forward('Password Recovery', 'Unable to find your Password in the Database.', site_url('user/login'));
+            }
+        }
+    }
 
     function logout()
     {

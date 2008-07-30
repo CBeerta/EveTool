@@ -6,4 +6,4 @@
 <tr><td colspan="2"><?php echo form_submit('submit', 'Login'); ?></td></tr>
 <?php echo form_close(); ?>
 </table>
-<p>If you do not have an account yet, please <?php echo anchor('user/register', 'register'); ?>.</p>
+<p>If you do not have an account yet, please <?php echo anchor('user/register', 'register'); ?>. If you forgot your password, you can <?php echo anchor('user/recover', 'recover');?> it.</p>

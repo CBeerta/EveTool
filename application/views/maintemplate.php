@@ -3,6 +3,9 @@
             <div class="yui-b" id="content"><?php print $content; ?></div>
         </div>
         <div class="yui-b" id="nav">
+        <ul>
+            <li><a id="nav" href="<?php echo site_url();?>">Home</a>
+        </ul>
         <?php if(!empty($character)): ?>
         <h2>Information</h2>
         <ul>

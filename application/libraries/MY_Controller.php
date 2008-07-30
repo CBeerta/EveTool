@@ -11,6 +11,7 @@ class MY_Controller extends Controller
 
         $this->load->library('eveapi', array('cachedir' => '/var/tmp'));
         $this->load->helper('eve');
+        $this->load->helper('message');
 
         $this->load->library('evecentral');
 
@@ -38,10 +39,17 @@ class MY_Controller extends Controller
                 $index++;
             }
         }
+        /**
+         * FIXME: Maybe move this to the database, instead of using the Api?
+         **/
         foreach ($accounts as $account)
         {
             $this->eveapi->setCredentials($account['apiuser'], $account['apikey']);
             $chars = Characters::getCharacters($this->eveapi->getCharacters());
+            if (!is_array($chars))
+            {
+                continue;
+            }
             foreach ($chars as $char)
             {   
                 $this->chars[$char['charname']]['charid'] = $char['charid'];

@@ -3,6 +3,7 @@ TODOLIST:
 
 FIXME:
  - Handle change of ApiKeys
+ - Move character list to database, and maybe out of the Controller
  - Allow Users to change their Passwords
  - Allow for Password recovery
  - Better Handling for eve-o downtimes

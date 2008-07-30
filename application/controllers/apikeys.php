@@ -2,8 +2,11 @@
 
 class Apikeys extends MY_Controller
 {
-    function add()
+    function add($apiUser = False)
     {
+        $data['chars'] = array();
+        $this->load->view('header.php', $data);
+
         $rules['apiuser'] = "required|trim";
         $rules['apikey'] = "required|trim";
 
@@ -13,7 +16,8 @@ class Apikeys extends MY_Controller
 
         if ($this->validation->run() === False)
         {
-            $data['content'] = $this->load->view('add_apikey', null, True);
+            $data['apiUser'] = $apiUser;
+            $data['content'] = $this->load->view('add_apikey', $data, True);
             $this->load->view('maintemplate', $data);
         }
         else
@@ -27,7 +31,7 @@ class Apikeys extends MY_Controller
                     VALUES (?,?,?)
                     ON DUPLICATE KEY UPDATE `apiFullKey`=?;', array($this->Auth['user_id'], $this->input->post('apiuser'), $this->input->post('apikey'), $this->input->post('apikey')));
 
-                redirect('eve');
+                redirect();
             }
             else
             {
