@@ -78,8 +78,21 @@ function getMaterials($groupID, $assets)
 {
     $CI =& get_instance();
     $CI->load->database();
-    
-    $q = $CI->db->query('SELECT typeID FROM eve.invTypes where groupID = ?', $groupID);
+   
+    if (is_array($groupID))
+    {
+        $where = 'WHERE (';
+        foreach ($groupID as $id)
+        {
+            $where .= "groupID={$id} OR ";
+        }
+        $where = substr($where, 0, strlen($where)-4).')';
+        $q = $CI->db->query('SELECT typeID FROM eve.invTypes '.$where);
+    }
+    else
+    {
+        $q = $CI->db->query('SELECT typeID FROM eve.invTypes where groupID = ?', $groupID);
+    }
     $typeIDList = array();
     foreach ($q->result() as $row)
     {
