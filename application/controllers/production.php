@@ -159,9 +159,29 @@ class Production extends MY_Controller
 
         list($materials) = getMaterials(array(18,873), AssetList::getAssetList($this->eveapi->getAssetList()));
         
-        $me = is_numeric($this->input->post('me')) ? $this->input->post('me') : 0;
+        if (is_numeric($this->input->post('me')))
+        {
+            $me = $this->input->post('me');
+            $q = $this->db->query('
+                INSERT INTO blueprintData
+                (characterID, blueprintTypeID, me) VALUES (?,?,?)
+                ON DUPLICATE KEY UPDATE me=?', array($this->chars[$character]['charid'], $blueprintID, $me, $me));
+        }
+        else
+        {
+            $q = $this->db->query('SELECT me FROM blueprintData WHERE characterID=? AND blueprintTypeID=?', array($this->chars[$character]['charid'], $blueprintID));
+            $res = $q->row();
+            if ($q->num_rows() > 0)
+            {
+                $me = $res->me;
+            }
+            else
+            {
+                $me = 0;
+            }
+        }
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
-        
+        $data['me'] = $me;
         foreach ($this->_getBlueprint($blueprintID, $me) as $row)
         {
             $req = ceil($row['requiresPerfect'] * $amount);
@@ -184,7 +204,8 @@ class Production extends MY_Controller
         $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6;');
         foreach ($q->result() as $row)
         {
-            $blueprintID = is_numeric($this->input->post($row->groupName)) ? $this->input->post($row->groupName) : $blueprintID;
+            $groupName = str_replace(' ', '_', $row->groupName);
+            $blueprintID = is_numeric($this->input->post($groupName)) ? $this->input->post($groupName) : $blueprintID;
         }
         $data['character'] = $character;
         $data['blueprintID'] = $blueprintID;

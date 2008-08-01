@@ -1,14 +1,4 @@
 <script type="text/javascript">
-function numberFormat(nStr) {
-  nStr += '';
-  x = nStr.split('.');
-  x1 = x[0];
-  x2 = x.length > 1 ? '.' + x[1] : '';
-  var rgx = /(\d+)(\d{3})/;
-  while (rgx.test(x1))
-    x1 = x1.replace(rgx, '$1' + ',' + '$2');
-  return x1 + x2;
-}
 $(document).ready(function(){
     $("#bpForm").ajaxComplete(function(request, settings){
       $("#bpSpinner").hide();
@@ -20,6 +10,7 @@ $(document).ready(function(){
     $("#bpForm").submit(formProcess);
     
     function loadResults(data) {
+        $("#me").val(data.me);
         $.each(data.req, function(i, item){
             $(".req" + i).text(numberFormat(item));
             $(".have" + i).text(numberFormat(data.have[i]))
@@ -51,11 +42,16 @@ $(document).ready(function(){
         </td>
     </tr>
     <tr>
-        <form action="<?php echo site_url('production/t1Update/'.$blueprintID); ?>" method="post" id="bpForm">
-        <th colspan="2">ME: <input type="text" name="me" id="me" value="0" size="2" /></th>
-        <th>Amount: <input type="text" name="amount" id="amount" value="1" size="2"></th>
-        <th colspan="2"><img style="padding-left: 20px;" id="bpSpinner" align="left" src="<?php echo site_url('/files/spinner-light.gif'); ?>"><?php echo form_submit('Submit', 'Submit'); ?></th>
-        </form>
+        <th colspan="5">
+        <span>
+            <img style="padding-left: 20px;" id="bpSpinner" align="left" src="<?php echo site_url('/files/spinner-light.gif'); ?>">
+            <form action="<?php echo site_url('production/t1Update/'.$blueprintID); ?>" method="post" id="bpForm">
+            ME: <input type="text" name="me" id="me" value="0" size="1" />
+            Amount: <input type="text" name="amount" id="amount" value="1" size="1">
+            <?php echo form_submit('Submit', 'Submit'); ?>
+            </form>
+        </span>
+        </th>
     </tr>
     <tr>
         <th colspan="2">Type</th>

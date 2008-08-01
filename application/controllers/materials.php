@@ -23,7 +23,6 @@ class Materials extends MY_Controller
         $groupID = !isset($_REQUEST['groupID']) ? '18' : $_REQUEST['groupID'];
         $categoryID = !isset($_REQUEST['categoryID']) ? '25' : $_REQUEST['categoryID'];
         $regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
-
         $sID = !isset($_REQUEST['categoryID']) ? 'groupID' : 'categoryID';
 
         $groupIDList = array();

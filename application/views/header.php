@@ -10,6 +10,7 @@
     <!-- js --> 
     <!-- <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.5.2/build/yahoo-dom-event/yahoo-dom-event.js&2.5.2/build/container/container-min.js"></script> -->
     <script type="text/javascript" src="<?php echo site_url('/files/jquery.js');?>"></script>
+    <script type="text/javascript" src="<?php echo site_url('/files/eve.js');?>"></script>
 </head>
 <body>
 <div id="doc4" class="yui-t4">
