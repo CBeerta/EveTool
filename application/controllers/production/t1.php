@@ -1,7 +1,12 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Production extends MY_Controller
+class T1 extends MY_Controller
 {
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->library('production');
+    }
 
     public function index($character = False)
     {
@@ -65,7 +70,7 @@ class Production extends MY_Controller
             {
                 if ($asset['categoryID'] == 9)
                 {
-                    $blueprints[] = array_merge($asset, $this->_getBlueprintInfo($asset['typeID']));
+                    $blueprints[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
                 }
                 if (isset($asset['contents']))
                 {
@@ -73,7 +78,7 @@ class Production extends MY_Controller
                     {
                         if ($content['categoryID'] == 9)
                         {
-                            $blueprints[] = array_merge($content, $this->_getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
+                            $blueprints[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
                         }
                     }
                 }
@@ -81,13 +86,13 @@ class Production extends MY_Controller
         }
         $data['blueprints'] = $blueprints;
         
-        $template['content'] = $this->load->view('blueprintfinder', $data, True);
+        $template['content'] = $this->load->view('production/t1_blueprints', $data, True);
         $this->load->view('maintemplate', $template);
         return;
     }
     
    
-    public function t1Update($character, $blueprintID)
+    public function update($character, $blueprintID)
     {
         $this->eveapi->setCredentials(
             $this->chars[$character]['apiuser'], 
@@ -122,7 +127,7 @@ class Production extends MY_Controller
         $data['me'] = $me;
         $data['totalVolume'] = 0;
         
-        list ($components, $totalMineralUsage) = $this->_getBlueprint($character, $blueprintID, $me);
+        list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me);
         foreach ($components as $row)
         {
             $req = ceil($row['requiresPerfect'] * $amount);
@@ -137,7 +142,7 @@ class Production extends MY_Controller
         exit;
     }
 
-    public function t1($character, $blueprintID = False)
+    public function detail($character, $blueprintID = False)
     {
         if (!in_array($character, array_keys($this->chars)))
         {
@@ -166,7 +171,7 @@ class Production extends MY_Controller
         $allowsFor = $data['data'] = array();
 
         $index = 0;
-        list ($components, $data['totalMineralUsage']) = $this->_getBlueprint($character, $blueprintID, 0);
+        list ($components, $data['totalMineralUsage']) = Production::getBlueprint($character, $blueprintID, 0);
 
         foreach ($components as $row)
         {
@@ -174,7 +179,7 @@ class Production extends MY_Controller
             $index++;
         }
         
-        $data['skillreq'] = $this->_getSkillReq($blueprintID);
+        $data['skillreq'] = Production::getSkillReq($blueprintID);
         $data['content'] = $this->load->view('production/t1', $data, True);
         $this->load->view('maintemplate', $data);
     }

@@ -18,7 +18,7 @@
         </ul>
         <h2>Tools</h2>
         <ul>
-            <li><a id="nav" href="<?php echo site_url('/production/index/'.$character);?>">Production</a>
+            <li><a id="nav" href="<?php echo site_url('/production/t1/index/'.$character);?>">T1 Production</a>
         </ul>
         <br />
         <?php else: ?>&nbsp;<?php endif; ?>
