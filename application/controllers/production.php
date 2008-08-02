@@ -2,35 +2,6 @@
 
 class Production extends MY_Controller
 {
-    private function _getBlueprintInfo($blueprintID)
-    {
-        $q = $this->db->query('SELECT * FROM invBlueprintTypes WHERE blueprintTypeID=?', $blueprintID);
-        return($q->row_array());
-    }
-
-    private function _getSkillReq($blueprintID)
-    {
-        $q = $this->db->query('
-                SELECT 
-                    typeReq.typeName, graphics.icon, materials.quantity AS level
-                FROM 
-                    TL2MaterialsForTypeWithActivity AS materials
-                INNER JOIN invTypes AS typeReq ON materials.requiredtypeID = typeReq.typeID
-                INNER JOIN invGroups AS typeGroup ON typeReq.groupID = typeGroup.groupID
-                INNER JOIN eveGraphics AS graphics ON typeReq.graphicID = graphics.graphicID
-                WHERE
-                    materials.typeID = ? AND 
-                    materials.activity = 1 AND 
-                    typeGroup.categoryID = 16
-                ORDER BY typeReq.typeName;', $blueprintID);
-
-        $skillReq = array();
-        foreach ($q->result_array() as $row)
-        {
-            $skillReq[] = $row;
-        }
-        return ($skillReq);
-    }
 
     public function index($character = False)
     {
@@ -115,49 +86,16 @@ class Production extends MY_Controller
         return;
     }
     
-    private function _getBlueprint($blueprintID, $me = 0, $pe = 5)
-    {
-        $q = $this->db->query('
-            SELECT 
-                typeReq.typeID,
-                typeReq.typeName, 
-                typeReq.groupID, 
-                typeGroup.categoryID,
-                bluePrint.wasteFactor,
-                bluePrint.materialModifier,
-                materials.quantity AS basequantity,
-                IF(typeReq.groupID = 332, materials.quantity, CEIL(materials.quantity * (1 + bluePrint.wasteFactor / 100) ) ) AS quantity, 
-                materials.damagePerJob
-            FROM 
-                TL2MaterialsForTypeWithActivity AS materials
-            INNER JOIN invTypes AS typeReq ON materials.requiredtypeID = typeReq.typeID
-            INNER JOIN invGroups AS typeGroup ON typeReq.groupID = typeGroup.groupID
-            INNER JOIN invBlueprintTypes AS bluePrint ON materials.typeID = bluePrint.blueprintTypeID
-            INNER JOIN eveGraphics AS graphics ON typeReq.graphicID = graphics.graphicID
-            WHERE 
-                materials.typeID = ? AND 
-                materials.activity = 1 AND 
-                typeGroup.categoryID NOT IN (6, 7, 16)
-            ORDER BY 
-            typeReq.typeName;', $blueprintID);
-        $data = array();
-        foreach ($q->result_array() as $row)
-        {
-            $waste  = $row['basequantity']*(($row['wasteFactor']/100)/(1+$me) + 0.25 - 0.05 * $pe);
-            $row['requiresPerfect'] = $row['basequantity'] + $waste;
-            $data[] = $row;
-        }
-        return $data;
-    }
-    
+   
     public function t1Update($character, $blueprintID)
     {
         $this->eveapi->setCredentials(
             $this->chars[$character]['apiuser'], 
             $this->chars[$character]['apikey'], 
             $this->chars[$character]['charid']);
-
-        list($materials) = getMaterials(array(18,873), AssetList::getAssetList($this->eveapi->getAssetList()));
+        $data = array();
+        
+        list($data['have']) = getMaterials(array(18,873), AssetList::getAssetList($this->eveapi->getAssetList()));
         
         if (is_numeric($this->input->post('me')))
         {
@@ -182,13 +120,18 @@ class Production extends MY_Controller
         }
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
         $data['me'] = $me;
-        foreach ($this->_getBlueprint($blueprintID, $me) as $row)
+        $data['totalVolume'] = 0;
+        
+        list ($components, $totalMineralUsage) = $this->_getBlueprint($character, $blueprintID, $me);
+        foreach ($components as $row)
         {
             $req = ceil($row['requiresPerfect'] * $amount);
-            $have = ceil($materials[$row['typeID']]);
-            
             $data['req'][$row['typeID']] = $req;
-            $data['have'][$row['typeID']] = $have;
+            $data['totalVolume'] += $req * $row['volume'];
+        }
+        foreach ($totalMineralUsage as $k => $v)
+        {
+            $data['totalMineralUsage'][$k] = $v * $amount;
         }
         echo json_encode($data);
         exit;
@@ -223,11 +166,14 @@ class Production extends MY_Controller
         $allowsFor = $data['data'] = array();
 
         $index = 0;
-        foreach ($this->_getBlueprint($blueprintID, 0, 5) as $row)
+        list ($components, $data['totalMineralUsage']) = $this->_getBlueprint($character, $blueprintID, 0);
+
+        foreach ($components as $row)
         {
             $data['data'][$index] = $row;
             $index++;
         }
+        
         $data['skillreq'] = $this->_getSkillReq($blueprintID);
         $data['content'] = $this->load->view('production/t1', $data, True);
         $this->load->view('maintemplate', $data);

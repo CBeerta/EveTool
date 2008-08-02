@@ -33,6 +33,5 @@ class Wallet extends MY_Controller
         $template['content'] = $this->load->view('walletjournal', $data, True);
         $this->load->view('maintemplate', $template);
     }
-
 }
 ?>
