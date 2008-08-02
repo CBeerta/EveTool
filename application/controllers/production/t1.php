@@ -125,7 +125,7 @@ class T1 extends MY_Controller
         }
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
         $data['me'] = $me;
-        $data['totalVolume'] = 0;
+        $data['totalVolume'] = $data['totalMineralVolume'] = 0;
         
         list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me);
         foreach ($components as $row)
@@ -136,7 +136,8 @@ class T1 extends MY_Controller
         }
         foreach ($totalMineralUsage as $k => $v)
         {
-            $data['totalMineralUsage'][$k] = $v * $amount;
+            $data['totalMineralUsage'][$k] = $v['amount'] * $amount;
+            $data['totalMineralVolume'] += $v['volume'] * $amount;
         }
         echo json_encode($data);
         exit;
@@ -172,7 +173,6 @@ class T1 extends MY_Controller
 
         $index = 0;
         list ($components, $data['totalMineralUsage']) = Production::getBlueprint($character, $blueprintID, 0);
-
         foreach ($components as $row)
         {
             $data['data'][$index] = $row;

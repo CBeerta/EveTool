@@ -23,6 +23,7 @@ $(document).ready(function(){
             
         });
         <?php if (count($totalMineralUsage) > 0): ?>
+        $("#totalMineralVolume").text(numberFormat(data.totalMineralVolume));
         $.each(data.totalMineralUsage, function(i, item){
             $(".totalReq" + i).text(numberFormat(item));
             $(".totalHave" + i).text(numberFormat(data.have[i]))
@@ -46,16 +47,16 @@ $(document).ready(function(){
 </script>
 <table width="100%">
     <tr>
-        <th colspan="5"><?php echo $product->typeName; ?></th>
+        <th colspan="4"><?php echo $product->typeName; ?></th>
     </tr>
     <tr>
-        <td colspan="5" style="text-align: left;">
+        <td colspan="4" style="text-align: left;">
             <img src="<?php echo getIconUrl($product->typeID, 128); ?>" align="left">
             <p style="padding-left: 140px;"><?php echo nl2br($product->description); ?></p>
         </td>
     </tr>
     <tr>
-        <th colspan="5">
+        <th colspan="4">
         <span>
             <img style="padding-left: 20px;" id="bpSpinner" align="left" src="<?php echo site_url('/files/spinner-light.gif'); ?>">
             <form action="<?php echo site_url('production/t1/update/'.$blueprintID); ?>" method="post" id="bpForm">
@@ -84,11 +85,13 @@ $(document).ready(function(){
     </tr>
 <?php endforeach; ?>
 	<tr>
-		<td colspan="5">Total Volume: <span id="totalVolume"></span> m&sup3;</td>
+		<th colspan="2">Total Volume:</th>
+        <td><span id="totalVolume"></span> m&sup3;</td>
+        <td>&nbsp;</td>
 	</tr>
 <?php if (count($totalMineralUsage) > 0): ?>
     <tr>
-        <th colspan="5">Total Mineral Usage</th>
+        <th colspan="4">Total Mineral Usage</th>
     </tr>
     <tr>
         <th colspan="2">Type</th>
@@ -103,6 +106,11 @@ $(document).ready(function(){
         <td><p class="totalHave<?php echo $k;?>"></p></td>
     </tr>        
     <?php endforeach;?>
+	<tr>
+		<th colspan="2">Total Volume:</th>
+        <td><span id="totalMineralVolume"></span> m&sup3;</td>
+        <td>&nbsp;</td>
+	</tr>
 <?php endif;?>
 </table>
 <?php if (count($skillreq) > 0): ?>

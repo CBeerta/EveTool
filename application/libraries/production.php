@@ -105,11 +105,13 @@ class Production
                     {
                         if (empty($totalMineralUsage[$part['typeID']]))
                         {
-                            $totalMineralUsage[$part['typeID']] = ceil($part['requiresPerfect'] * $row['requiresPerfect']);
+                            $totalMineralUsage[$part['typeID']]['amount'] = ceil($part['requiresPerfect'] * $row['requiresPerfect']);
+                            $totalMineralUsage[$part['typeID']]['volume'] = ceil($part['requiresPerfect'] * $row['requiresPerfect'] * $part['volume']);
                         }
                         else
                         {
-                            $totalMineralUsage[$part['typeID']] += ceil($part['requiresPerfect'] * $row['requiresPerfect']);
+                            $totalMineralUsage[$part['typeID']]['amount'] += ceil($part['requiresPerfect'] * $row['requiresPerfect']);
+                            $totalMineralUsage[$part['typeID']]['volume'] += ceil($part['requiresPerfect'] * $row['requiresPerfect'] * $part['volume']);
                         }
                     }        
                 }

@@ -13,7 +13,7 @@
     <script type="text/javascript" src="<?php echo site_url('/files/eve.js');?>"></script>
 </head>
 <body>
-<div id="doc4" class="yui-t4">
+<div id="doc3" class="yui-t4">
     <div id="hd">
         <div class="yui-g">
             <div class="yui-u first"><?php //echo $character;?></div>
