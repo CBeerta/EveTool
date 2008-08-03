@@ -9,7 +9,7 @@ if ($_SERVER['HTTP_HOST'] == 'anaea.fra.beerta.de')
 }
 else
 {
-    $config['image_cache_path'] = '/home/www/public/files/cache/';
+    $config['image_cache_path'] = '/var/www/evetool/files/cache/';
     $config['image_cache_url'] = 'http://aello.beerta.net/files/cache/';
 }
 
