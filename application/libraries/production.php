@@ -34,7 +34,7 @@ class Production
         return ($skillReq);
     }
 
-    public function getBlueprint($character, $blueprintID, $me = 0, $pe = False)
+    public function getBlueprint($character, $blueprintID, $me = 0, $have = False, $pe = False)
     {
         $CI =& get_instance();
         $CI->eveapi->setCredentials(
@@ -54,6 +54,12 @@ class Production
                 }
             }
         }
+
+        if (!$have)
+        {
+            $have = array();
+        }
+
         $q = $CI->db->query('
             SELECT 
                 typeReq.typeID,
@@ -79,10 +85,12 @@ class Production
                 typeGroup.categoryID NOT IN (6, 7, 16)
             ORDER BY 
             	typeReq.typeName;', $blueprintID);
+
         $data = $totalMineralUsage = array();
+
         foreach ($q->result_array() as $row)
         {
-            $waste  = $row['basequantity']*(($row['wasteFactor']/100)/(1+$me) + 0.25 - 0.05 * $pe);
+            $waste  = round($row['basequantity']*(($row['wasteFactor']/100)/(1+$me) + 0.25 - 0.05 * $pe));
             $row['requiresPerfect'] = $row['basequantity'] + $waste;
             if (is_numeric($row['isPart']))
             {
@@ -98,20 +106,28 @@ class Production
                     $row['me'] = 0;
                 }
 
-                list($row['partRequires'], $childMats) = Production::getBlueprint($character, $row['isPart'], $row['me'], $pe);
+                list($row['partRequires'], $childMats) = Production::getBlueprint($character, $row['isPart'], $row['me'], $have, $pe);
+
+                if (!isset($have[$row['typeID']]))
+                {
+                    $have[$row['typeID']] = 0;
+                }
+
                 foreach ($row['partRequires'] as $part)
                 {
                     if ($part['groupID'] == 18)
                     {
+                        $need = $row['requiresPerfect'] - $have[$row['typeID']];
+
                         if (empty($totalMineralUsage[$part['typeID']]))
                         {
-                            $totalMineralUsage[$part['typeID']]['amount'] = ceil($part['requiresPerfect'] * $row['requiresPerfect']);
-                            $totalMineralUsage[$part['typeID']]['volume'] = ceil($part['requiresPerfect'] * $row['requiresPerfect'] * $part['volume']);
+                            $totalMineralUsage[$part['typeID']]['amount'] = round($part['requiresPerfect'] * $need);
+                            $totalMineralUsage[$part['typeID']]['volume'] = round($part['requiresPerfect'] * $need * $part['volume']);
                         }
                         else
                         {
-                            $totalMineralUsage[$part['typeID']]['amount'] += ceil($part['requiresPerfect'] * $row['requiresPerfect']);
-                            $totalMineralUsage[$part['typeID']]['volume'] += ceil($part['requiresPerfect'] * $row['requiresPerfect'] * $part['volume']);
+                            $totalMineralUsage[$part['typeID']]['amount'] += round($part['requiresPerfect'] * $need);
+                            $totalMineralUsage[$part['typeID']]['volume'] += round($part['requiresPerfect'] * $need * $part['volume']);
                         }
                     }        
                 }
@@ -120,7 +136,6 @@ class Production
         }
         return (array($data, $totalMineralUsage));
     }
- 
 
 
 }

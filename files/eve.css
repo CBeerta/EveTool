@@ -64,13 +64,23 @@ li {
  * Header
  *
  **/
-#hd {
+div#hd {
     background-color: #313032;
     color: white;
     font-size: 85%;
-    height: 100px;
+    height: 84px;
+    padding-top: 16px;
+}
+h1#hd {
+    font-weight: bold;
+    font-family: "Trebuchet MS", Verdana, Arial;
+    font-size: 197%;
+    text-align: left;
 }
 
+img#hd {
+    border-bottom: 2px solid #313032;
+}
 
 #bd {
     background: #fff;

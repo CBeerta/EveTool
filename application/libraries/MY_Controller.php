@@ -18,6 +18,8 @@ class MY_Controller extends Controller
 
         $accounts = array();
 
+        $data['character'] = '';
+
         if (!$this->users->isLoggedIn())
         {
             redirect('user/login');
@@ -58,12 +60,14 @@ class MY_Controller extends Controller
                 $this->chars[$char['charname']]['apikey'] = $account['apikey'];
                 $this->chars[$char['charname']]['corpname'] = $char['corpname'];
                 $this->chars[$char['charname']]['corpid'] = $char['corpid'];
+
+                if (in_array($char['charname'], $this->uri->segment_array()))
+                {
+                    $data['character'] = $char['charname'];
+                }
             }
         }
-        $tool = $this->uri->segment($this->uri->total_segments()-2);
-        $subtool = $this->uri->segment($this->uri->total_segments()-1);
-        $data['tool'] = empty($tool) ? 'overview' : $tool;
-        $data['subtool'] = empty($subtool) ? 'index' : $subtool;
+        $data['tool'] = $this->uri->segment(1, 'OverView');
         
         $data['chars'] = empty($this->chars) ? array() : $this->chars;
         $this->load->view('header.php', $data);

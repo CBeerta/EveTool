@@ -63,6 +63,7 @@ class T1 extends MY_Controller
             $data['t'.$row->techLevel][$row->groupName][$row->blueprintTypeID] = $row->Item;
         }
         $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array('invGroups.categoryID'  => 9));
+
         $blueprints = array();
         foreach ($assets as $loc)
         {  
@@ -90,7 +91,6 @@ class T1 extends MY_Controller
         $this->load->view('maintemplate', $template);
         return;
     }
-    
    
     public function update($character, $blueprintID)
     {
@@ -100,7 +100,7 @@ class T1 extends MY_Controller
             $this->chars[$character]['charid']);
         $data = array();
         
-        list($data['have']) = getMaterials(array(18,873), AssetList::getAssetList($this->eveapi->getAssetList()));
+        list($data['have']) = getMaterials(array(18, 754, 873), AssetList::getAssetList($this->eveapi->getAssetList()));
         
         if (is_numeric($this->input->post('me')))
         {
@@ -127,7 +127,7 @@ class T1 extends MY_Controller
         $data['me'] = $me;
         $data['totalVolume'] = $data['totalMineralVolume'] = 0;
         
-        list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me);
+        list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have']);
         foreach ($components as $row)
         {
             $req = ceil($row['requiresPerfect'] * $amount);

@@ -35,14 +35,25 @@ class EveCentral
         if ($update == True)
         {
             $ch = curl_init($uri);
-            $fp = fopen($destFile, "w");
+            $fp = fopen($destFile.'.tmp', "w");
 
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_HEADER, 0);
-
             curl_exec($ch);
-            curl_close($ch);
             fclose($fp);
+
+            $res = curl_getinfo($ch);
+            if ($res['http_code'] >= 400)
+            {
+                /* Something went wrong */
+                unlink($destFile.'.tmp');
+            }
+            else
+            {
+                rename($destFile.'tmp', $destFile);
+            }
+            curl_close($ch);
+
         }
         return(simplexml_load_file($destFile));
     }
