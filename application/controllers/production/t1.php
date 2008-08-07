@@ -62,30 +62,6 @@ class T1 extends MY_Controller
         {
             $data['t'.$row->techLevel][$row->groupName][$row->blueprintTypeID] = $row->Item;
         }
-        $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array('invGroups.categoryID'  => 9));
-
-        $blueprints = array();
-        foreach ($assets as $loc)
-        {  
-            foreach ($loc as $asset)
-            {
-                if ($asset['categoryID'] == 9)
-                {
-                    $blueprints[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
-                }
-                if (isset($asset['contents']))
-                {
-                    foreach ($asset['contents'] as $content)
-                    {
-                        if ($content['categoryID'] == 9)
-                        {
-                            $blueprints[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
-                        }
-                    }
-                }
-            }
-        }
-        $data['blueprints'] = $blueprints;
         
         $template['content'] = $this->load->view('production/t1_blueprints', $data, True);
         $this->load->view('maintemplate', $template);
@@ -100,7 +76,7 @@ class T1 extends MY_Controller
             $this->chars[$character]['charid']);
         $data = array();
         
-        list($data['have']) = getMaterials(array(18, 754, 873), AssetList::getAssetList($this->eveapi->getAssetList()));
+        list($data['have']) = getMaterials(array(18, 754, 873), AssetList::getAssetsFromDB($this->chars[$character]['charid']));
         
         if (is_numeric($this->input->post('me')))
         {

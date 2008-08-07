@@ -277,7 +277,7 @@ class AssetList
         $where = '';
         foreach ($limit as $k => $v)
         {
-            $where .= "{$k}={$v} {$connect} ";
+            $where .= "{$k}='{$v}' {$connect} ";
         }
         $where = substr($where, 0, -strlen($connect)-2);
 

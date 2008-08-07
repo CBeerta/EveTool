@@ -50,7 +50,7 @@ class EveCentral
             }
             else
             {
-                rename($destFile.'tmp', $destFile);
+                rename($destFile.'.tmp', $destFile);
             }
             curl_close($ch);
 

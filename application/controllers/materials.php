@@ -81,5 +81,47 @@ class Materials extends MY_Controller
         $template['content'] = $this->load->view('materials', $data, True);
         $this->load->view('maintemplate', $template);
     }
+
+    public function blueprints($character)
+    {
+        if (!in_array($character, array_keys($this->chars)))
+        {
+            die("Could not find matching char {$character}");
+        }
+        $this->eveapi->setCredentials(
+            $this->chars[$character]['apiuser'], 
+            $this->chars[$character]['apikey'], 
+            $this->chars[$character]['charid']);
+        $data['character'] = $character;
+
+        $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array('invGroups.categoryID'  => 9));
+
+        $blueprints = array();
+        foreach ($assets as $loc)
+        {  
+            foreach ($loc as $asset)
+            {
+                if ($asset['categoryID'] == 9)
+                {
+                    $blueprints[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
+                }
+                if (isset($asset['contents']))
+                {
+                    foreach ($asset['contents'] as $content)
+                    {
+                        if ($content['categoryID'] == 9)
+                        {
+                            $blueprints[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
+                        }
+                    }
+                }
+            }
+        }
+        $data['blueprints'] = $blueprints;
+
+        $template['content'] = $this->load->view('production/owned_blueprints', $data, True);
+        $this->load->view('maintemplate', $template);
+        return;
+    }
 }
 ?>

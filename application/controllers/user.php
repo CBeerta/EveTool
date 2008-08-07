@@ -8,7 +8,8 @@ class User extends MY_Controller {
         $this->load->library('users');
 
         $data['chars'] = array();
-        $data['skillinfo'] = '<p>Please Login!</p>';
+        $data['tool'] = 'Login';
+        $data['character'] = '';
         $this->load->view('header', $data);
     }
 

@@ -113,11 +113,14 @@ function getMaterials($groupID, $assets)
             {
                 $totalMaterials[$asset['typeID']] += $asset['quantity'];
             }
-            foreach ($asset['contents'] as $content)
+            if (isset($asset['contents']))
             {
-                if (in_array($content['typeID'], $typeIDList))
+                foreach ($asset['contents'] as $content)
                 {
-                    $totalMaterials[$content['typeID']] += $content['quantity'];
+                    if (in_array($content['typeID'], $typeIDList))
+                    {
+                        $totalMaterials[$content['typeID']] += $content['quantity'];
+                    }
                 }
             }
         }
