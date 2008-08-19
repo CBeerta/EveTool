@@ -1,6 +1,9 @@
 <table width="100%">
     <caption>Wallet Journal</caption>
     <tr>
+        <td colspan="5" style="text-align:center; background-color: white;"><img src="<?php echo site_url('wallet/chart/'.$character);?>"></td>
+    </tr>
+    <tr>
         <th>Date</th>
         <th>Type</th>
         <th>Amount</th>
