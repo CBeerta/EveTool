@@ -10,7 +10,7 @@ class Wallet extends MY_Controller
             die("Could not find matchign char {$character}");
         }
 
-        $this->load->library('phpgraphlib', array('width' => 800,'height' => 300));
+        $this->load->library('phpgraphlib', array('width' => 800,'height' => 350));
 
         $data['character'] = $character;
 

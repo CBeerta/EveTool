@@ -102,8 +102,10 @@ class T1 extends MY_Controller
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
         $data['me'] = $me;
         $data['totalVolume'] = $data['totalMineralVolume'] = 0;
+
+        $pe = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : 5;
         
-        list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have']);
+        list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
         foreach ($components as $row)
         {
             $req = ceil($row['requiresPerfect'] * $amount);

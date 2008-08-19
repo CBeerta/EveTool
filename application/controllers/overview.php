@@ -98,9 +98,10 @@ class Overview extends MY_Controller
 
     function config()
     {
-        if ($this->input->post('regions'))
+        if ($this->input->post('submit'))
         {
             setUserConfig($this->Auth['user_id'], 'market_region', $this->input->post('regions'));
+            setUserConfig($this->Auth['user_id'], 'use_perfect', $this->input->post('use_perfect', False));
         }
 
         $data = array();
@@ -111,6 +112,9 @@ class Overview extends MY_Controller
         {
             $data['regions'][$row->regionID] = $row->regionName;
         }
+
+        $data['use_perfect'] = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : True;
+
         $template['content'] = $this->load->view('config', $data, True);
         $this->load->view('maintemplate', $template);
     }
