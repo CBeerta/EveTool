@@ -43,6 +43,7 @@ class Wallet extends MY_Controller
         }
         $this->phpgraphlib->addData($chartdata);
         $this->phpgraphlib->setBars(true);
+        $this->phpgraphlib->setDataPoints(false);
         $this->phpgraphlib->setLine(false);
         $this->phpgraphlib->setGradient("red", "maroon");
         $this->phpgraphlib->setTitle("30 Day Wallet History");

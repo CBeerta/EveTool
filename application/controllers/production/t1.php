@@ -24,6 +24,7 @@ class T1 extends MY_Controller
             SELECT 
                 productGroup.groupID, 
                 productGroup.groupName, 
+                category.categoryID,
                 blueprintType.typeID, 
                 blueprints.blueprintTypeID,
                 blueprintType.typename Blueprint,
@@ -54,13 +55,13 @@ class T1 extends MY_Controller
                 INNER JOIN invCategories AS category        ON productGroup.categoryID   = category.categoryID
             WHERE 
                 blueprintType.published = 1 
-                AND category.categoryID=6
+                AND ( category.categoryID=6 OR category.categoryID=7 )
             ORDER BY
-                techLevel, groupID, productType.typeName');
+                category.categoryID, techLevel, groupID, productType.typeName');
         
         foreach ($q->result() as $row)
         {
-            $data['t'.$row->techLevel][$row->groupName][$row->blueprintTypeID] = $row->Item;
+            $data['t'.$row->techLevel][$row->categoryID][$row->groupName][$row->blueprintTypeID] = $row->Item;
         }
         
         $template['content'] = $this->load->view('production/t1_blueprints', $data, True);
@@ -128,7 +129,7 @@ class T1 extends MY_Controller
             die("Could not find matching char {$character}");
         }
 
-        $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6;');
+        $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6 OR invGroups.categoryID=7;');
         foreach ($q->result() as $row)
         {
             $groupName = str_replace(' ', '_', $row->groupName);

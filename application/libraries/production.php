@@ -16,13 +16,13 @@ class Production
                 SELECT 
                     typeReq.typeName, graphics.icon, materials.quantity AS level
                 FROM 
-                    TL2MaterialsForTypeWithActivity AS materials
+                    typeActivityMaterials AS materials
                 INNER JOIN invTypes AS typeReq ON materials.requiredtypeID = typeReq.typeID
                 INNER JOIN invGroups AS typeGroup ON typeReq.groupID = typeGroup.groupID
                 INNER JOIN eveGraphics AS graphics ON typeReq.graphicID = graphics.graphicID
                 WHERE
                     materials.typeID = ? AND 
-                    materials.activity = 1 AND 
+                    materials.activityID = 1 AND 
                     typeGroup.categoryID = 16
                 ORDER BY typeReq.typeName;', $blueprintID);
 
@@ -74,14 +74,14 @@ class Production
                 materials.damagePerJob,
                 (SELECT blueprintTypeID FROM invBlueprintTypes WHERE productTypeID=typeReq.typeID LIMIT 1) AS isPart
             FROM 
-                TL2MaterialsForTypeWithActivity AS materials
+                typeActivityMaterials AS materials
 	            INNER JOIN invTypes AS typeReq ON materials.requiredtypeID = typeReq.typeID
 	            INNER JOIN invGroups AS typeGroup ON typeReq.groupID = typeGroup.groupID
 	            INNER JOIN invBlueprintTypes AS bluePrint ON materials.typeID = bluePrint.blueprintTypeID
 	            INNER JOIN eveGraphics AS graphics ON typeReq.graphicID = graphics.graphicID
             WHERE 
                 materials.typeID = ? AND 
-                materials.activity = 1 AND 
+                materials.activityID = 1 AND 
                 typeGroup.categoryID NOT IN (6, 7, 16)
             ORDER BY 
             	typeReq.typeName;', $blueprintID);
