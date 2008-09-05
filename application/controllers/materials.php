@@ -13,15 +13,18 @@ class Materials extends MY_Controller
      *
      * @param   string
      */
-    public function index($character = False)
+    public function index($character = False, $groupID = 18)
     {
         if (!in_array($character, array_keys($this->chars)))
         {
             die("Could not find matchign char {$character}");
         }
         $data['character'] = $character;
-        $groupID = !isset($_REQUEST['groupID']) ? '18' : $_REQUEST['groupID'];
-        $categoryID = !isset($_REQUEST['categoryID']) ? '25' : $_REQUEST['categoryID'];
+
+/*      FIXME: doesnt work anymoar */
+//        $groupID = !isset($_REQUEST['groupID']) ? '18' : $_REQUEST['groupID'];
+//        $categoryID = !isset($_REQUEST['categoryID']) ? '25' : $_REQUEST['categoryID'];
+
         $regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
         $sID = !isset($_REQUEST['categoryID']) ? 'groupID' : 'categoryID';
 

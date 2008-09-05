@@ -34,8 +34,8 @@
 $active_group = "default";
 
 $db['default']['hostname'] = "localhost";
-$db['default']['username'] = "claus";
-$db['default']['password'] = "skeedo";
+$db['default']['username'] = $_SERVER['DBUSER'];
+$db['default']['password'] = $_SERVER['DBPASS'];
 $db['default']['database'] = "eve";
 $db['default']['dbdriver'] = "mysql";
 $db['default']['dbprefix'] = "";
