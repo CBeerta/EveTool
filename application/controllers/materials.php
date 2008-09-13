@@ -15,6 +15,7 @@ class Materials extends MY_Controller
      */
     public function index($character = False, $groupID = 18)
     {
+        $character = urldecode($character);
         if (!in_array($character, array_keys($this->chars)))
         {
             die("Could not find matchign char {$character}");
@@ -87,6 +88,7 @@ class Materials extends MY_Controller
 
     public function blueprints($character)
     {
+        $character = urldecode($character);
         if (!in_array($character, array_keys($this->chars)))
         {
             die("Could not find matching char {$character}");

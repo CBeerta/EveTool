@@ -15,6 +15,7 @@ class Industry extends MY_Controller
     
     public function jobs($character = False)
     {
+        $character = urldecode($character);
         if (!in_array($character, array_keys($this->chars)))
         {
             die("Could not find matchign char {$character}");

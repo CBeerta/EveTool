@@ -3,6 +3,7 @@
 class MY_Controller extends Controller
 {
     var $chars = array();
+    var $char;
     var $Auth;
 
     function __construct ()
@@ -60,7 +61,6 @@ class MY_Controller extends Controller
                 $this->chars[$char['charname']]['apikey'] = $account['apikey'];
                 $this->chars[$char['charname']]['corpname'] = $char['corpname'];
                 $this->chars[$char['charname']]['corpid'] = $char['corpid'];
-
                 if (in_array($char['charname'], $this->uri->segment_array()))
                 {
                     $data['character'] = $char['charname'];

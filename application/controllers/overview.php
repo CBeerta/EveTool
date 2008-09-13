@@ -19,6 +19,7 @@ class Overview extends MY_Controller
 
     function skilltree($character = False)
     {
+        $character = urldecode($character);
         if (!in_array($character, array_keys($this->chars)))
         {
             die("Could not find matchign char {$character}");
