@@ -65,7 +65,7 @@ class Materials extends MY_Controller
                     {
                         if ($content[$sID] == $$sID) 
                         {
-                            if (!isset($data['data'][$asset['typeID']]))
+                            if (!isset($data['data'][$content['typeID']]))
                                 $data['data'][$content['typeID']] = array('volume' => $content['volume'], 'quantity' => 0, 'typeName' => $content['typeName']);
                             $data['data'][$content['typeID']]['quantity'] += $content['quantity'];
                         }
