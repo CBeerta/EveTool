@@ -1,6 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once(BASEPATH.'../eveapi/eveapi/class.api.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.standings.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.alliancelist.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.balance.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.charactersheet.php');
@@ -270,7 +271,8 @@ class MarketOrders
 
 class AssetList
 {
-    public function getAssetsFromDB($charid, $limit = array(1 => 1), $connect = 'OR')
+
+    static function getAssetsFromDB($charid, $limit = array(1 => 1), $connect = 'OR')
     {
         $CI =& get_instance();
         $assets = array();
@@ -347,6 +349,7 @@ class AssetList
 
         $output = array();
         $xml = new SimpleXMLElement($contents);
+
         
         /**
          * FIXME: how do we expire outdated assets?
@@ -407,7 +410,7 @@ class AssetList
             }
             $output[$asset['locationID']][] = $asset;
         }
-        return($output);
+        return ((string) $xml->cachedUntil);
     }
 }
 ?>

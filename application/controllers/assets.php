@@ -26,11 +26,13 @@ class Assets extends MY_Controller
             $this->chars[$character]['apikey'], 
             $this->chars[$character]['charid']);
 
-        AssetList::getAssetList($this->eveapi->getAssetList(), $this->chars[$character]['charid']);
+        $data['cachedUntil'] = AssetList::getAssetList($this->eveapi->getAssetList(), $this->chars[$character]['charid']);
         $data['assets'] = AssetList::getAssetsFromDB($this->chars[$character]['charid']);
         $template['content'] = $this->load->view('assets', $data, True);
         $this->load->view('maintemplate', $template);
     }
+
+
 /*
     public function search($character = False, $query)
     {

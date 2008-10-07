@@ -53,7 +53,6 @@ class EveCentral
                 rename($destFile.'.tmp', $destFile);
             }
             curl_close($ch);
-
         }
         return(simplexml_load_file($destFile));
     }

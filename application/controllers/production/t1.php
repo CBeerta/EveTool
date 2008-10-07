@@ -10,6 +10,7 @@ class T1 extends MY_Controller
 
     public function index($character = False)
     {
+        $character = urldecode($character);
         if (!in_array($character, array_keys($this->chars)))
         {
             die("Could not find matching char {$character}");
@@ -71,6 +72,7 @@ class T1 extends MY_Controller
    
     public function update($character, $blueprintID)
     {
+        $character = urldecode($character);
         $this->eveapi->setCredentials(
             $this->chars[$character]['apiuser'], 
             $this->chars[$character]['apikey'], 
@@ -124,6 +126,7 @@ class T1 extends MY_Controller
 
     public function detail($character, $blueprintID = False)
     {
+        $character = urldecode($character);
         if (!in_array($character, array_keys($this->chars)))
         {
             die("Could not find matching char {$character}");

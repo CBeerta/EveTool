@@ -119,6 +119,29 @@ class Overview extends MY_Controller
         $template['content'] = $this->load->view('config', $data, True);
         $this->load->view('maintemplate', $template);
     }
+
+    function standings($character = False)
+    {
+        if (!in_array($character, array_keys($this->chars)))
+        {
+            die("Could not find matchign char {$character}");
+        }
+        $this->eveapi->setCredentials(
+            $this->chars[$character]['apiuser'], 
+            $this->chars[$character]['apikey'], 
+            $this->chars[$character]['charid']);
+
+        $data['character'] = $character;
+        $standings = Standings::getStandings($this->eveapi->getStandings());
+    
+        
+        print '<pre>';
+        print_r($standings);
+
+        exit;
+
+    }
+
 }
 
 ?>

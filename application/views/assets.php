@@ -44,3 +44,5 @@ function toggle_it(itemID){
 </tbody>
 <?php endforeach; // location?>
 </table>
+<br />
+<span style="font-size: 77%;">Cached Until: <?php echo apiTimePrettyPrint($cachedUntil);?></span>
