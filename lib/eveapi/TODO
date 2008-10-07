@@ -1,0 +1,12 @@
+TODO list for 0.23
+- getStandings requires alteration for Alliance, return array for Char to change to an equivlant format as Corp/Alliance Array - done
+- Addition of MemberSecurity, MemberSecurityLog and Titles to be added
+- Addition of remaining API classes CharacterName CharacterID ErrorList and the ID to image service
+- Add test cases for the added functions to api-testing 
+- Document added functions
+- Retest API functions that have changed in Revelations 1.1
+- Add the ability to autoload class files to the library, and change api-testing to use this
+- Malformed XML throws an exception - might want to catch that and attempt fetching XML once more. On 2nd thought, we can't re-fetch because of the current layout of the library. What a PITA. At least the exception can be caught.
+
+TODO list for 0.30
+- Captured in branch; not duplicating it here
