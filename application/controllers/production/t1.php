@@ -104,35 +104,39 @@ class T1 extends MY_Controller
         }
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
         $data['me'] = $me;
-        $data['totalVolume'] = $data['totalMineralVolume'] = $data['totalValue'] = 0;
+        $data['totalVolume'] = $data['totalMineralVolume'] = $data['totalMineralVolumeValue'] = $data['totalValue'] = 0;
 
         $pe = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : 5;
         
         list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
         
-	$typeIds = array();
-	foreach($components as $row) {
-		array_push($typeIds, $row['typeID']);
-	}
-	$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
-	$prices = $this->evecentral->getPrices($typeIds, $regionID);
+		$typeIds = array();
+		foreach($components as $row) {
+			array_push($typeIds, $row['typeID']);
+		}
+		foreach($totalMineralUsage as $k => $v) {
+			array_push($typeIds, $k);
+		}
+		$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
+		$prices = $this->evecentral->getPrices($typeIds, $regionID);
 
-	foreach ($components as $row)
+		foreach ($components as $row)
         {
             $req = ceil($row['requiresPerfect'] * $amount);
- 
-	   
-	   
- 	    $data['price'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'];
-	    $data['value'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'] * $req;
- 	    $data['req'][$row['typeID']] = $req;
-            $data['totalVolume'] += $req * $row['volume'];
+ 	   
+	 	    $data['price'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'];
+		    $data['value'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'] * $req;
+	 	    $data['req'][$row['typeID']] = $req;
+	        $data['totalVolume'] += $req * $row['volume'];
             $data['totalValue'] += $req  * $prices[$row['typeID']]['buy']['median'];
-	}
+		}
         foreach ($totalMineralUsage as $k => $v)
         {
+        	$data['price'][$k] = $prices[$k]['buy']['median'];
+        	$data['totalMineralValue'][$k] = $v['amount'] * $amount * $prices[$k]['buy']['median'];
             $data['totalMineralUsage'][$k] = $v['amount'] * $amount;
             $data['totalMineralVolume'] += $v['volume'] * $amount;
+            $data['totalMineralVolumeValue'] += $v['amount'] * $amount * $prices[$k]['buy']['median'];
         }
         echo json_encode($data);
         exit;

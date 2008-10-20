@@ -12,8 +12,8 @@ $(document).ready(function(){
     function loadResults(data) {
         $("#me").val(data.me);
         $("#totalVolume").text(numberFormat(data.totalVolume));
- 	$("#totalValue").text(numberFormat(data.totalValue));
- 	$.each(data.req, function(i, item){
+ 	    $("#totalValue").text(numberFormat(data.totalValue));
+ 	    $.each(data.req, function(i, item){
             $(".req" + i).text(numberFormat(item));
             $(".have" + i).text(numberFormat(data.have[i]))
             if ( item > data.have[i]) {
@@ -21,20 +21,22 @@ $(document).ready(function(){
             } else {
                 $(".have" + i).css({color: $("td").css("color")});
             }
-	    $(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
+	         $(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
             
         });
         <?php if (count($totalMineralUsage) > 0): ?>
         $("#totalMineralVolume").text(numberFormat(data.totalMineralVolume));
+        $("#totalMineralVolumeValue").text(numberFormat(data.totalMineralVolumeValue));
         $.each(data.totalMineralUsage, function(i, item){
             $(".totalReq" + i).text(numberFormat(item));
             $(".totalHave" + i).text(numberFormat(data.have[i]))
+            
             if ( item > data.have[i]) {
                 $(".totalHave" + i).css({color:"red"});
             } else {
                 $(".totalHave" + i).css({color: $("td").css("color")});
             }
-	     $(".value"+i).text(numberFormat(data.value[i]));
+	       $(".totalValue"+i).text(numberFormat(data.totalMineralValue[i]) + ' (' + numberFormat(data.price[i]) +')');
 
         });
         <?php endif; ?>
@@ -74,7 +76,7 @@ $(document).ready(function(){
         <th colspan="2">Type</th>
         <th>Requires</th>
         <th>Available</th>
-	<th>Purchase Value</th>
+	    <th>Purchase Value</th>
     </tr>
 <?php foreach($data as $r): ?>
     <tr>
@@ -86,37 +88,39 @@ $(document).ready(function(){
         <?php endif; ?>
         <td><p class="req<?php echo $r['typeID'];?>"></p></td>
         <td><p class="have<?php echo $r['typeID'];?>"></p></td>
-	<td><p class="value<?php echo $r['typeID'];?>"></p></td>
+	    <td><p class="value<?php echo $r['typeID'];?>"></p></td>
     </tr>
 <?php endforeach; ?>
 	<tr>
 		<th colspan="2">Total Volume:</th>
         <td><span id="totalVolume"></span> m&sup3;</td>
         <th>Total Value:</th>
-	<td><span id="totalValue"></span> ISK</td>
+	   <td><span id="totalValue"></span> ISK</td>
 	</tr>
 <?php if (count($totalMineralUsage) > 0): ?>
     <tr>
         <th colspan="5">Total Mineral Usage</th>
     </tr>
     <tr>
-        <th colspan="3">Type</th>
+        <th colspan="2">Type</th>
         <th>Requires</th>
         <th>Have</th>
+        <th>Purchase Value</th>
     </tr>
     <?php foreach ($totalMineralUsage as $k => $v):?>
     <tr>        
         <td width="32"><img src="<?php echo getIconUrl($k, 32); ?>"></td>
-        <td colspan="2" style="text-align: left"><?php echo getInvType($k)->typeName; ?></td>
+        <td style="text-align: left"><?php echo getInvType($k)->typeName; ?></td>
         <td><p class="totalReq<?php echo $k;?>"></p></td>
         <td><p class="totalHave<?php echo $k;?>"></p></td>
-	<td><p class="totalValue<?php echo $k;?>"></p></td>
+	    <td><p class="totalValue<?php echo $k;?>"></p></td>
     </tr>        
     <?php endforeach;?>
 	<tr>
-		<th colspan="3">Total Volume:</th>
+		<th colspan="2">Total Volume:</th>
         <td><span id="totalMineralVolume"></span> m&sup3;</td>
-        <td>&nbsp;</td>
+        <th>Total value:</td>
+        <td><span id="totalMineralVolumeValue"></span> ISK</td>
 	</tr>
 <?php endif;?>
 </table>
