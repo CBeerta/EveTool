@@ -104,17 +104,31 @@ class T1 extends MY_Controller
         }
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
         $data['me'] = $me;
-        $data['totalVolume'] = $data['totalMineralVolume'] = 0;
+        $data['totalVolume'] = $data['totalMineralVolume'] = $data['totalValue'] = 0;
 
         $pe = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : 5;
         
         list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
-        foreach ($components as $row)
+        
+	$typeIds = array();
+	foreach($components as $row) {
+		array_push($typeIds, $row['typeID']);
+	}
+	$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
+	$prices = $this->evecentral->getPrices($typeIds, $regionID);
+
+	foreach ($components as $row)
         {
             $req = ceil($row['requiresPerfect'] * $amount);
-            $data['req'][$row['typeID']] = $req;
+ 
+	   
+	   
+ 	    $data['price'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'];
+	    $data['value'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'] * $req;
+ 	    $data['req'][$row['typeID']] = $req;
             $data['totalVolume'] += $req * $row['volume'];
-        }
+            $data['totalValue'] += $req  * $prices[$row['typeID']]['buy']['median'];
+	}
         foreach ($totalMineralUsage as $k => $v)
         {
             $data['totalMineralUsage'][$k] = $v['amount'] * $amount;

@@ -12,7 +12,8 @@ $(document).ready(function(){
     function loadResults(data) {
         $("#me").val(data.me);
         $("#totalVolume").text(numberFormat(data.totalVolume));
-        $.each(data.req, function(i, item){
+ 	$("#totalValue").text(numberFormat(data.totalValue));
+ 	$.each(data.req, function(i, item){
             $(".req" + i).text(numberFormat(item));
             $(".have" + i).text(numberFormat(data.have[i]))
             if ( item > data.have[i]) {
@@ -20,6 +21,7 @@ $(document).ready(function(){
             } else {
                 $(".have" + i).css({color: $("td").css("color")});
             }
+	    $(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
             
         });
         <?php if (count($totalMineralUsage) > 0): ?>
@@ -32,6 +34,7 @@ $(document).ready(function(){
             } else {
                 $(".totalHave" + i).css({color: $("td").css("color")});
             }
+	     $(".value"+i).text(numberFormat(data.value[i]));
 
         });
         <?php endif; ?>
@@ -47,16 +50,16 @@ $(document).ready(function(){
 </script>
 <table width="100%">
     <tr>
-        <th colspan="4"><?php echo $product->typeName; ?></th>
+        <th colspan="5"><?php echo $product->typeName; ?></th>
     </tr>
     <tr>
-        <td colspan="4" style="text-align: left;">
+        <td colspan="5" style="text-align: left;">
             <img src="<?php echo getIconUrl($product->typeID, 128); ?>" align="left">
             <p style="padding-left: 140px;"><?php echo nl2br($product->description); ?></p>
         </td>
     </tr>
     <tr>
-        <th colspan="4">
+        <th colspan="5">
         <span>
             <img style="padding-left: 20px;" id="bpSpinner" align="left" src="<?php echo site_url('/files/spinner-light.gif'); ?>">
             <form action="<?php echo site_url('production/t1/update/'.$blueprintID); ?>" method="post" id="bpForm">
@@ -71,6 +74,7 @@ $(document).ready(function(){
         <th colspan="2">Type</th>
         <th>Requires</th>
         <th>Available</th>
+	<th>Purchase Value</th>
     </tr>
 <?php foreach($data as $r): ?>
     <tr>
@@ -82,19 +86,21 @@ $(document).ready(function(){
         <?php endif; ?>
         <td><p class="req<?php echo $r['typeID'];?>"></p></td>
         <td><p class="have<?php echo $r['typeID'];?>"></p></td>
+	<td><p class="value<?php echo $r['typeID'];?>"></p></td>
     </tr>
 <?php endforeach; ?>
 	<tr>
 		<th colspan="2">Total Volume:</th>
         <td><span id="totalVolume"></span> m&sup3;</td>
-        <td>&nbsp;</td>
+        <th>Total Value:</th>
+	<td><span id="totalValue"></span> ISK</td>
 	</tr>
 <?php if (count($totalMineralUsage) > 0): ?>
     <tr>
-        <th colspan="4">Total Mineral Usage</th>
+        <th colspan="5">Total Mineral Usage</th>
     </tr>
     <tr>
-        <th colspan="2">Type</th>
+        <th colspan="3">Type</th>
         <th>Requires</th>
         <th>Have</th>
     </tr>
@@ -104,10 +110,11 @@ $(document).ready(function(){
         <td style="text-align: left"><?php echo getInvType($k)->typeName; ?></td>
         <td><p class="totalReq<?php echo $k;?>"></p></td>
         <td><p class="totalHave<?php echo $k;?>"></p></td>
+	<td><p class="totalValue<?php echo $k;?>"></p></td>
     </tr>        
     <?php endforeach;?>
 	<tr>
-		<th colspan="2">Total Volume:</th>
+		<th colspan="3">Total Volume:</th>
         <td><span id="totalMineralVolume"></span> m&sup3;</td>
         <td>&nbsp;</td>
 	</tr>
