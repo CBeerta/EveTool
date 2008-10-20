@@ -7,13 +7,31 @@ class Overview extends MY_Controller
         $this->load->helper('cookie');
         if ($_SERVER['HTTP_HOST'] == 'anaea.fra.beerta.de')
         {
-
             $template['content'] = $this->load->view('todolist', null, True);
         }
-        else
+
+        $data['chars'] = array();
+        $data['total'] = 0;
+        foreach ($this->chars as $k => $v)
         {
-            $template['content'] = 'Here be dragons!';
+            print_r($character);
+            $this->eveapi->setCredentials(
+                $v['apiuser'], 
+                $v['apikey'], 
+                $v['charid']);
+            $balance = AccountBalance::getAccountBalance($this->eveapi->getAccountBalance());
+            $data['chars'][$k]['balance'] = $balance[0]['balance'];
+            $data['total'] += $balance[0]['balance'];
+
+            $training = CharacterSheet::getSkillInTraining($this->eveapi->getSkillInTraining());
+            if ($training['skillInTraining'] != 0)
+            {
+                $training['trainingTypeName'] = $this->eveapi->skilltree[$training['trainingTypeID']]['typeName'];
+            }
+            $data['chars'][$k]['training'] = $training;
         }
+
+        $template['content'] = $this->load->view('overview', $data, True);
         $this->load->view('maintemplate', $template);
     }
 
