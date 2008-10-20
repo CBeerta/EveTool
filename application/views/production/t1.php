@@ -107,7 +107,7 @@ $(document).ready(function(){
     <?php foreach ($totalMineralUsage as $k => $v):?>
     <tr>        
         <td width="32"><img src="<?php echo getIconUrl($k, 32); ?>"></td>
-        <td style="text-align: left"><?php echo getInvType($k)->typeName; ?></td>
+        <td colspan="2" style="text-align: left"><?php echo getInvType($k)->typeName; ?></td>
         <td><p class="totalReq<?php echo $k;?>"></p></td>
         <td><p class="totalHave<?php echo $k;?>"></p></td>
 	<td><p class="totalValue<?php echo $k;?>"></p></td>
