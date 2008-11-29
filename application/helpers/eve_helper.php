@@ -293,7 +293,37 @@ function setUserConfig($acctID, $keyName, $value)
     {
         return False;
     }
+
 }
 
+function isPublic()
+{
+    $CI =& get_instance();
+    $page = implode('_', array_slice($CI->uri->segment_array(), 0, -1));
+
+    $q = $CI->db->query('
+        SELECT 
+            asc_apikeys.apiUser,
+            asc_apikeys.apiFullKey,
+            asc_apikeys.acctID
+        FROM
+            asc_apikeys,
+            asc_characters
+        WHERE
+            asc_apikeys.apiuser = asc_characters.apiuser AND
+            asc_characters.characterName = ?
+        LIMIT 1', $CI->uri->rsegment($CI->uri->total_segments()));
+
+    $row = $q->row();
+
+    if ($q->num_rows() > 0 && getUserConfig($row->acctID, $page) !== False)
+    {
+        return ($row);
+    }
+    else
+    {
+        return (False);
+    }
+}
 
 ?>

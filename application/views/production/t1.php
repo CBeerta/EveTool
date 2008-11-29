@@ -21,8 +21,7 @@ $(document).ready(function(){
             } else {
                 $(".have" + i).css({color: $("td").css("color")});
             }
-	         $(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
-            
+            $(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
         });
         <?php if (count($totalMineralUsage) > 0): ?>
         $("#totalMineralVolume").text(numberFormat(data.totalMineralVolume));

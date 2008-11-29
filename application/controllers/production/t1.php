@@ -111,10 +111,12 @@ class T1 extends MY_Controller
         list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
         
 		$typeIds = array();
-		foreach($components as $row) {
+		foreach($components as $row) 
+        {
 			array_push($typeIds, $row['typeID']);
 		}
-		foreach($totalMineralUsage as $k => $v) {
+		foreach($totalMineralUsage as $k => $v) 
+        {
 			array_push($typeIds, $k);
 		}
 		$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');

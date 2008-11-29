@@ -21,6 +21,16 @@ class MY_Controller extends Controller
 
         $data['character'] = '';
 
+/*
+        ### FIXME: EveTool benutzt die asc_characters tabelle noch ueberhaupt nicht, daher gibt es diese info hier nicht
+        if (($apiinfo = isPublic()) !== False)
+        {
+            $accounts[0]['apiuser'] = $apiinfo->apiUser;
+            $accounts[0]['apikey'] = $apiinfo->apiFullKey;
+        }
+        else 
+*/
+        
         if (!$this->users->isLoggedIn())
         {
             redirect('user/login');
