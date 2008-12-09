@@ -56,7 +56,7 @@ class T1 extends MY_Controller
                 INNER JOIN invCategories AS category        ON productGroup.categoryID   = category.categoryID
             WHERE 
                 blueprintType.published = 1 
-                AND ( category.categoryID=6 OR category.categoryID=7  OR category.categoryID=18 )
+                AND ( category.categoryID=6 OR category.categoryID=7 OR category.categoryID=18 OR category.categoryID=8 )
             ORDER BY
                 category.categoryID, techLevel, groupID, productType.typeName');
         
@@ -152,7 +152,7 @@ class T1 extends MY_Controller
             die("Could not find matching char {$character}");
         }
 
-        $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6 OR invGroups.categoryID=7 OR invGroups.categoryID=18;');
+        $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6 OR invGroups.categoryID=7 OR invGroups.categoryID=18 OR invGroups.categoryID=8;');
         foreach ($q->result() as $row)
         {
             $groupName = str_replace(' ', '_', $row->groupName);

@@ -20,7 +20,6 @@ class MY_Controller extends Controller
         $accounts = array();
 
         $data['character'] = '';
-
 /*
         ### FIXME: EveTool benutzt die asc_characters tabelle noch ueberhaupt nicht, daher gibt es diese info hier nicht
         if (($apiinfo = isPublic()) !== False)
@@ -30,7 +29,6 @@ class MY_Controller extends Controller
         }
         else 
 */
-        
         if (!$this->users->isLoggedIn())
         {
             redirect('user/login');
