@@ -1,3 +1,7 @@
+<br />
+<a id="buttan" href="<? echo site_url('/wallet/journal/'.$character);?>">Wallet Journal</a>
+<a id="buttan" href="<? echo site_url('/wallet/dailyjournal/'.$character);?>">Group by Day</a>
+<br />
 <table width="100%">
     <caption>Wallet Journal</caption>
     <tr>
