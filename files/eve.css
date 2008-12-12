@@ -39,6 +39,15 @@ th {
     /* border: 1px solid #666; */
 }
 
+td.light {
+    background-color: #e6e6e6;
+    font-weight: bold;
+    color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
 td {
     padding: 2px;
     text-align: right;
@@ -53,6 +62,13 @@ h1 {
 a, a:hover, a:visited, a:active {
     color: #995555;
     text-decoration: none;
+}
+
+a#buttan {
+    padding: 10px;
+    border: 2px solid #aaaaaa;
+    background-color: #fefefe;
+    font-weight: bold;
 }
 
 li {
