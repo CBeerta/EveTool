@@ -21,7 +21,8 @@ $(document).ready(function(){
             } else {
                 $(".have" + i).css({color: $("td").css("color")});
             }
-            $(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
+            //$(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
+            $(".value"+i).text(numberFormat(data.value[i])+ ' ISK');
         });
         <?php if (count($totalMineralUsage) > 0): ?>
         $("#totalMineralVolume").text(numberFormat(data.totalMineralVolume));
@@ -35,7 +36,8 @@ $(document).ready(function(){
             } else {
                 $(".totalHave" + i).css({color: $("td").css("color")});
             }
-	       $(".totalValue"+i).text(numberFormat(data.totalMineralValue[i]) + ' (' + numberFormat(data.price[i]) +')');
+	       //$(".totalValue"+i).text(numberFormat(data.totalMineralValue[i]) + ' (' + numberFormat(data.price[i]) +')');
+	       $(".totalValue"+i).text(numberFormat(data.totalMineralValue[i]) + ' ISK');
 
         });
         <?php endif; ?>
@@ -118,7 +120,7 @@ $(document).ready(function(){
 	<tr>
 		<th colspan="2">Total Volume:</th>
         <td><span id="totalMineralVolume"></span> m&sup3;</td>
-        <th>Total value:</td>
+        <th>Total Value:</td>
         <td><span id="totalMineralVolumeValue"></span> ISK</td>
 	</tr>
 <?php endif;?>

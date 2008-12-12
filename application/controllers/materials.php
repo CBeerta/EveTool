@@ -86,6 +86,36 @@ class Materials extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+    public function _byCategory($charid, $categoryID = 9)
+    {
+
+        $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => 9));
+
+        $data = array();
+        $data = array();
+        foreach ($assets as $loc)
+        {  
+            foreach ($loc as $asset)
+            {
+                if ($asset['categoryID'] == $categoryID)
+                {
+                    $data[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
+                }
+                if (isset($asset['contents']))
+                {
+                    foreach ($asset['contents'] as $content)
+                    {
+                        if ($content['categoryID'] == $categoryID)
+                        {
+                            $data[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
+                        }
+                    }
+                }
+            }
+        }
+        return ($data);
+    }
+
     public function blueprints($character)
     {
         $character = urldecode($character);
@@ -98,35 +128,29 @@ class Materials extends MY_Controller
             $this->chars[$character]['apikey'], 
             $this->chars[$character]['charid']);
         $data['character'] = $character;
-
-        $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array('invGroups.categoryID'  => 9));
-
-        $blueprints = array();
-        foreach ($assets as $loc)
-        {  
-            foreach ($loc as $asset)
-            {
-                if ($asset['categoryID'] == 9)
-                {
-                    $blueprints[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
-                }
-                if (isset($asset['contents']))
-                {
-                    foreach ($asset['contents'] as $content)
-                    {
-                        if ($content['categoryID'] == 9)
-                        {
-                            $blueprints[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
-                        }
-                    }
-                }
-            }
-        }
-        $data['blueprints'] = $blueprints;
-
-        $template['content'] = $this->load->view('production/owned_blueprints', $data, True);
+        $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 9);
+        $data['title']= 'Played Owned Blueprints';
+        $template['content'] = $this->load->view('bycategory', $data, True);
         $this->load->view('maintemplate', $template);
-        return;
     }
+
+    public function ships($character)
+    {
+        $character = urldecode($character);
+        if (!in_array($character, array_keys($this->chars)))
+        {
+            die("Could not find matching char {$character}");
+        }
+        $this->eveapi->setCredentials(
+            $this->chars[$character]['apiuser'], 
+            $this->chars[$character]['apikey'], 
+            $this->chars[$character]['charid']);
+        $data['character'] = $character;
+        $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 6);
+        $data['title']= 'Played Owned Ships';
+        $template['content'] = $this->load->view('bycategory', $data, True);
+        $this->load->view('maintemplate', $template);
+    }
+
 }
 ?>
