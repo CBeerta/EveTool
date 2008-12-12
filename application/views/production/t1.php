@@ -6,7 +6,7 @@ $(document).ready(function(){
     $("#bpForm").ajaxStart(function(request, settings){
       $("#bpSpinner").show();
     });
-    $.getJSON("<?php echo site_url('production/t1/update/'.$character.'/'.$blueprintID); ?>", loadResults);
+    $.getJSON("<?php echo site_url('production/t1/update/'.$blueprintID.'/'.$character); ?>", loadResults);
     $("#bpForm").submit(formProcess);
     
     function loadResults(data) {
@@ -47,7 +47,7 @@ $(document).ready(function(){
       event.preventDefault();
       me = $("#me").val();
       amount = $("#amount").val();
-      $.post("<?php echo site_url('production/t1/update/'.$character.'/'.$blueprintID);?>", {me: me, amount: amount},loadResults, "json");
+      $.post("<?php echo site_url('production/t1/update/'.$blueprintID.'/'.$character);?>", {me: me, amount: amount},loadResults, "json");
     }
 });
 </script>
@@ -84,7 +84,7 @@ $(document).ready(function(){
         <td width="32"><img src="<?php echo getIconUrl($r['typeID'], 32); ?>"></td>
         <td style="text-align: left">
         <?php if(is_numeric($r['isPart'])): ?>
-        <a href="<?php echo site_url('production/t1/detail/'.$character.'/'.$r['isPart']); ?>"><?php echo $r['typeName']; ?></a>        <?php else: ?>
+        <a href="<?php echo site_url('production/t1/detail/'.$r['isPart'].'/'.$character); ?>"><?php echo $r['typeName']; ?></a>        <?php else: ?>
         <?php echo $r['typeName']; ?></td>
         <?php endif; ?>
         <td><p class="req<?php echo $r['typeID'];?>"></p></td>

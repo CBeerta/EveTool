@@ -10,24 +10,13 @@ class Transactions extends MY_Controller
      * @param   string
      * @param   int
      */
-    public function index($character = False, $highlight = Null)
+    public function index()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
-
+        $character = $this->character;
         $data['character'] = $character;
-
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
 
         $transxml = $this->eveapi->getWalletTransactions();
         $data['translist'] = WalletTransactions::getWalletTransactions($transxml);
-        $data['highlight'] = $highlight;
 
         $template['title'] = "Transactionlist for {$character}";
         $template['content'] = $this->load->view('transactionlist', $data, True);

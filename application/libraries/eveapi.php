@@ -1,17 +1,20 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+
+@set_include_path(@get_include_path() . PATH_SEPARATOR . BASEPATH.'../eveapi/eveapi/');
+
 require_once(BASEPATH.'../eveapi/eveapi/class.api.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.standings.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.alliancelist.php');
-require_once(BASEPATH.'../eveapi/eveapi/class.balance.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.accountbalance.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.charactersheet.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.charselect.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.corporationsheet.php');
-require_once(BASEPATH.'../eveapi/eveapi/class.generic.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.reftypes.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.skilltree.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.membertrack.php');
-require_once(BASEPATH.'../eveapi/eveapi/class.transactions.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.wallettransactions.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.walletjournal.php');
-require_once(BASEPATH.'../eveapi/eveapi/class.starbases.php');
 
 class EveApi Extends Api {
 
@@ -30,7 +33,7 @@ class EveApi Extends Api {
         }
 
         $this->reftypes = RefTypes::getRefTypes($this->getRefTypes());
-        $skilltree = Generic::getSkillTree($this->getSkillTree());
+        $skilltree = SkillTree::getSkillTree($this->getSkillTree());
         $this->stationlist = Stations::getConquerableStationList($this->getConquerableStationList());
 
         foreach ($skilltree as $group)

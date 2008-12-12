@@ -3,23 +3,11 @@
 
 class Wallet extends MY_Controller
 {
-    public function chart($character = false)
+    public function chart()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
-
+        $character = $this->character;
         $this->load->library('phpgraphlib', array('width' => 800,'height' => 350));
-
         $data['character'] = $character;
-
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
-
 
         $walletxml = $this->eveapi->getWalletJournal();
         $data['wallet'] = WalletJournal::getWalletJournal($walletxml);
@@ -59,21 +47,10 @@ class Wallet extends MY_Controller
      *
      * @param   string
      */
-    public function journal($character = False)
+    public function journal()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
-
+        $character = $this->character;
         $data['character'] = $character;
-
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
-
 
         $walletxml = $this->eveapi->getWalletJournal();
         $data['wallet'] = WalletJournal::getWalletJournal($walletxml);

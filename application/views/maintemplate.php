@@ -13,7 +13,7 @@
             <li><a href="<?php echo site_url('/wallet/journal/'.$character);?>">Wallet Journal</a>
             <li><a href="<?php echo site_url('/assets/index/'.$character);?>">Assets</a>
             <ul>
-                <li><a href="<?php echo site_url('/materials/index/'.$character);?>">Materials</a>
+                <li><a href="<?php echo site_url('/materials/index/18/'.$character);?>">Materials</a>
                 <li><a href="<?php echo site_url('/materials/blueprints/'.$character);?>">Blueprints</a>
                 <li><a href="<?php echo site_url('/materials/ships/'.$character);?>">Ships</a>
             </ul>

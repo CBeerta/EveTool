@@ -10,15 +10,7 @@ class T2 extends MY_Controller
 
     public function index($character = False)
     {
-    	$character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matching char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
+    	$character = $this->character;
         $data['character'] = $character;
 
 

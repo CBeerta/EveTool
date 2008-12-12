@@ -13,17 +13,9 @@ class Industry extends MY_Controller
     
     var $maxAge = 604800; // 1 week FIXME: make this user-tunable
     
-    public function jobs($character = False)
+    public function jobs()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
+        $character = $this->character;
         $data['character'] = $character;
 
         $jobs = IndustryJobs::getIndustryJobs($this->eveapi->getIndustryJobs());

@@ -10,17 +10,10 @@ class Market extends MY_Controller
      *
      * @param   string
      */
-    public function orders($character = False)
+    public function orders()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
+        $character = $this->character;
+
         $orders = MarketOrders::getMarketOrders($this->eveapi->getMarketOrders());
         $data['character'] = $character;
 

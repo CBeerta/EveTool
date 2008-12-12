@@ -2,7 +2,7 @@
 
 class Overview extends MY_Controller
 {
-    public function index($character = False)
+    public function index()
     {
         $this->load->helper('cookie');
         if ($_SERVER['HTTP_HOST'] == 'anaea.fra.beerta.de')
@@ -14,7 +14,6 @@ class Overview extends MY_Controller
         $data['total'] = 0;
         foreach ($this->chars as $k => $v)
         {
-            print_r($character);
             $this->eveapi->setCredentials(
                 $v['apiuser'], 
                 $v['apikey'], 
@@ -35,19 +34,9 @@ class Overview extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
-    function skilltree($character = False)
+    function skilltree()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
-
-        $data['character'] = $character;
+        $data['character'] = $this->character;
         $data['data'] = array();
         $balance = AccountBalance::getAccountBalance($this->eveapi->getAccountBalance());
         $data['balance'] = $balance[0]['balance'];
@@ -95,8 +84,7 @@ class Overview extends MY_Controller
             $enhancer = isset($charsheet['enhancers'][$attribute.'Bonus']['augmentatorValue']) ? $charsheet['enhancers'][$attribute.'Bonus']['augmentatorValue'] : 0;
             $data['attributes'][$attribute] = floor(($charsheet['attributes'][$attribute] + $enhancer + $sll + $shl) * $learning);
         }
-        $data['charinfo'] = $charsheet['info'];
-
+        $data['charinfo'] = $charsheet;
 
         if ($training['skillInTraining'] != 0)
         {
@@ -138,18 +126,9 @@ class Overview extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
-    function standings($character = False)
+    function standings()
     {
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
-
-        $data['character'] = $character;
+        $data['character'] = $this->character;
         $standings = Standings::getStandings($this->eveapi->getStandings());
     
         

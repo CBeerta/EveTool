@@ -13,13 +13,9 @@ class Materials extends MY_Controller
      *
      * @param   string
      */
-    public function index($character = False, $groupID = 18)
+    public function index($groupID, $character)
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
+        $character = $this->character; 
         $data['character'] = $character;
 
 /*      FIXME: doesnt work anymoar */
@@ -86,10 +82,10 @@ class Materials extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
-    public function _byCategory($charid, $categoryID = 9)
+    private function _byCategory($charid, $categoryID = 9)
     {
 
-        $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => 9));
+        $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => $categoryID));
 
         $data = array();
         $data = array();
@@ -116,17 +112,9 @@ class Materials extends MY_Controller
         return ($data);
     }
 
-    public function blueprints($character)
+    public function blueprints()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matching char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
+        $character = $this->character;
         $data['character'] = $character;
         $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 9);
         $data['title']= 'Played Owned Blueprints';
@@ -134,17 +122,9 @@ class Materials extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
-    public function ships($character)
+    public function ships()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matching char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
+        $character = $this->character;
         $data['character'] = $character;
         $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 6);
         $data['title']= 'Played Owned Ships';

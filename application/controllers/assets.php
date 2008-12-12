@@ -11,23 +11,13 @@ class Assets extends MY_Controller
      * @param   string
      */
 
-    public function index($character = False)
+    public function index()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
         $data = array();
-        $data['character'] = $character;
+        $data['character'] = $this->character;
 
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
-
-        $data['cachedUntil'] = AssetList::getAssetList($this->eveapi->getAssetList(), $this->chars[$character]['charid']);
-        $data['assets'] = AssetList::getAssetsFromDB($this->chars[$character]['charid']);
+        $data['cachedUntil'] = AssetList::getAssetList($this->eveapi->getAssetList(), $this->chars[$this->character]['charid']);
+        $data['assets'] = AssetList::getAssetsFromDB($this->chars[$this->character]['charid']);
         $template['content'] = $this->load->view('assets', $data, True);
         $this->load->view('maintemplate', $template);
     }
@@ -36,17 +26,9 @@ class Assets extends MY_Controller
 /*
     public function search($character = False, $query)
     {
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matchign char {$character}");
-        }
         $data = array();
-        $data['character'] = $character;
+        $data['character'] = $this->character;
 
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
 
         $data['assets'] = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array('invTypes.typeName' => $query) );
         

@@ -8,17 +8,9 @@ class T1 extends MY_Controller
         $this->load->library('production');
     }
 
-    public function index($character = False)
+    public function index()
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matching char {$character}");
-        }
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
+        $character = $this->character;
         $data['character'] = $character;
 
         $q = $this->db->query('
@@ -70,13 +62,9 @@ class T1 extends MY_Controller
         return;
     }
    
-    public function update($character, $blueprintID)
+    public function update($blueprintID, $character)
     {
-        $character = urldecode($character);
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
+        $character = $this->character;
         $data = array();
         
         list($data['have']) = getMaterials(array(18, 754, 873), AssetList::getAssetsFromDB($this->chars[$character]['charid']));
@@ -144,13 +132,9 @@ class T1 extends MY_Controller
         exit;
     }
 
-    public function detail($character, $blueprintID = False)
+    public function detail($blueprintID, $character)
     {
-        $character = urldecode($character);
-        if (!in_array($character, array_keys($this->chars)))
-        {
-            die("Could not find matching char {$character}");
-        }
+        $character = $this->character;
 
         $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6 OR invGroups.categoryID=7 OR invGroups.categoryID=18 OR invGroups.categoryID=8;');
         foreach ($q->result() as $row)
@@ -161,11 +145,6 @@ class T1 extends MY_Controller
         $data['character'] = $character;
         $data['blueprintID'] = $blueprintID;
         $data['content'] = '';
-
-        $this->eveapi->setCredentials(
-            $this->chars[$character]['apiuser'], 
-            $this->chars[$character]['apikey'], 
-            $this->chars[$character]['charid']);
 
         $q = $this->db->query('SELECT * FROM invTypes, invBlueprintTypes WHERE invTypes.typeID=invBlueprintTypes.productTypeID AND invBlueprintTypes.blueprintTypeID=?', $blueprintID);
         $data['product'] = $q->row();
