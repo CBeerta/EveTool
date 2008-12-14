@@ -10,7 +10,7 @@
         <h2>Information</h2>
         <ul>
             <li><a href="<?php echo site_url('/transactions/index/'.$character);?>">Transaction List</a>
-            <li><a href="<?php echo site_url('/wallet/journal/'.$character);?>">Wallet Journal</a>
+            <li><a href="<?php echo site_url('/wallet/dailyjournal/'.$character);?>">Wallet Journal</a>
             <li><a href="<?php echo site_url('/assets/index/'.$character);?>">Assets</a>
             <ul>
                 <li><a href="<?php echo site_url('/materials/index/18/'.$character);?>">Materials</a>

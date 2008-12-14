@@ -23,6 +23,12 @@
           <td class="dataTableCell" align="center"><?php echo $attributes['perception']; ?></td>
         </tr>
         <tr>
+          <td class="dataTableCell">Race / Blood line</td>
+          <td class="dataTableCell"><?php echo $charinfo['race'].' / '.$charinfo['bloodLine'];?></td>
+          <td class="dataTableCell">Memory</td>
+          <td class="dataTableCell" align="center"><?php echo $attributes['memory']?></td>
+        </tr>
+        <tr>
           <td class="dataTableCell">Total Cash</td>
           <td class="dataTableCell"><?php echo number_format($charinfo['balance']);?> ISK</td>
           <td class="dataTableCell">Charisma</td>
@@ -35,11 +41,22 @@
           <td class="dataTableCell" align="center"><?php echo $attributes['willpower'];?></td>
         </tr>
         <tr>
-          <td class="dataTableCell">Race / Blood line</td>
-          <td class="dataTableCell"><?php echo $charinfo['race'].' / '.$charinfo['bloodLine'];?></td>
-          <td class="dataTableCell">Memory</td>
-          <td class="dataTableCell" align="center"><?php echo $attributes['memory']?></td>
+          <td colspan="4" class="dataTableCell">&nbsp;</td>
         </tr>
+        <tr>
+          <td class="dataTableCell">Clone</td>
+          <td colspan="3"lass="dataTableCell"><?php echo $charinfo['cloneName'].'('.number_format($charinfo['cloneSkillPoints']).')';?></td>
+        </tr>
+        <?php if (!empty($charinfo['corporationTitles'])): ?>
+        <tr>
+          <td class="dataTableCell">Roles</td>
+          <td colspan="3" class="dataTableCell">
+          <?php foreach ($charinfo['corporationTitles'] as $v): ?>
+          <?php echo $v['titleName'].', '; ?>  
+          <?php endforeach; ?>
+          </td>
+        </tr>
+        <?php endif; ?>
         <tr>
           <td colspan="4" class="dataTableCell"></td>
         </tr>
