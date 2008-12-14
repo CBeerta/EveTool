@@ -1,6 +1,7 @@
 body{
     color:#333;
 	background: #FFFFFF url(/files/images/bg.gif) repeat-x;
+    font-family: "Trebuchet MS", Verdana, Arial;
 }
 
 table {
@@ -64,8 +65,13 @@ a, a:hover, a:visited, a:active {
     text-decoration: none;
 }
 
+div#buttan {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
 a#buttan {
-    padding: 10px;
+    padding: 5px;
     border: 2px solid #aaaaaa;
     background-color: #fefefe;
     font-weight: bold;
