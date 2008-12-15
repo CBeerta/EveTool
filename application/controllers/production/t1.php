@@ -132,7 +132,7 @@ class T1 extends MY_Controller
         exit;
     }
 
-    public function detail($blueprintID, $character)
+    public function detail($blueprintID = Null)
     {
         $character = $this->character;
 

@@ -44,7 +44,6 @@ class Wallet extends MY_Controller
      *
      * Display a Journal with the latest Wallet Transactions
      *
-     * @param   string
      */
     public function journal()
     {
@@ -110,7 +109,6 @@ class Wallet extends MY_Controller
         $template['title'] = "Wallet Journal for {$character}";
         $template['content'] = $this->load->view('walletdailyjournal', $data, True);
         $this->load->view('maintemplate', $template);
-
     }
 }
 ?>

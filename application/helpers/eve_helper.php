@@ -87,11 +87,11 @@ function getMaterials($groupID, $assets)
             $where .= "groupID={$id} OR ";
         }
         $where = substr($where, 0, strlen($where)-4).')';
-        $q = $CI->db->query('SELECT typeID FROM eve.invTypes '.$where);
+        $q = $CI->db->query('SELECT typeID FROM invTypes '.$where);
     }
     else
     {
-        $q = $CI->db->query('SELECT typeID FROM eve.invTypes where groupID = ?', $groupID);
+        $q = $CI->db->query('SELECT typeID FROM invTypes where groupID = ?', $groupID);
     }
     $typeIDList = array();
     foreach ($q->result() as $row)
@@ -137,7 +137,7 @@ function regionIDToName($regionID)
     $CI =& get_instance();
     $CI->load->database();
 
-    $q = $CI->db->query('SELECT * FROM eve.mapRegions WHERE regionID = ?;', $regionID);
+    $q = $CI->db->query('SELECT * FROM mapRegions WHERE regionID = ?;', $regionID);
     $row = $q->row();
     if (count($row)>0)
     {
@@ -155,7 +155,7 @@ function locationIDToName($locationID)
     $CI =& get_instance();
     $CI->load->database();
 
-    $q = $CI->db->query('SELECT * FROM eve.eveNames WHERE itemID = ?;', $locationID);
+    $q = $CI->db->query('SELECT * FROM eveNames WHERE itemID = ?;', $locationID);
     $row = $q->row();
     if (count($row)>0)
     {
@@ -177,7 +177,7 @@ function getInvType($typeID)
     $CI =& get_instance();
     $CI->load->database();
 
-    $q = $CI->db->query('SELECT * FROM eve.invTypes WHERE typeID = ?;', $typeID);
+    $q = $CI->db->query('SELECT * FROM invTypes WHERE typeID = ?;', $typeID);
     $row = $q->row();
     if (count($row) > 0)
     {
@@ -200,9 +200,9 @@ function getIconUrl($typeID, $size = 64, $background = 'black')
 
     $q = $CI->db->query('
         SELECT icon,invGroups.categoryID,typeID FROM 
-            eve.invTypes,
-            eve.eveGraphics,
-            eve.invGroups
+            invTypes,
+            eveGraphics,
+            invGroups
         WHERE 
             invTypes.typeID = ? AND 
             invTypes.graphicID=eveGraphics.graphicID AND

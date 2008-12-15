@@ -131,12 +131,10 @@ class Overview extends MY_Controller
         $data['character'] = $this->character;
         $standings = Standings::getStandings($this->eveapi->getStandings());
     
-        
         print '<pre>';
         print_r($standings);
 
         exit;
-
     }
 
 }

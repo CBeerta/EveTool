@@ -12,7 +12,7 @@
             <li><a href="<?php echo site_url('/transactions/index/'.$character);?>">Transaction List</a>
             <li><a href="<?php echo site_url('/wallet/dailyjournal/'.$character);?>">Wallet Journal</a>
             <li><a href="<?php echo site_url('/assets/index/'.$character);?>">Assets</a>
-            <ul>
+            <ul class="submenu">
                 <li><a href="<?php echo site_url('/materials/index/18/'.$character);?>">Materials</a>
                 <li><a href="<?php echo site_url('/materials/blueprints/'.$character);?>">Blueprints</a>
                 <li><a href="<?php echo site_url('/materials/ships/'.$character);?>">Ships</a>
@@ -22,10 +22,10 @@
         </ul>
         <h2>T1 Production</h2>
         <ul>
-                <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#ships">Ships</a>
-                <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#modules">Modules</a>
-                <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#charges">Ammunition</a>
-                <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#drones">Drones</a>
+            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#ships">Ships</a>
+            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#modules">Modules</a>
+            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#charges">Ammunition</a>
+            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#drones">Drones</a>
         </ul>
         <br />
         <?php else: ?>&nbsp;<?php endif; ?>

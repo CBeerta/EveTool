@@ -1,6 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-
 @set_include_path(@get_include_path() . PATH_SEPARATOR . BASEPATH.'../eveapi/eveapi/');
 
 require_once(BASEPATH.'../eveapi/eveapi/class.api.php');
@@ -285,7 +284,7 @@ class AssetList
             $where .= "{$k}='{$v}' {$connect} ";
         }
         $where = substr($where, 0, -strlen($connect)-2);
-
+		
         $q = $CI->db->query('
             SELECT 
                 assets.itemID as assetItemID,
@@ -353,7 +352,7 @@ class AssetList
         $output = array();
         $xml = new SimpleXMLElement($contents);
 
-        
+       
         /**
          * FIXME: how do we expire outdated assets?
          */

@@ -26,7 +26,7 @@ class Materials extends MY_Controller
         $sID = !isset($_REQUEST['categoryID']) ? 'groupID' : 'categoryID';
 
         $groupIDList = array();
-        $q = $this->db->query('SELECT groupID,groupName FROM eve.invGroups;');
+        $q = $this->db->query('SELECT groupID,groupName FROM invGroups;');
         foreach ($q->result() as $row)
         {
             if ($row->groupID == $groupID)
@@ -84,7 +84,6 @@ class Materials extends MY_Controller
 
     private function _byCategory($charid, $categoryID = 9)
     {
-
         $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => $categoryID));
 
         $data = array();
@@ -131,6 +130,5 @@ class Materials extends MY_Controller
         $template['content'] = $this->load->view('bycategory', $data, True);
         $this->load->view('maintemplate', $template);
     }
-
 }
 ?>
