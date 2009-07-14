@@ -4,11 +4,13 @@ class Overview extends MY_Controller
 {
     public function index()
     {
+        /*
         $this->load->helper('cookie');
         if ($_SERVER['HTTP_HOST'] == 'anaea.fra.beerta.de')
         {
             $template['content'] = $this->load->view('todolist', null, True);
         }
+        */
 
         $data['chars'] = array();
         $data['total'] = 0;
@@ -28,6 +30,7 @@ class Overview extends MY_Controller
                 $training['trainingTypeName'] = $this->eveapi->skilltree[$training['trainingTypeID']]['typeName'];
             }
             $data['chars'][$k]['training'] = $training;
+            $data['chars'][$k]['charid'] = $v['charid'];
         }
 
         $template['content'] = $this->load->view('overview', $data, True);
