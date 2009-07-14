@@ -16,5 +16,13 @@
     </td>
     <td><?php echo locationIDToName($asset['locationID']); ?></td>
 </tr>
+<?php if ( getInvType($asset['typeID'])->categoryID == 6 && isset($asset['assetItemID']) ): //Ship?>
+<tr>
+    <td colspan="2">&nbsp;</td>
+    <td>
+        <?php echo shipFitting($asset['assetItemID'], $asset['typeID']); ?>
+    </td>
+</tr>
+<?php endif; ?>
 <?php endforeach; ?>
 </table>

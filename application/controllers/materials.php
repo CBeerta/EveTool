@@ -127,6 +127,7 @@ class Materials extends MY_Controller
         $data['character'] = $character;
         $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 6);
         $data['title']= 'Played Owned Ships';
+        
         $template['content'] = $this->load->view('bycategory', $data, True);
         $this->load->view('maintemplate', $template);
     }

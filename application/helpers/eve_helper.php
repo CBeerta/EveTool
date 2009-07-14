@@ -168,6 +168,94 @@ function locationIDToName($locationID)
 }
 
 
+function shipFitting($locationItemID, $typeID)
+{
+    $CI =& get_instance();
+    $CI->load->database();
+
+    $data = array();
+    
+    $q = $CI->db->query("
+            SELECT 
+                    TRIM(attribtypes.attributename) as type,
+                    attrib.valueint AS amount 
+            FROM dgmTypeAttributes AS attrib
+                    INNER JOIN invTypes AS type
+                        ON attrib.typeID = type.typeID
+                    INNER JOIN dgmAttributeTypes AS attribtypes
+                        ON attrib.attributeID = attribtypes.attributeID
+            WHERE attribtypes.attributename IN ('lowSlots', 'medSlots', 'hiSlots', 'rigSlots')
+                    AND type.typeID = ?;", $typeID);
+    $slots = array();
+    foreach ( $q->result() as $slot )
+    {
+        $slots[$slot->type] = $slot->amount;
+    }
+    $data['slots'] = $slots;
+
+    $q = $CI->db->query('
+        SELECT 
+            * 
+        FROM 
+            contents,
+            invTypes
+        WHERE
+            contents.typeID = invTypes.typeID AND
+            locationItemID = ?;', $locationItemID);
+    if ($q->num_rows() <= 0)
+    {
+        return False;
+    }
+    
+    $fitting = array();
+    for ( $i = 0 ; $i < 8 ; $i++ )
+    {
+        $fitting["high.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
+        $fitting["high.{$i}.Alt"] = 'Empty';
+        
+        $fitting["med.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
+        $fitting["med.{$i}.Alt"] = 'Empty';
+        
+        $fitting["low.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
+        $fitting["low.{$i}.Alt"] = 'Empty';
+        
+        $fitting["rig.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
+        $fitting["rig.{$i}.Alt"] = 'Empty';
+                
+        $fitting["ammo_high.{$i}.show"] = '';
+        $fitting["ammo_high.{$i}.type"] = '';
+        
+        $fitting["ammo_mid.{$i}.show"] = '';
+        $fitting["ammo_mid.{$i}.type"] = '';
+    }
+    
+    foreach ($q->result() as $row)
+    {
+        if ($row->flag >= 11 && $row->flag <= 18) //low
+        {
+            $fitting['low.'.($row->flag - 11).'.Icon'] = getIconUrl($row->typeID, 64);
+            $fitting['low.'.($row->flag - 11).'.Alt'] = $row->typeName;
+        }
+        else if ($row->flag >= 19 && $row->flag <= 26) //med
+        {
+            $fitting['med.'.($row->flag - 19).'.Icon'] = getIconUrl($row->typeID, 64);
+            $fitting['med.'.($row->flag - 19).'.Alt'] = $row->typeName;
+        }
+        else if ($row->flag >= 27 && $row->flag <= 34) //high
+        {
+            $fitting['high.'.($row->flag - 27).'.Icon'] = getIconUrl($row->typeID, 64);
+            $fitting['high.'.($row->flag - 27).'.Alt'] = $row->typeName;
+        }
+        else if ($row->flag >= 92 && $row->flag <= 99) //rig
+        {
+            $fitting['rig.'.($row->flag - 92).'.Icon'] = getIconUrl($row->typeID, 32);
+            $fitting['rig.'.($row->flag - 92).'.Alt'] = $row->typeName;
+        }
+    }
+    $data['fitting'] = $fitting;
+    return ($CI->load->view('ship_fitting', $data, True));
+}
+
 function getInvType($typeID)
 {
     if (empty($typeID))
@@ -177,7 +265,7 @@ function getInvType($typeID)
     $CI =& get_instance();
     $CI->load->database();
 
-    $q = $CI->db->query('SELECT * FROM invTypes WHERE typeID = ?;', $typeID);
+    $q = $CI->db->query('SELECT * FROM invTypes,invGroups WHERE typeID = ? AND invTypes.groupID=invGroups.groupID;', $typeID);
     $row = $q->row();
     if (count($row) > 0)
     {
