@@ -4,20 +4,28 @@ class MY_Controller extends Controller
 {
     var $chars = array();
     var $character = Null;
+    var $corp = Null;
     var $char;
     var $Auth;
+    var $has_corpapi_access = False;
 
     function __construct ()
     {
         parent::Controller();
-
+        
+        $this->load->library('pagination');
         $this->load->library('eveapi', array('cachedir' => '/var/tmp'));
+        
+        $this->load->helper('cookie');
         $this->load->helper('eve');
         $this->load->helper('message');
+        $this->load->helper('fitting');
+        $this->load->helper('inventory');
+        $this->load->helper('agent');
 
         $this->load->library('evecentral');
         $this->load->library('production');
-
+        $this->load->library('killmails');
 
         $accounts = array();
 
@@ -68,17 +76,47 @@ class MY_Controller extends Controller
                 }
             }
         }
-        $data['tool'] = $this->uri->segment(1, 'OverView');
         
+        $data['tool'] = $this->uri->segment(1, 'Overview');
         $data['chars'] = empty($this->chars) ? array() : $this->chars;
+
+        $data['base_url'] = site_url("/overview/skilltree");
         $character = urldecode($this->uri->segment($this->uri->total_segments()));
         if (in_array($character, array_keys($this->chars)))
         {
+            $this->session->set_flashdata('character', $character);
             $this->character = $character;
+            
+            // Pop the Charactername off the url, so we can build a new url for a different character
+            $full_uri = explode('/', $this->uri->uri_string());
+            array_pop($full_uri);
+            $data['base_url'] = !$this->uri->segment(1) ? site_url("/overview/skilltree") : site_url(implode('/', $full_uri));
+        }
+        else if ($character = $this->session->flashdata('character'))
+        {
+            $this->character = $character;
+            $this->session->set_flashdata('character', $character);
+            $data['base_url'] = !$this->uri->segment(1) ? site_url("/overview/skilltree") : current_url();
+        }
+
+        if (!is_null($this->character))
+        {
+            $data['character'] = $this->character;
+            $this->corp = $this->chars[$this->character]['corpname'];
             $this->eveapi->setCredentials(
-                $this->chars[$character]['apiuser'], 
-                $this->chars[$character]['apikey'], 
-                $this->chars[$character]['charid']);
+                $this->chars[$this->character]['apiuser'], 
+                $this->chars[$this->character]['apikey'], 
+                $this->chars[$this->character]['charid']);
+            $this->has_corpapi_access = EveApi::has_corpapi_access();
+        }
+        else if ($data['tool'] != 'Overview')
+        {
+            /**
+             * This is a Stupid Fix, more of a workaround. For some reason the Sessions sometimes resets on one of the contant pages,
+             * Which obviously doesnt work very well, so redirect home in that case.
+             * FIXME!
+            */
+            redirect("/");
         }
 
         $user_timezone = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');

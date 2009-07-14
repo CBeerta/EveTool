@@ -1,10 +1,12 @@
 Quick Installation Guide:
 
-- Dump the SQL into your MySQL into a database.
+- Download the SQL Dumps: http://files.beerta.net/evetool-latest.tar.gz
+- Dump the SQL Dumps into your MySQL into a database.
 - Drop the Contents into your webserver
 - Goto the Lib Directory and pull the required external libraries as described in the README
 - Modify 'application/config/database.php' and 'application/config/evetool.php' to suit your needs
 - Make sure the Cache directory is writeable by the server
+- Download the Images Dump from CCP and unzip into 'files/itemdb' (cd files ; wget http://ccp.vo.llnwd.net/o2/data/QuantumRise_1.0.0_imgs_dx9.zip ; unzip QuantumRise_1.0.0_imgs_dx9.zip ; mv dx9 itemdb ; rm *.zip)
 - Point your 404 Document to the /index.php
 
 That should do it

@@ -9,26 +9,28 @@
         <?php if(!empty($character)): ?>
         <h2>Information</h2>
         <ul>
-            <li><a href="<?php echo site_url('/transactions/index/'.$character);?>">Transaction List</a>
-            <li><a href="<?php echo site_url('/wallet/dailyjournal/'.$character);?>">Wallet Journal</a>
-            <li><a href="<?php echo site_url('/assets/index/'.$character);?>">Assets</a>
+            <li><a href="<?php echo site_url("/overview/skilltree/");?>">Skilltree</a>
+            <li><a href="<?php echo site_url("/transactions/index/");?>">Transaction List</a>
+            <li><a href="<?php echo site_url("/wallet/dailyjournal/");?>">Wallet Journal</a>
+            <li><a href="<?php echo site_url("/assets/index");?>">Assets</a>
             <ul class="submenu">
-                <li><a href="<?php echo site_url('/materials/index/18/'.$character);?>">Materials</a>
-                <li><a href="<?php echo site_url('/assets/blueprints/'.$character);?>">Blueprints</a>
-                <li><a href="<?php echo site_url('/assets/ships/'.$character);?>">Ships</a>
+                <li><a href="<?php echo site_url("/materials/index/18");?>">Materials</a>
+                <li><a href="<?php echo site_url("/assets/blueprints/");?>">Blueprints</a>
+                <li><a href="<?php echo site_url("/assets/ships/");?>">Ships</a>
             </ul>
-            <li><a href="<?php echo site_url('/industry/jobs/'.$character);?>">Industry Jobs</a>
-            <li><a href="<?php echo site_url('/market/orders/'.$character);?>">Market Orders</a>
+            <li><a href="<?php echo site_url("/industry/jobs/");?>">Industry Jobs</a>
+            <li><a href="<?php echo site_url("/market/orders/");?>">Market Orders</a>
+            <li><a href="<?php echo site_url("/charstandings/agents/");?>">Agents</a>
+            <li><a href="<?php echo site_url("/killboard/char/{$character}");?>">Killboard</a>
         </ul>
         <h2>T1 Production</h2>
         <ul>
-            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#ships">Ships</a>
-            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#modules">Modules</a>
-            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#charges">Ammunition</a>
-            <li><a href="<?php echo site_url('/production/t1/index/'.$character);?>#drones">Drones</a>
+            <li><a href="<?php echo site_url("/production/t1/index/");?>#ships">Ships</a>
+            <li><a href="<?php echo site_url("/production/t1/index/");?>#modules">Modules</a>
+            <li><a href="<?php echo site_url("/production/t1/index/");?>#charges">Ammunition</a>
+            <li><a href="<?php echo site_url("/production/t1/index/");?>#drones">Drones</a>
         </ul>
-        <br />
-        <?php else: ?>&nbsp;<?php endif; ?>
+        <?php endif; ?>
         <br />
         <h2>Configuration</h2>
         <ul>

@@ -1,13 +1,12 @@
-
-
-
-
 <table width="100%">
 <caption><?php echo $caption; ?></caption>
 
 <tr>
     <th colspan="9">
-        <?php echo form_open('materials/index/'.$character); ?>
+        <?php echo form_open("materials/index"); ?>
+        <?php if ( $groupID == 18 ): ?>
+        Custom Mineral Prices: <?php echo form_checkbox('custom_prices', 'accept', $custom_prices); ?>&nbsp;|&nbsp;
+        <?php endif; ?>
         <?php echo form_dropdown('groupID', $groupIDList, $groupID); ?>
         <?php echo form_submit('submit', 'Select'); ?>
         <?php echo form_close(); ?>
@@ -23,7 +22,7 @@
 </tr>
 <?php foreach ($data as $k => $v): ?>
 <tr>
-	<td style="text-align: left;" colspan="2"><img src="<?php echo getIconUrl($k,32);?>"></td>
+	<td style="text-align: left;" colspan="2"><img src="<?php echo getIconUrl($v,32);?>"></td>
     <td style="text-align: left;"><?php echo $v['typeName'];?></td>
     <td><?php echo number_format($v['quantity']); ?></td>
     <td><?php echo number_format($v['volume']*$v['quantity']); ?> m&sup3;</td>

@@ -12,4 +12,30 @@ function msg_forward($heading, $message, $destination, $delay = 5, $template = '
 }
 
 
+function debug_popup( $message )
+{
+    $CI =& get_instance();
+    
+    if ( !is_string($message) )
+    {
+        $message = print_r($message, True);
+    }
+
+    $txt  = '<div style="font-size: small;">';
+    $txt .= '<pre>'.strtr($message, array('\\'=>'\\\\',"'"=>"\\'",'"'=>'\\"',"\r"=>'\\r',"\n"=>'\\n','</'=>'<\/')).'</pre>';
+    $txt .= '</div>';
+    
+    $js = '
+        <script type="text/javascript">
+    //    <![CDATA[
+            _console = window.open("","Debug Console","width=680,height=600,resizable,scrollbars=yes");
+            _console.document.write(\''.$txt.'\');
+            _console.document.close();
+    //      ]]>
+        </script>
+    ';
+    
+    echo $js;
+}
+
 ?>

@@ -37,22 +37,9 @@ class Production
     public function getBlueprint($character, $blueprintID, $me = 0, $have = False, $pe = False)
     {
         $CI =& get_instance();
-        $CI->eveapi->setCredentials(
-            $CI->chars[$character]['apiuser'], 
-            $CI->chars[$character]['apikey'], 
-            $CI->chars[$character]['charid']);
-
         if (!$pe)
         {
-            $charsheet = CharacterSheet::getCharacterSheet($CI->eveapi->getcharactersheet());
-            $pe = 0;
-            foreach($charsheet['skills'] as $skill)
-            {
-                if($skill['typeID'] == 3380)
-                {
-                    $pe = $skill['level'];
-                }
-            }
+            $pe = $CI->eveapi->get_skill_level(3388);
         }
 
         if (!$have)
@@ -70,6 +57,7 @@ class Production
                 bluePrint.wasteFactor,
                 bluePrint.materialModifier,
                 materials.quantity AS basequantity,
+                graphics.icon,
                 IF(typeReq.groupID = 332, materials.quantity, CEIL(materials.quantity * (1 + bluePrint.wasteFactor / 100) ) ) AS quantity, 
                 materials.damagePerJob,
                 (SELECT blueprintTypeID FROM invBlueprintTypes WHERE productTypeID=typeReq.typeID LIMIT 1) AS isPart
@@ -121,6 +109,7 @@ class Production
 
                         if (empty($totalMineralUsage[$part['typeID']]))
                         {
+                            $totalMineralUsage[$part['typeID']] = $part;
                             $totalMineralUsage[$part['typeID']]['amount'] = round($part['requiresPerfect'] * $need);
                             $totalMineralUsage[$part['typeID']]['volume'] = round($part['requiresPerfect'] * $need * $part['volume']);
                         }

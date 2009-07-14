@@ -20,10 +20,12 @@ class Materials extends MY_Controller
 
         $regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
         
-        
+        //FIXME: Make it possible again to check for categoryID's
         $sID = 'groupID'; // What ID to search for
-        //$sID = !isset($_REQUEST['categoryID']) ? 'groupID' : 'categoryID';
+        
         $groupID = $this->input->post('groupID') ? $this->input->post('groupID') : $groupID;
+        $custom_prices = $this->input->post('custom_prices') ? True : False;
+        $data['custom_prices'] = $custom_prices;
         
         $data['groupID'] = $groupID;
 
@@ -54,7 +56,7 @@ class Materials extends MY_Controller
                 if ($asset[$sID] == $$sID) 
                 {
                     if (!isset($data['data'][$asset['typeID']]))
-                        $data['data'][$asset['typeID']] = array('volume' => $asset['volume'], 'quantity' => 0, 'typeName' => $asset['typeName']);
+                        $data['data'][$asset['typeID']] = array_merge($asset ,array('quantity' => 0));
                     $data['data'][$asset['typeID']]['quantity'] += $asset['quantity'];
                 }
                 if (isset($asset['contents']))
@@ -64,14 +66,14 @@ class Materials extends MY_Controller
                         if ($content[$sID] == $$sID) 
                         {
                             if (!isset($data['data'][$content['typeID']]))
-                                $data['data'][$content['typeID']] = array('volume' => $content['volume'], 'quantity' => 0, 'typeName' => $content['typeName']);
+                                $data['data'][$content['typeID']] = array_merge($content ,array('quantity' => 0));
                             $data['data'][$content['typeID']]['quantity'] += $content['quantity'];
                         }
                     }
                 }
             }
         }
-        $data['prices'] = $this->evecentral->getPrices(array_keys($data['data']), $regionID);
+        $data['prices'] = $this->evecentral->getPrices(array_keys($data['data']), $regionID, $custom_prices);
         foreach ($data['data'] as $k => $v)
         {
             $data['sums']['volume'] += $v['volume']*$v['quantity'];

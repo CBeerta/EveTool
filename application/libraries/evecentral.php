@@ -12,8 +12,6 @@ class EveCentral
         $uri  = 'http://eve-central.com/api/marketstat?';
         $uri .= 'regionlimit='.$region;
         
-        $typeIdList = array_merge($typeIdList, $this->mineralTypes); // Always fetch mineral prices
-
         foreach (array_unique($typeIdList) as $typeId)
         {
             $uri .= '&typeid='.$typeId;
@@ -63,11 +61,14 @@ class EveCentral
     public function getPrices($typeIDList, $region = 10000002, $user_prices = False )
     {
         $prices = array();
+
+        $typeIdList = array_merge($typeIDList, $this->mineralTypes); // Always fetch mineral prices
         foreach ($typeIDList as $typeID)
         {
             foreach (array('median','avg','max') as $kind)
             {
-                /* Empty everything, incase our pull goes wrong
+                /* 
+                 * Empty everything, incase our pull goes wrong
                  * As we dont want our parent to die horribly
                  */
                 $prices[$typeID]['buy'][$kind] = 0;
@@ -76,33 +77,43 @@ class EveCentral
             }
         }
         
-        $xml = $this->retrieveXml($typeIDList, $region);
-        if ($xml)
+        for ( $i = 1 ; $i <= count($typeIDList) ; $i+=20 )
         {
-            foreach ($xml->marketstat[0]->type as $type)
+            $splitted = array_splice($typeIDList, $i-1, 20, True);
+            $xml = $this->retrieveXml($splitted, $region);
+            if ($xml !== False)
             {
-                foreach (array('buy','sell','all') as $kind)
+                foreach ($xml->marketstat[0]->type as $type)
                 {
-                    foreach ($type->$kind->children() as $key => $value)
+                    foreach (array('buy','sell','all') as $kind)
                     {
-                        $prices[(int) $type->attributes()->id][$kind][(string) $key] = (string) $value;
+                        foreach ($type->$kind->children() as $key => $value)
+                        {
+                            $prices[(int) $type->attributes()->id][$kind][(string) $key] = (string) $value;
+                        }
                     }
                 }
             }
-        }
         
+        }
+
+
         if ( $user_prices !== False )
         {
             // Apply user mineral Prices over the fetched ones
             $CI =& get_instance();
-            $mineral_prices = unserialize(getUserConfig($CI->Auth['user_id'], 'mineral_prices'));
-            foreach ( $mineral_prices as $k => $v)
+            $mineral_prices = getUserConfig($CI->Auth['user_id'], 'mineral_prices');
+            if ( $mineral_prices !== False )
             {
-                foreach ( array('median', 'avg', 'max') as $kind )
+                $mineral_prices = unserialize($mineral_prices);
+                foreach ( $mineral_prices as $k => $v)
                 {
-                    $prices[$k]['buy'][$kind] = $v;
-                    $prices[$k]['sell'][$kind] = $v;
-                    $prices[$k]['all'][$kind] = $v;
+                    foreach ( array('median', 'avg', 'max') as $kind )
+                    {
+                        $prices[$k]['buy'][$kind] = $v;
+                        $prices[$k]['sell'][$kind] = $v;
+                        $prices[$k]['all'][$kind] = $v;
+                    }
                 }
             }
         }

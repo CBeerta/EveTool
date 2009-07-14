@@ -11,6 +11,7 @@
     <!-- <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.5.2/build/yahoo-dom-event/yahoo-dom-event.js&2.5.2/build/container/container-min.js"></script> -->
     <script type="text/javascript" src="<?php echo site_url('/files/jquery.js');?>"></script>
     <script type="text/javascript" src="<?php echo site_url('/files/eve.js');?>"></script>
+    <script type="text/javascript" src="<?php echo site_url('/files/sorttable.js');?>"></script>
 </head>
 <body>
 <div id="doc3" class="yui-t4">
@@ -20,7 +21,7 @@
             <div class="yui-u">
                 <p>
                     <?php foreach (array_keys($chars) as $char): ?>
-					<a href="<?php echo site_url('/overview/skilltree'); ?>/<?php echo $char;?>">   
+					<a href="<?php echo "{$base_url}/{$char}"; ?>">
                         <img id="hd" <?php if ($character == $char) { echo 'style="border-bottom: 2px solid red;"'; } ?> title="<?php echo $char; ?>" src="/files/cache/char/<?php echo $chars[$char]['charid'];?>/64/char.jpg">
                     </a>
                     <?php endforeach; ?>

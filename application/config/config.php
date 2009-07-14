@@ -11,10 +11,18 @@
 |	http://www.your-site.com/
 |
 */
-$protocol = isset($_SERVER["HTTPS"]) ? 'https' : 'http';
-$root = $protocol."://".$_SERVER['HTTP_HOST'];
-$root .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
-$config['base_url']    = "$root"; 
+
+if (isset($_SERVER['HTTP_HOST']))
+{
+    $protocol = isset($_SERVER["HTTPS"]) ? 'https' : 'http';
+    $root = $protocol."://".$_SERVER['HTTP_HOST'];
+    $root .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+    $config['base_url']    = "$root"; 
+}
+else
+{
+    $config['base_url'] = '';
+}
 
 
 /*

@@ -30,17 +30,16 @@ class Assets extends MY_Controller
             
     }
 
-    private function _byCategory($charid, $categoryID = 9)
+    private function _byCategory($charid, $categoryID = 9, $filter = array(31, 237) )
     {
         $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => $categoryID));
 
-        $data = array();
         $data = array();
         foreach ($assets as $loc)
         {  
             foreach ($loc as $asset)
             {
-                if ($asset['categoryID'] == $categoryID)
+                if ( $asset['categoryID'] == $categoryID && !in_array($asset['groupID'], $filter) )
                 {
                     $data[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
                 }
@@ -48,7 +47,7 @@ class Assets extends MY_Controller
                 {
                     foreach ($asset['contents'] as $content)
                     {
-                        if ($content['categoryID'] == $categoryID)
+                        if ( $content['categoryID'] == $categoryID && !in_array($content['groupID'], $filter) )
                         {
                             $data[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
                         }

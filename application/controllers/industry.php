@@ -1,6 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-
 class Industry extends MY_Controller
 {
     /**
@@ -10,31 +9,42 @@ class Industry extends MY_Controller
      *
      * @param   string
      */
-    
-    var $maxAge = 604800; // 1 week FIXME: make this user-tunable
-    
-    public function jobs()
+    public function jobs($maxDays = 7)
     {
         $character = $this->character;
         $data['character'] = $character;
 
-        $jobs = IndustryJobs::getIndustryJobs($this->eveapi->getIndustryJobs());
+        $char_jobs = MY_IndustryJobs::getIndustryJobs($this->eveapi->getIndustryJobs());
+        if ($this->has_corpapi_access && getUserConfig($this->Auth['user_id'], 'pull_corp'))
+        {
+            $corp_jobs = MY_IndustryJobs::getIndustryJobs($this->eveapi->getIndustryJobs(True));
+            $data['corpmates'] = $this->eveapi->corp_members;
+        }
         $index = 0;
         $data['data'] = array();
+        
+        $maxDays = is_numeric($maxDays) ? $maxDays : 7;
 
+        $jobs = empty($char_jobs) ? array() : $char_jobs;
+        if (!empty($corp_jobs))
+        {
+            $jobs = array_merge($char_jobs, $corp_jobs);
+        }
         foreach ($jobs as $job)
         {
-            if (strtotime($job['endProductionTime'].' +0000') < gmmktime() - $this->maxAge)
+            $endtime = strtotime($job['endProductionTime'].' +0000');
+            if ($endtime < gmmktime() - ($maxDays*24*60*60) )
             {
                 continue;
             }
-            $data['data'][$index] = array(
-                    'typeID' => $job['outputTypeID'],
-                    'typeName' => getInvType($job['outputTypeID'])->typeName,
-                    'status' => IndustryJobs::statusIDToString($job['completedStatus']),
-                    'activity' => IndustryJobs::activityIDToString($job['activityID']),
+            $data['data'][$index] = (array) getInvType($job['outputTypeID']);
+            $data['data'][$index] += array(
+                    'status' => MY_IndustryJobs::statusIDToString($job['completedStatus']),
+                    'activity' => MY_IndustryJobs::activityIDToString($job['activityID']),
                     'amount' => $job['runs'],
+                    'outputLocationID' => $job['outputLocationID'],
                     'ends' => timeToComplete($job['endProductionTime']),
+                    'installerID' => $job['installerID'],
                     'location' => locationIDToName($job['outputLocationID']));
 
             if ($job['activityID'] == 1 && $job['completedStatus'] == 0)
@@ -44,6 +54,9 @@ class Industry extends MY_Controller
             }
             $index++;
         }
+        ksort($data['data']);
+        $data['maxDays'] = $maxDays;
+
         $template['content'] = $this->load->view('jobs', $data, True);
         $this->load->view('maintemplate', $template);
     }

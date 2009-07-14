@@ -1,19 +1,17 @@
-<?php
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * 
  * These Functions are here to completely Trash the MySQL database.
  *
  * FIXME: Some Caching would be nice.
- */
+**/
 
-class emptyInvType
-{
-    var $typeName = 'Unknown Item';
-    var $description = 'Unknown Item - There is no Description in the Database for this Item Yet';
-    var $volume = 0.0;
-    var $mass = 0;
-}
-
+/**
+ * Convert a Timestamp from the Eve Api to something human readable
+ * 
+ * @access public
+ * @param  string
+ * @param  string
+**/
 
 function apiTimePrettyPrint($time, $format = 'r')
 {
@@ -45,23 +43,23 @@ function timeToComplete($endTime)
 	$diff = ($end - gmmktime());
 	if ($diff <= 0)
 	{
-		return('Done');
+		return("Done: ".date('D, j M Y G:i', $end));
 	}
 	
     $info = array();
 	if ($diff>86400)
 	{
-	    $info['Day(s)'] = ($diff - ($diff % 86400)) / 86400;
+	    $info['d'] = ($diff - ($diff % 86400)) / 86400;
 	    $diff = $diff % 86400;
 	}
 	if ($diff > 3600)
 	{
-	    $info['Hour(s)'] = ($diff - ($diff % 3600)) / 3600;
+	    $info['h'] = ($diff - ($diff % 3600)) / 3600;
 	    $diff = $diff % 3600;
 	}
 	if ($diff > 60)
 	{
-	    $info['Minute(s)'] = ($diff - ($diff % 60)) / 60;
+	    $info['m'] = ($diff - ($diff % 60)) / 60;
 	    $diff = $diff % 60;
 	}
 	$str = '';
@@ -69,64 +67,13 @@ function timeToComplete($endTime)
 	{
 	    if ($v > 0)
 	    {
-	        $str .= "$v $k, ";
+	        $str .= "$v$k ";
 	    }
 	}
-	return (substr($str, 0, -2));
+	return (trim($str));
+	//return (substr($str, 0, -1));
 }
-function getMaterials($groupID, $assets)
-{
-    $CI =& get_instance();
-    $CI->load->database();
-   
-    if (is_array($groupID))
-    {
-        $where = 'WHERE (';
-        foreach ($groupID as $id)
-        {
-            $where .= "groupID={$id} OR ";
-        }
-        $where = substr($where, 0, strlen($where)-4).')';
-        $q = $CI->db->query('SELECT typeID FROM invTypes '.$where);
-    }
-    else
-    {
-        $q = $CI->db->query('SELECT typeID FROM invTypes where groupID = ?', $groupID);
-    }
-    $typeIDList = array();
-    foreach ($q->result() as $row)
-    {
-        $typeIDList[] = $row->typeID;
-    }
-    
-    $totalMaterials = array();
-    foreach ($typeIDList as $typeID) 
-    {
-        $totalMaterials[$typeID] = 0;
-    }
 
-    foreach ($assets as $locitems)
-    {   
-        foreach ($locitems as $asset)
-        {
-            if (in_array($asset['typeID'], $typeIDList))
-            {
-                $totalMaterials[$asset['typeID']] += $asset['quantity'];
-            }
-            if (isset($asset['contents']))
-            {
-                foreach ($asset['contents'] as $content)
-                {
-                    if (in_array($content['typeID'], $typeIDList))
-                    {
-                        $totalMaterials[$content['typeID']] += $content['quantity'];
-                    }
-                }
-            }
-        }
-    }
-    return(array($totalMaterials, $typeIDList));
-}
 
 function regionIDToName($regionID)
 {
@@ -161,194 +108,168 @@ function locationIDToName($locationID)
     {
         return ($row->itemName);
     }
-    else
+    else if (isset($CI->eveapi->stationlist[$locationID]))
     {
         return ($CI->eveapi->stationlist[$locationID]);
+    }
+    else
+    {
+        return ('Unknown');
+        //return ('<a href="'.site_url("pos/detail/{$locationID}").'">POS</a>');
     }
 }
 
 
-function shipFitting($locationItemID, $typeID)
+function get_character_portrait($name, $size = 64)
+{
+    if (is_numeric($name))
+    {
+        $id = $name;
+    }
+    else
+    {
+        $id = get_character_id($name);
+    }
+    
+    $CI =& get_instance();
+    
+    $url  = '<img src="';
+    if ($size < 64) 
+    {
+        $url .= site_url("files/cache/char/{$id}/64/char.jpg");
+    }
+    else
+    {
+        $url .= site_url("files/cache/char/{$id}/{$size}/char.jpg");
+    }
+    $url .= "\" width=\"{$size}\" height=\"{$size}\"";
+    if (!empty($CI->eveapi->corp_members[$id]))
+    {
+        $i = $CI->eveapi->corp_members[$id];
+        $url .= " name=\"{$i->name}\"";
+        //$url .= " title=\"Name: {$i->name}\n\nTitle: {$i->title}\"";
+        $url .= " title=\"{$i->name}\"";
+    }
+    $url .= ">";
+    return ($url);
+}
+
+function get_character_id($name)
 {
     $CI =& get_instance();
     $CI->load->database();
-
-    $data = array();
     
-    $q = $CI->db->query("
-            SELECT 
-                    TRIM(attribtypes.attributename) as type,
-                    attrib.valueint AS amount 
-            FROM dgmTypeAttributes AS attrib
-                    INNER JOIN invTypes AS type
-                        ON attrib.typeID = type.typeID
-                    INNER JOIN dgmAttributeTypes AS attribtypes
-                        ON attrib.attributeID = attribtypes.attributeID
-            WHERE attribtypes.attributename IN ('lowSlots', 'medSlots', 'hiSlots', 'rigSlots')
-                    AND type.typeID = ?;", $typeID);
-    $slots = array();
-    foreach ( $q->result() as $slot )
-    {
-        $slots[$slot->type] = $slot->amount;
-    }
-    $data['slots'] = $slots;
-
-    $q = $CI->db->query('
-        SELECT 
-            * 
-        FROM 
-            contents,
-            invTypes
-        WHERE
-            contents.typeID = invTypes.typeID AND
-            locationItemID = ?;', $locationItemID);
+    $q = $CI->db->query('SELECT characterID FROM kb_characters WHERE name=?', $name);
+    
     if ($q->num_rows() <= 0)
     {
         return False;
     }
-    
-    $fitting = array();
-    for ( $i = 0 ; $i < 8 ; $i++ )
+    $r = $q->row();
+    if ($r->characterID > 0)
     {
-        $fitting["high.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
-        $fitting["high.{$i}.Alt"] = 'Empty';
-        
-        $fitting["med.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
-        $fitting["med.{$i}.Alt"] = 'Empty';
-        
-        $fitting["low.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
-        $fitting["low.{$i}.Alt"] = 'Empty';
-        
-        $fitting["rig.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
-        $fitting["rig.{$i}.Alt"] = 'Empty';
-                
-        $fitting["ammo_high.{$i}.show"] = '';
-        $fitting["ammo_high.{$i}.type"] = '';
-        
-        $fitting["ammo_mid.{$i}.show"] = '';
-        $fitting["ammo_mid.{$i}.type"] = '';
+        return ($r->characterID);
     }
+    $CI->load->library('eveapi', array('cachedir' => '/var/tmp'));
+    $data = CharacterID::getCharacterID($CI->eveapi->getCharacterID($name));
     
-    foreach ($q->result() as $row)
-    {
-        if ($row->flag >= 11 && $row->flag <= 18) //low
-        {
-            $fitting['low.'.($row->flag - 11).'.Icon'] = getIconUrl($row->typeID, 64);
-            $fitting['low.'.($row->flag - 11).'.Alt'] = $row->typeName;
-        }
-        else if ($row->flag >= 19 && $row->flag <= 26) //med
-        {
-            $fitting['med.'.($row->flag - 19).'.Icon'] = getIconUrl($row->typeID, 64);
-            $fitting['med.'.($row->flag - 19).'.Alt'] = $row->typeName;
-        }
-        else if ($row->flag >= 27 && $row->flag <= 34) //high
-        {
-            $fitting['high.'.($row->flag - 27).'.Icon'] = getIconUrl($row->typeID, 64);
-            $fitting['high.'.($row->flag - 27).'.Alt'] = $row->typeName;
-        }
-        else if ($row->flag >= 92 && $row->flag <= 99) //rig
-        {
-            $fitting['rig.'.($row->flag - 92).'.Icon'] = getIconUrl($row->typeID, 32);
-            $fitting['rig.'.($row->flag - 92).'.Alt'] = $row->typeName;
-        }
-    }
-    $data['fitting'] = $fitting;
-    return ($CI->load->view('ship_fitting', $data, True));
+    $CI ->db->query('UPDATE kb_characters SET characterID = ? WHERE name = ?;', array($data[0]['characterID'], $name));
+    //$CI ->db->query("INSERT INTO kb_characters (name, characterID)  VALUES (?, ?) ON DUPLICATE KEY UPDATE characterID = ?;", array($name, $data[0]['characterID'], $data[0]['characterID']));
+    return ($data[0]['characterID']);
 }
 
-function getInvType($typeID)
+
+/**
+* Return eveName for any available id
+*
+* @access public
+* @param int
+**/
+/*
+// doesnt seem to be used
+function get_eve_name($id)    
 {
-    if (empty($typeID))
+    $CI =& get_instance();
+    $q = $CI->db->query('SELECT itemName FROM eveNames WHERE itemID = ?', $id);
+    
+    if ($q->num_rows() > 0)
+    {
+        return($q->row()->itemName);
+    }
+    return ('Unknown');
+}
+*/
+
+function getIconUrl($type, $size = 64, $background = 'black')
+{
+    if (empty($type))
     {
         return False;
     }
-    $CI =& get_instance();
-    $CI->load->database();
-
-    $q = $CI->db->query('SELECT * FROM invTypes,invGroups WHERE typeID = ? AND invTypes.groupID=invGroups.groupID;', $typeID);
-    $row = $q->row();
-    if (count($row) > 0)
+    else if (is_array($type))
     {
-        return ($row);
+        $row = (object) $type;    
     }
+    else if (is_object($type))
+    {
+        $row = $type;
+    }
+    /*
+    // Don't trash the database with this anymore
     else
     {
-        return (new emptyInvType);
+        $row = getInvType($type);
     }
-}
-
-function getIconUrl($typeID, $size = 64, $background = 'black')
-{
-    if (empty($typeID))
-    {
-        return False;
-    }
-    $CI =& get_instance();
-    $CI->load->database();
-
-    $q = $CI->db->query('
-        SELECT icon,invGroups.categoryID,typeID FROM 
-            invTypes,
-            eveGraphics,
-            invGroups
-        WHERE 
-            invTypes.typeID = ? AND 
-            invTypes.graphicID=eveGraphics.graphicID AND
-            invTypes.groupID = invGroups.groupID', $typeID);
-    $row = $q->row();
+    */
     
     if (!empty($row->categoryID) && $row->categoryID == 6)
     {
         // Ship
-        return ("/files/cache/itemdb/shiptypes/".($size)."_".($size)."/{$row->typeID}.png");
+        return ("/files/itemdb/types/shiptypes_png/{$size}_{$size}/{$row->typeID}.png");
     }
+    else if (!empty($row->categoryID) && $row->categoryID == 18)
+    {
+        //drone
+        return ("/files/itemdb/types/dronetypes_png/{$size}_{$size}/{$row->typeID}.png");
+    }
+    else if (!empty($row->categoryID) && $row->categoryID == 23)
+    {
+        //structure
+        return ("/files/itemdb/types/structuretypes_png/{$size}_{$size}/{$row->typeID}.png");
+    }
+
     else if (!empty($row->categoryID) && $row->categoryID == 9)
     {
         //blueprint
-        return ("/files/cache/itemdb/blueprinttypes/64_64/{$row->typeID}.png");
+        return ("/files/itemdb/blueprints/blueprints/64_64/{$row->typeID}.png");
     }
     else if (isset($row->icon) && !empty($row->icon))
     {
-        return ("/files/cache/itemdb/{$background}/{$size}_{$size}/icon{$row->icon}.png");
+        return ("/files/itemdb/icons/icons_items_png/{$size}_{$size}/icon{$row->icon}.png");
     }
     else
     {
-        return ("/files/cache/itemdb/{$background}/{$size}_{$size}/icon07_15.png");
+        return ("/files/itemdb/icons/icons_items_png/{$size}_{$size}/icon07_15.png");
     }
 }
 
 
 function slotIcon($flag)
 {
-    if ($flag >= 11 && $flag <= 18)
+    switch (True)
     {
-        // low
-        return(array('/files/cache/itemdb/black/32_32/icon08_09.png', 'Low Slot'));
-    }
-    else if ($flag >= 19 && $flag <= 26)
-    {
-        // med
-        return(array('/files/cache/itemdb/black/32_32/icon08_10.png', 'Medium Slot'));
-    }
-    else if ($flag >= 27 && $flag <= 34)
-    {
-        // hight
-        return(array('/files/cache/itemdb/black/32_32/icon08_11.png', 'High Slot'));
-    }
-    else if ($flag == 87)
-    {
-        // dronebay
-        return(array('/files/cache/itemdb/black/32_32/icon02_10.png', 'Dronebay'));
-    }
-    else if ($flag >= 92 && $flag <= 99)
-    {
-        // rig
-        return(array('/files/cache/itemdb/black/32_32/icon22_24.png', 'Rig'));
-    }
-    else
-    {
-        // probably cargo
-        return(array('/files/cache/itemdb/black/32_32/icon03_13.png', 'Cargo'));
+        case in_array($flag, range(11,18)): //low
+            return(array('/files/itemdb/icons/icons_items_png/64_64/icon08_09.png', 'Low Slot'));
+        case in_array($flag, range(19,26)): // med
+            return(array('/files/itemdb/icons/icons_items_png/64_64/icon08_10.png', 'Medium Slot'));
+        case in_array($flag, range(27,34)): // high
+            return(array('/files/itemdb/icons/icons_items_png/64_64/icon08_11.png', 'High Slot'));
+        case in_array($flag, range(92,99)): // rig
+            return(array('/files/itemdb/icons/icons_items_png/32_32/icon22_24.png', 'Rig'));
+        case ($flag == 87): // dronebay
+            return(array('/files/itemdb/icons/icons_items_png/64_64/icon02_10.png', 'Dronebay'));
+        default: //probably Cargo
+            return(array('/files/itemdb/icons/icons_items_png/64_64/icon03_13.png', 'Cargo'));
     }
 }
 
@@ -365,6 +286,7 @@ function getUserConfig($acctID, $keyName)
         return False;
     }
 }
+
 function setUserConfig($acctID, $keyName, $value)
 {
     $CI =& get_instance();

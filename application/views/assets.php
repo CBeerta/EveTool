@@ -22,7 +22,7 @@ function toggle_it(itemID){
 </td>
 <?php foreach($location as $asset): ?>
 <tr>
-    <td><img width="32" height="32" src="<?php echo getIconUrl($asset['typeID'],32);?>"></td>
+    <td><img width="32" height="32" src="<?php echo getIconUrl($asset,32);?>"></td>
     <td colspan="2" style="text-align: left;"><?php echo $asset['typeName']; ?></td>
     <td><?php echo number_format($asset['quantity']); ?></td>
     <td><?php echo number_format($asset['volume']*$asset['quantity']);?> m&sup3;</td>
@@ -31,7 +31,7 @@ function toggle_it(itemID){
 <?php list($sloticon, $slottitle) = slotIcon($content['flag']); ?>
 <tr id="contents">
     <td><img width="24" height="24" title="<?php echo $slottitle; ?>" src="<?php echo $sloticon; ?>"></td>
-    <td><img width="16" height="16" src="<?php echo getIconUrl($content['typeID'],16);?>"></td>
+    <td><img width="16" height="16" src="<?php echo getIconUrl($content,32);?>"></td>
     <td style="text-align: left;"><?php echo $content['typeName']; ?></td>
     <td><?php echo number_format($content['quantity']); ?></td>
     <td><?php echo number_format($content['volume']*$content['quantity']);?> m&sup3;</td>

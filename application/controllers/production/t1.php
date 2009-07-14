@@ -61,8 +61,21 @@ class T1 extends MY_Controller
         $this->load->view('maintemplate', $template);
         return;
     }
+    
+    public function redirect($blueprintID = 24699)
+    {
+        $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6 OR invGroups.categoryID=7 OR invGroups.categoryID=18 OR invGroups.categoryID=8;');
+        
+        foreach ($q->result() as $row)
+        {
+            $groupName = str_replace(' ', '_', $row->groupName);
+            $blueprintID = is_numeric($this->input->post($groupName)) ? $this->input->post($groupName) : $blueprintID;
+        }
+        
+        redirect("production/t1/detail/{$blueprintID}");
+    }
    
-    public function update($blueprintID, $character)
+    public function update($blueprintID)
     {
         $character = $this->character;
         $data = array();
@@ -91,7 +104,10 @@ class T1 extends MY_Controller
             }
         }
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
+        $custom_prices = False; // This is all not working yet
+                
         $data['me'] = $me;
+        $data['custom_prices'] = $custom_prices;
         $data['totalVolume'] = $data['totalMineralVolume'] = $data['totalMineralVolumeValue'] = $data['totalValue'] = 0;
 
         $pe = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : 5;
@@ -109,7 +125,7 @@ class T1 extends MY_Controller
 		}
 		$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
 		
-    	$prices = $this->evecentral->getPrices($typeIds, $regionID, $this->input->post('custom_prices') );
+    	$prices = $this->evecentral->getPrices($typeIds, $regionID, $custom_prices);
 
 		foreach ($components as $row)
         {
@@ -133,21 +149,33 @@ class T1 extends MY_Controller
         exit;
     }
 
-    public function detail($blueprintID = Null)
+    public function detail($blueprintID)
     {
         $character = $this->character;
 
-        $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6 OR invGroups.categoryID=7 OR invGroups.categoryID=18 OR invGroups.categoryID=8;');
-        foreach ($q->result() as $row)
-        {
-            $groupName = str_replace(' ', '_', $row->groupName);
-            $blueprintID = is_numeric($this->input->post($groupName)) ? $this->input->post($groupName) : $blueprintID;
-        }
+        
         $data['character'] = $character;
         $data['blueprintID'] = $blueprintID;
         $data['content'] = '';
 
-        $q = $this->db->query('SELECT * FROM invTypes, invBlueprintTypes WHERE invTypes.typeID=invBlueprintTypes.productTypeID AND invBlueprintTypes.blueprintTypeID=?', $blueprintID);
+        $q = $this->db->query("
+                SELECT 
+                    invTypes.typeID,
+                    invTypes.typeName,
+                    invTypes.groupID,
+                    invGroups.categoryID,
+                    invTypes.description,
+                    eveGraphics.icon
+                FROM 
+                    invTypes, 
+                    eveGraphics,
+                    invGroups,
+                    invBlueprintTypes 
+                WHERE 
+                    invTypes.groupID = invGroups.groupID AND
+                    eveGraphics.graphicID = invTypes.graphicID AND
+                    invTypes.typeID = invBlueprintTypes.productTypeID AND 
+                    invBlueprintTypes.blueprintTypeID = ?", $blueprintID);
         $data['product'] = $q->row();
         $data['caption'] = getInvType($blueprintID)->typeName;
         

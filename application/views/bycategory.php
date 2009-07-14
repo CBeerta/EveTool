@@ -18,23 +18,23 @@ function toggle_it(itemID){
 </tr>
 <?php foreach($assets as $asset): ?>
 <tr onClick="toggle_it(<?php echo $asset['assetItemID']; ?>)">
-    <th><img align="left" width="64" height="64" src="<?php echo getIconUrl($asset['typeID'],64);?>"></th>
+    <th><img align="left" width="64" height="64" src="<?php echo getIconUrl($asset,64);?>"></th>
     <th style="text-align: left;">
     <?php if (isset($asset['techLevel'])): ?>
-        <a href="<?php echo site_url('/production/t'.$asset['techLevel'].'/detail/'.$asset['typeID'].'/'.$character);?>"><?php echo $asset['typeName']; ?></a>
+        <a href="<?php echo site_url('/production/t'.$asset['techLevel'].'/detail/'.$asset['typeID']);?>"><?php echo $asset['typeName']; ?></a>
     <?php else: ?>
         <?php echo $asset['typeName']; ?>
     <?php endif; ?>
     <br />
-    <?php echo getInvType($asset['typeID'])->groupName; ?>
+    <?php echo $asset['groupName']; ?>
     </th>
     <th><?php echo locationIDToName($asset['locationID']); ?></th>
 </tr>
-<?php if ( getInvType($asset['typeID'])->categoryID == 6 && isset($asset['assetItemID']) ): //Ship?>
+<?php if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
 <tbody style="display: none;" id="<?php echo $asset['assetItemID']; ?>">
 <tr>
     <td colspan="3">
-        <?php echo shipFitting($asset['assetItemID'], $asset['typeID']); ?>
+        <?php echo Ship_Fitting::get($asset['typeName'], Ship_Fitting::items_from_db($asset['assetItemID'])); ?>
     </td>
 </tr>
 </tbody>

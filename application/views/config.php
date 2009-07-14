@@ -11,6 +11,10 @@
     <td><?php echo form_checkbox('use_perfect', True, $use_perfect); ?></td>
 </tr>
 <tr>
+    <td>Pull Corporation Data, and merge with Character data where applicable</td>
+    <td><?php echo form_checkbox('pull_corp', True, $pull_corp); ?></td>
+</tr>
+<tr>
     <td>Your Timezone</td>
     <td><?php echo form_dropdown('user_timezone', $timezone_list, $selected_tz); ?>
 </tr>

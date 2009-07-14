@@ -5,7 +5,7 @@ class Apikeys extends MY_Controller
     function add($apiUser = False)
     {
         $data['chars'] = array();
-        $this->load->view('header.php', $data);
+        //$this->load->view('header.php', $data);
 
         $rules['apiuser'] = "required|trim";
         $rules['apikey'] = "required|trim";

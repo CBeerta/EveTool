@@ -11,15 +11,21 @@ require_once(BASEPATH.'../eveapi/eveapi/class.charselect.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.corporationsheet.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.reftypes.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.skilltree.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.marketorders.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.membertrack.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.industryjobs.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.wallettransactions.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.walletjournal.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.characterid.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.starbaselist.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.starbasedetail.php');
 
 class EveApi Extends Api {
 
     var $reftypes;
     var $skilltree;
     var $stationlist;
+    var $corp_members;
 
     function __construct($params)
     {
@@ -34,6 +40,7 @@ class EveApi Extends Api {
         $this->reftypes = RefTypes::getRefTypes($this->getRefTypes());
         $skilltree = SkillTree::getSkillTree($this->getSkillTree());
         $this->stationlist = Stations::getConquerableStationList($this->getConquerableStationList());
+        $this->corpMembers = array(); // this is filled by 'has_corpapi_access()
 
         foreach ($skilltree as $group)
         {
@@ -47,6 +54,84 @@ class EveApi Extends Api {
         }
 	}
 
+
+    function has_corpapi_access()
+    {
+        return False; //FIXME: this stuff isnt cached properly, thus making the entire site crawl
+        
+        $CI =& get_instance();
+        $data = MemberTrack::getMembers($CI->eveapi->getMemberTracking());
+        
+        if (!empty($data))
+        {
+            foreach ($data as $row)
+            {
+                $CI->eveapi->corp_members[$row['characterID']] = (object) $row;
+            }
+            return True;
+        }
+        
+        return False;
+    }
+
+	
+    /**
+    * Find the Skill level for a specific skill (ie Production efficience, Connections, etc)
+    *
+    * @access public
+    * @param int
+    **/
+    public function get_skill_level($typeID)
+    {
+        $CI =& get_instance();
+        
+        $charsheet = CharacterSheet::getCharacterSheet($this->getcharactersheet());
+        $l = 0;
+        foreach($charsheet['skills'] as $skill)
+        {
+            if($skill['typeID'] == $typeID)
+            {
+                $l = $skill['level'];
+            }
+        }
+        
+        return ($l);
+    }
+    
+    /**
+    * Return All available EVE Regions
+    *
+    * @access public
+    **/
+    public function get_eve_regions()
+    {
+        $CI =& get_instance();
+        $q = $CI->db->query('SELECT regionID,regionName,factionID FROM mapRegions ORDER BY regionName;');
+        $regions = array();
+        foreach ( $q->result() as $row )
+        {
+            $regions[$row->regionID] = $row->regionName;
+        }
+        return ($regions);
+    }
+    
+    /**
+    * Return All available NPC Corporations
+    *
+    * @access public
+    **/
+    public function get_npc_corps()
+    {
+        $CI =& get_instance();
+        $q = $CI->db->query('SELECT corporationID,itemName FROM crpNPCCorporations,eveNames WHERE crpNPCCorporations.corporationID=eveNames.itemID ORDER BY itemName;');
+        $corps = array();
+        foreach ( $q->result() as $row )
+        {
+            $corps[$row->corporationID] = $row->itemName;
+        }
+        return ($corps);
+    }
+    
     public function getAssetList($timeout = 1440, $cachethis = null)
     {
 		if (!is_numeric($timeout))
@@ -99,6 +184,7 @@ class EveApi Extends Api {
 		return $contents;
 	}
 
+/*
 	public function getMarketOrders($timeout = 60, $cachethis = null)
 	{
 		if (!is_numeric($timeout))
@@ -127,35 +213,7 @@ class EveApi Extends Api {
 		$contents = $this->retrieveXml("/char/MarketOrders.xml.aspx", $timeout, $cachePath, $cachethis);
 		return $contents;
 	}
-
-	public function getIndustryJobs($timeout = 60, $cachethis = null)
-	{
-		if (!is_numeric($timeout))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getIndustryJobs: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = 60;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getIndustryJobs: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
-		}
-
-        $cachePath = array();
-        $cachePath[0] = 'userID';
-        $cachePath[1] = 'characterID';
-        $cachePath[2] = 'accountKey';
-
-		$contents = $this->retrieveXml("/char/IndustryJobs.xml.aspx", $timeout, $cachePath, $cachethis);
-		return $contents;
-	}
+*/
 }
 
 class Stations
@@ -180,7 +238,7 @@ class Stations
     }
 }
 
-class IndustryJobs
+class MY_IndustryJobs extends IndustryJobs
 {
 	static function statusIDToString($status)
 	{
@@ -211,7 +269,7 @@ class IndustryJobs
 				0 => 'None',
 				1 => 'Prod',
 				2 => 'Tech',
-				3 => 'PEn',
+				3 => 'PE',
 				4 => 'ME',
 				5 => 'Copy',
 				6 => 'Dub',
@@ -219,31 +277,9 @@ class IndustryJobs
 				8 => 'Inv');
 		return ($mapping[$activityID]);
 	}
-	static function getIndustryJobs($contents)
-	{
-		$output = array();
-
-		if (!empty($contents) && is_string($contents))
-		{
-			$xml = new SimpleXMLElement($contents);
-			$index = 0;
-			foreach ($xml->result->rowset->row as $row)
-			{
-				foreach ($row->attributes() as $name => $value)
-                {
-					$output[$index][(string) $name] = (string) $value;
-				}
-				$index++;
-			}
-		}
-		else
-		{
-			return null;
-		}
-		return $output;
-	}
 }
 
+/*
 class MarketOrders
 {
 	static function getMarketOrders($contents)
@@ -270,7 +306,7 @@ class MarketOrders
 		return $output;
 	}
 }
-
+*/
 class AssetList
 {
 
@@ -297,15 +333,19 @@ class AssetList
                 invTypes.typeID,
                 assets.quantity,
                 invGroups.categoryID,
+                invGroups.groupName,
+                eveGraphics.icon,
                 (SELECT COUNT(itemID) FROM contents WHERE contents.locationItemId=assetItemID) AS contentAmount
             FROM 
                 invTypes,
                 assets,
+                eveGraphics,
                 invGroups
             WHERE
                 (('.$where.') OR (SELECT COUNT(itemID) FROM contents WHERE contents.locationItemID=assetitemID)>0) AND
                 assets.characterID=? AND
                 assets.typeID=invTypes.typeID AND
+                invTypes.graphicID=eveGraphics.graphicID AND
                 invTypes.groupID=invGroups.groupID
             ORDER BY
                 assets.locationID,invGroups.categoryID,invTypes.typeID;', $charid);
@@ -323,15 +363,19 @@ class AssetList
                         invTypes.volume,
                         invTypes.typeID,
                         invGroups.categoryID,
+                        invGroups.groupName,
+                        eveGraphics.icon,
                         quantity,
                         flag
                     FROM
                         invTypes,
                         contents,
+                        eveGraphics,
                         invGroups
                     WHERE
                         ('.$where.') AND
                         invTypes.groupID=invGroups.groupID AND
+                        invTypes.graphicID=eveGraphics.graphicID AND
                         contents.locationItemID=? AND
                         invTypes.typeID=contents.typeID
                     ORDER BY flag DESC,invTypes.typeID', $row['assetItemID']);
@@ -415,4 +459,9 @@ class AssetList
         return ((string) $xml->cachedUntil);
     }
 }
+
+
+
+
+
 ?>

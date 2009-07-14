@@ -7,6 +7,7 @@ class Files extends Controller
     {
         parent::Controller();
         $this->config->load('evetool');
+        $this->load->helper('eve');
     }
 
     public function _mkdirs($dir, $recursive = true) 
@@ -26,6 +27,7 @@ class Files extends Controller
         }
         return FALSE;
     }
+    
     private function _download($uri, $destfile)
     {
         $ch = curl_init($uri);
@@ -39,16 +41,34 @@ class Files extends Controller
         @fclose($fp);
     }
 
-
     function cache()
     {
         preg_match('|^/files/cache/(.*)|', $this->uri->uri_string(), $matches);
-
+        $desturl = $_SERVER['REQUEST_URI'];
+        
         switch ($this->uri->slash_segment(3)) 
         {
             case 'char/':
                 list($tmp,$charid,$size) = explode('/', $matches[1]);
                 $destfile = $matches[1];
+                /*
+                    // This is fubar, it leads to a redirect everytime, which sucks for performance
+                if (!is_numeric($charid))
+                {
+                    $id = get_character_id(urldecode($charid));
+                    $charid = -1;
+                    if (isset($id['characterID']))
+                    {
+                        $charid = $id['characterID'];
+                        $destfile = "char/{$charid}/{$size}/char.jpg";
+                        $desturl = "/files/cache/{$destfile}";
+                    }
+                    else
+                    {
+                        die('Unable to identify Image');
+                    }
+                }
+                */
                 $cachefile = $this->config->item('image_cache_path').$destfile;
                 $uri = "http://img.eve.is/serv.asp?s={$size}&c={$charid}";
                 break;
@@ -62,14 +82,10 @@ class Files extends Controller
             default:
                 return False;
         }
-
-        
         $this->_mkdirs(dirname($cachefile));
         $this->_download($uri, $cachefile);
 
-        redirect($_SERVER['REQUEST_URI']);
-
-
+        redirect($desturl.'?random='.uniqid());
     }
 }
 

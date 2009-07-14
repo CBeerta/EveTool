@@ -4,13 +4,8 @@ class Overview extends MY_Controller
 {
     public function index()
     {
-        /*
-        $this->load->helper('cookie');
-        if ($_SERVER['HTTP_HOST'] == 'anaea.fra.beerta.de')
-        {
-            $template['content'] = $this->load->view('todolist', null, True);
-        }
-        */
+        $this->load->library('simplepie');
+        $this->simplepie->set_cache_location('/var/tmp');
 
         $data['chars'] = array();
         $data['total'] = 0;
@@ -32,7 +27,12 @@ class Overview extends MY_Controller
             $data['chars'][$k]['training'] = $training;
             $data['chars'][$k]['charid'] = $v['charid'];
         }
-
+        /*
+        $this->simplepie->set_feed_url("http://myeve.eve-online.com/feed/rdfnews.asp?tid=1");
+        $this->simplepie->init();
+        $data['feed'] = $this->simplepie->get_items(0, 5);
+        */
+        
         $template['content'] = $this->load->view('overview', $data, True);
         $this->load->view('maintemplate', $template);
     }
@@ -46,7 +46,7 @@ class Overview extends MY_Controller
 
         $training = CharacterSheet::getSkillInTraining($this->eveapi->getSkillInTraining());
         $charsheet = CharacterSheet::getCharacterSheet($this->eveapi->getcharactersheet());
-
+        
         $skillTree = array();
         $data['skillPointsTotal'] = 0;
         foreach ($charsheet['skills'] as $skill)
@@ -115,6 +115,7 @@ class Overview extends MY_Controller
         {
             setUserConfig($this->Auth['user_id'], 'market_region', $this->input->post('regions'));
             setUserConfig($this->Auth['user_id'], 'use_perfect', $this->input->post('use_perfect', False));
+            setUserConfig($this->Auth['user_id'], 'pull_corp', $this->input->post('pull_corp', False));
             setUserConfig($this->Auth['user_id'], 'user_timezone', $data['timezone_list'][$this->input->post('user_timezone', False)]);
             setUserConfig($this->Auth['user_id'], 'mineral_prices', serialize($this->input->post('mineral_prices')));
         }
@@ -126,7 +127,8 @@ class Overview extends MY_Controller
         {
             $data['regions'][$row->regionID] = $row->regionName;
         }
-    
+        
+        $data['pull_corp'] = !getUserConfig($this->Auth['user_id'], 'pull_corp') ? False : True;
         $data['use_perfect'] = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : True;
         $data['user_timezone'] = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');
         $data['selected_tz'] = array_search($data['user_timezone'], $data['timezone_list']);

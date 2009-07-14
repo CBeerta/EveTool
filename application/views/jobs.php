@@ -1,7 +1,15 @@
+<div id="buttan">
+Days to show: 
+<?php echo anchor("industry/jobs/7", "7");?>, 
+<?php echo anchor("industry/jobs/14", "14");?>, 
+<?php echo anchor("industry/jobs/30", "30");?>,
+<?php echo anchor("industry/jobs/999999", "all");?>
+</div>
 <table width="100%">
-<caption>Jobs for the last 7 days</caption>
+<caption>Jobs for the last <?php echo $maxDays; ?> days</caption>
 <tr>
-	<th colspan="2">Item</th>
+	<th width="32">By</th>
+    <th colspan="2">Item</th>
     <th>Status</th>
     <th>Activity</th>
     <th>Amount</th>
@@ -10,7 +18,12 @@
 </tr>
 <?php foreach ($data as $row): ?>
 <tr>
-	<td style="text-align: left;"><img src="<?php echo getIconUrl($row['typeID'],32);?>"></td>
+    <?php if (isset($corpmates[$row['installerID']])): ?>
+    <td><?php echo get_character_portrait($row['installerID'], 32); ?></td>
+    <?php else: ?>
+    <td><?php echo get_character_portrait($row['installerID'], 32); ?></td>
+    <?php endif; ?>
+	<td style="text-align: left;"><img src="<?php echo getIconUrl($row,32);?>" width="32" height="32"></td>
     <td style="text-align: left;"><?php echo $row['typeName']; ?></td>
     <td><?php echo $row['status']; ?></td>
     <td><?php echo $row['activity']; ?></td>

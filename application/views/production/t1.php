@@ -6,7 +6,7 @@ $(document).ready(function(){
     $("#bpForm").ajaxStart(function(request, settings){
       $("#bpSpinner").show();
     });
-    $.getJSON("<?php echo site_url('production/t1/update/'.$blueprintID.'/'.$character); ?>", loadResults);
+    $.getJSON("<?php echo site_url('production/t1/update/'.$blueprintID); ?>", loadResults);
     $("#bpForm").submit(formProcess);
     
     function loadResults(data) {
@@ -21,7 +21,6 @@ $(document).ready(function(){
             } else {
                 $(".have" + i).css({color: $("td").css("color")});
             }
-            //$(".value"+i).text(numberFormat(data.value[i])+ ' (' + numberFormat(data.price[i]) +')');
             $(".value"+i).text(numberFormat(data.value[i])+ ' ISK');
         });
         <?php if (count($totalMineralUsage) > 0): ?>
@@ -36,7 +35,6 @@ $(document).ready(function(){
             } else {
                 $(".totalHave" + i).css({color: $("td").css("color")});
             }
-	       //$(".totalValue"+i).text(numberFormat(data.totalMineralValue[i]) + ' (' + numberFormat(data.price[i]) +')');
 	       $(".totalValue"+i).text(numberFormat(data.totalMineralValue[i]) + ' ISK');
 
         });
@@ -47,7 +45,8 @@ $(document).ready(function(){
       event.preventDefault();
       me = $("#me").val();
       amount = $("#amount").val();
-      $.post("<?php echo site_url('production/t1/update/'.$blueprintID.'/'.$character);?>", {me: me, amount: amount},loadResults, "json");
+      custom_prices = $("#custom_prices").val();
+      $.post("<?php echo site_url('production/t1/update/'.$blueprintID);?>", {me: me, amount: amount, custom_prices: custom_prices},loadResults, "json");
     }
 });
 </script>
@@ -57,7 +56,7 @@ $(document).ready(function(){
     </tr>
     <tr>
         <td colspan="5" style="text-align: left;">
-            <img src="<?php echo getIconUrl($product->typeID, 128); ?>" align="left">
+            <img src="<?php echo getIconUrl($product, 64); ?>" align="left">
             <p style="padding-left: 140px;"><?php echo nl2br($product->description); ?></p>
         </td>
     </tr>
@@ -68,7 +67,7 @@ $(document).ready(function(){
             <form action="<?php echo site_url('production/t1/update/'.$blueprintID); ?>" method="post" id="bpForm">
             ME: <input type="text" name="me" id="me" value="0" size="1" />
             Amount: <input type="text" name="amount" id="amount" value="1" size="1">
-            Use Custom Mineral Prices: <input type="checkbox" name="custom_prices" value="1">
+            <!-- Use Custom Mineral Prices: <?php echo form_checkbox('custom_prices', 'accept', False); ?> -->
             <?php echo form_submit('Submit', 'Submit'); ?>
             </form>
         </span>
@@ -82,10 +81,10 @@ $(document).ready(function(){
     </tr>
 <?php foreach($data as $r): ?>
     <tr>
-        <td width="32"><img src="<?php echo getIconUrl($r['typeID'], 32); ?>"></td>
+        <td width="32"><img src="<?php echo getIconUrl($r, 32); ?>"></td>
         <td style="text-align: left">
         <?php if(is_numeric($r['isPart'])): ?>
-        <a href="<?php echo site_url('production/t1/detail/'.$r['isPart'].'/'.$character); ?>"><?php echo $r['typeName']; ?></a>        <?php else: ?>
+        <a href="<?php echo site_url('production/t1/detail/'.$r['isPart']); ?>"><?php echo $r['typeName']; ?></a>        <?php else: ?>
         <?php echo $r['typeName']; ?></td>
         <?php endif; ?>
         <td><p class="req<?php echo $r['typeID'];?>"></p></td>
@@ -111,7 +110,7 @@ $(document).ready(function(){
     </tr>
     <?php foreach ($totalMineralUsage as $k => $v):?>
     <tr>        
-        <td width="32"><img src="<?php echo getIconUrl($k, 32); ?>"></td>
+        <td width="32"><img src="<?php echo getIconUrl($v, 32); ?>"></td>
         <td style="text-align: left"><?php echo getInvType($k)->typeName; ?></td>
         <td><p class="totalReq<?php echo $k;?>"></p></td>
         <td><p class="totalHave<?php echo $k;?>"></p></td>
