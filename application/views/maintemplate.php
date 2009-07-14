@@ -14,8 +14,8 @@
             <li><a href="<?php echo site_url('/assets/index/'.$character);?>">Assets</a>
             <ul class="submenu">
                 <li><a href="<?php echo site_url('/materials/index/18/'.$character);?>">Materials</a>
-                <li><a href="<?php echo site_url('/materials/blueprints/'.$character);?>">Blueprints</a>
-                <li><a href="<?php echo site_url('/materials/ships/'.$character);?>">Ships</a>
+                <li><a href="<?php echo site_url('/assets/blueprints/'.$character);?>">Blueprints</a>
+                <li><a href="<?php echo site_url('/assets/ships/'.$character);?>">Ships</a>
             </ul>
             <li><a href="<?php echo site_url('/industry/jobs/'.$character);?>">Industry Jobs</a>
             <li><a href="<?php echo site_url('/market/orders/'.$character);?>">Market Orders</a>

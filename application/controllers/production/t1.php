@@ -108,7 +108,8 @@ class T1 extends MY_Controller
 			array_push($typeIds, $k);
 		}
 		$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
-		$prices = $this->evecentral->getPrices($typeIds, $regionID);
+		
+    	$prices = $this->evecentral->getPrices($typeIds, $regionID, $this->input->post('custom_prices') );
 
 		foreach ($components as $row)
         {

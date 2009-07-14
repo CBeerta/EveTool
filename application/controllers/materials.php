@@ -13,17 +13,19 @@ class Materials extends MY_Controller
      *
      * @param   string
      */
-    public function index($groupID, $character)
+    public function index($groupID = 18, $character = False)
     {
         $character = $this->character; 
         $data['character'] = $character;
 
-/*      FIXME: doesnt work anymoar */
-//        $groupID = !isset($_REQUEST['groupID']) ? '18' : $_REQUEST['groupID'];
-//        $categoryID = !isset($_REQUEST['categoryID']) ? '25' : $_REQUEST['categoryID'];
-
         $regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
-        $sID = !isset($_REQUEST['categoryID']) ? 'groupID' : 'categoryID';
+        
+        
+        $sID = 'groupID'; // What ID to search for
+        //$sID = !isset($_REQUEST['categoryID']) ? 'groupID' : 'categoryID';
+        $groupID = $this->input->post('groupID') ? $this->input->post('groupID') : $groupID;
+        
+        $data['groupID'] = $groupID;
 
         $groupIDList = array();
         $q = $this->db->query('SELECT groupID,groupName FROM invGroups;');
@@ -36,7 +38,7 @@ class Materials extends MY_Controller
             }
             if (in_array($row->groupID, $this->groupList))
             {
-                $groupIDList[] = array('groupID' => $row->groupID, 'groupName' => $row->groupName);
+                $groupIDList[$row->groupID] = $row->groupName;
             }
         }
         $data['groupIDList'] = $groupIDList;
@@ -79,56 +81,6 @@ class Materials extends MY_Controller
         $data['caption'] = 'Materials - Prices from the "'.regionIDToName($regionID).'" region';
 
         $template['content'] = $this->load->view('materials', $data, True);
-        $this->load->view('maintemplate', $template);
-    }
-
-    private function _byCategory($charid, $categoryID = 9)
-    {
-        $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => $categoryID));
-
-        $data = array();
-        $data = array();
-        foreach ($assets as $loc)
-        {  
-            foreach ($loc as $asset)
-            {
-                if ($asset['categoryID'] == $categoryID)
-                {
-                    $data[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
-                }
-                if (isset($asset['contents']))
-                {
-                    foreach ($asset['contents'] as $content)
-                    {
-                        if ($content['categoryID'] == $categoryID)
-                        {
-                            $data[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
-                        }
-                    }
-                }
-            }
-        }
-        return ($data);
-    }
-
-    public function blueprints()
-    {
-        $character = $this->character;
-        $data['character'] = $character;
-        $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 9);
-        $data['title']= 'Played Owned Blueprints';
-        $template['content'] = $this->load->view('bycategory', $data, True);
-        $this->load->view('maintemplate', $template);
-    }
-
-    public function ships()
-    {
-        $character = $this->character;
-        $data['character'] = $character;
-        $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 6);
-        $data['title']= 'Played Owned Ships';
-        
-        $template['content'] = $this->load->view('bycategory', $data, True);
         $this->load->view('maintemplate', $template);
     }
 }

@@ -1,12 +1,19 @@
-<div>
-<?php foreach ($groupIDList as $item): ?>
-&#149; <a href="<?php echo site_url('materials/index/'.$item['groupID'].'/'.$character);?>"><?php echo $item['groupName']; ?></a>
-<?php endforeach; ?>
-<!-- &#149; <a href="<?php echo site_url('materials/index/'.$character);?>?categoryID=25">Raw Minerals</a>  -->
-</div>
-<hr />
+
+
+
+
 <table width="100%">
 <caption><?php echo $caption; ?></caption>
+
+<tr>
+    <th colspan="9">
+        <?php echo form_open('materials/index/'.$character); ?>
+        <?php echo form_dropdown('groupID', $groupIDList, $groupID); ?>
+        <?php echo form_submit('submit', 'Select'); ?>
+        <?php echo form_close(); ?>
+    </th>
+</tr>
+
 <tr>
 	<th colspan="3">Name</th>
     <th>Amount</th>

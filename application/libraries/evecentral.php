@@ -11,8 +11,10 @@ class EveCentral
     {
         $uri  = 'http://eve-central.com/api/marketstat?';
         $uri .= 'regionlimit='.$region;
+        
+        $typeIdList = array_merge($typeIdList, $this->mineralTypes); // Always fetch mineral prices
 
-        foreach ($typeIdList as $typeId)
+        foreach (array_unique($typeIdList) as $typeId)
         {
             $uri .= '&typeid='.$typeId;
         }
@@ -58,12 +60,12 @@ class EveCentral
         return(@simplexml_load_file($destFile));
     }
 
-    public function getPrices($typeIDList, $region = 10000002)
+    public function getPrices($typeIDList, $region = 10000002, $user_prices = False )
     {
         $prices = array();
         foreach ($typeIDList as $typeID)
         {
-            foreach (array('median','avg','may') as $kind)
+            foreach (array('median','avg','max') as $kind)
             {
                 /* Empty everything, incase our pull goes wrong
                  * As we dont want our parent to die horribly
@@ -85,6 +87,22 @@ class EveCentral
                     {
                         $prices[(int) $type->attributes()->id][$kind][(string) $key] = (string) $value;
                     }
+                }
+            }
+        }
+        
+        if ( $user_prices !== False )
+        {
+            // Apply user mineral Prices over the fetched ones
+            $CI =& get_instance();
+            $mineral_prices = unserialize(getUserConfig($CI->Auth['user_id'], 'mineral_prices'));
+            foreach ( $mineral_prices as $k => $v)
+            {
+                foreach ( array('median', 'avg', 'max') as $kind )
+                {
+                    $prices[$k]['buy'][$kind] = $v;
+                    $prices[$k]['sell'][$kind] = $v;
+                    $prices[$k]['all'][$kind] = $v;
                 }
             }
         }

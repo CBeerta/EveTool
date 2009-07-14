@@ -316,7 +316,7 @@ class AssetList
             {
                 $c = $CI->db->query('
                     SELECT 
-                        itemID,
+                        itemID as assetItemID,
                         characterID,
                         invTypes.groupID,
                         invTypes.typeName,

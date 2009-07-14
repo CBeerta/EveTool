@@ -68,6 +68,7 @@ $(document).ready(function(){
             <form action="<?php echo site_url('production/t1/update/'.$blueprintID); ?>" method="post" id="bpForm">
             ME: <input type="text" name="me" id="me" value="0" size="1" />
             Amount: <input type="text" name="amount" id="amount" value="1" size="1">
+            Use Custom Mineral Prices: <input type="checkbox" name="custom_prices" value="1">
             <?php echo form_submit('Submit', 'Submit'); ?>
             </form>
         </span>
