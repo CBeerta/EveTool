@@ -1,0 +1,10 @@
+Quick Installation Guide:
+
+- Dump the SQL into your MySQL into a database.
+- Drop the Contents into your webserver
+- Goto the Lib Directory and pull the required external libraries as described in the README
+- Modify 'application/config/database.php' and 'application/config/evetool.php' to suit your needs
+- Make sure the Cache directory is writeable by the server
+- Point your 404 Document to the /index.php
+
+That should do it

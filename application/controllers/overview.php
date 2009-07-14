@@ -105,13 +105,16 @@ class Overview extends MY_Controller
 
     function config()
     {
+        $data = array();
+        $data['timezone_list'] = timezone_identifiers_list();
+
         if ($this->input->post('submit'))
         {
             setUserConfig($this->Auth['user_id'], 'market_region', $this->input->post('regions'));
             setUserConfig($this->Auth['user_id'], 'use_perfect', $this->input->post('use_perfect', False));
+            setUserConfig($this->Auth['user_id'], 'user_timezone', $data['timezone_list'][$this->input->post('user_timezone', False)]);
         }
 
-        $data = array();
         $q = $this->db->query('SELECT regionID,regionName FROM mapRegions ORDER BY regionName');
         $data['config_region'] = getUserConfig($this->Auth['user_id'], 'market_region');
 
@@ -119,8 +122,10 @@ class Overview extends MY_Controller
         {
             $data['regions'][$row->regionID] = $row->regionName;
         }
-
+    
         $data['use_perfect'] = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : True;
+        $data['user_timezone'] = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');
+        $data['selected_tz'] = array_search($data['user_timezone'], $data['timezone_list']);
 
         $template['content'] = $this->load->view('config', $data, True);
         $this->load->view('maintemplate', $template);

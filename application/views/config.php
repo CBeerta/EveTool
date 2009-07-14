@@ -10,6 +10,10 @@
     <td>Use Perfect Skills instead of Character Skills for Production</td>
     <td><?php echo form_checkbox('use_perfect', True, $use_perfect); ?></td>
 </tr>
+<tr>
+    <td>Your Timezone</td>
+    <td><?php echo form_dropdown('user_timezone', $timezone_list, $selected_tz); ?>
+</tr>
 
 <tr>
     <td colspan="2"><?php echo form_submit('submit', 'Update'); ?></td>

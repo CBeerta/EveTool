@@ -18,6 +18,7 @@ class MY_Controller extends Controller
         $this->load->library('evecentral');
         $this->load->library('production');
 
+
         $accounts = array();
 
         $data['character'] = '';
@@ -79,6 +80,10 @@ class MY_Controller extends Controller
                 $this->chars[$character]['apikey'], 
                 $this->chars[$character]['charid']);
         }
+
+        $user_timezone = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');
+        date_default_timezone_set($user_timezone);
+
         $this->load->view('header.php', $data);
     }
 }
