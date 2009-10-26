@@ -22,6 +22,10 @@
         <td><font color="green"><?php echo number_format($type['income'], 2); ?></font></td>
     </tr>
     <?php endforeach;?>
+	<tr>
+		<td class="light" colspan="2" align="right">Balance:</td>
+		<td class="light"><?php echo number_format($balance[$k], 2); ?></td>
+	</tr>
     <tr><td colspan="3">&nbsp;</td></tr>
     <?php endforeach;?>
 </table>

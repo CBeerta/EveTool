@@ -68,7 +68,7 @@ class Wallet extends MY_Controller
         $wallet = WalletJournal::getWalletJournal($walletxml);
 
         $daily = array();
-
+			
         foreach ($wallet as $entry)
         {
             $day = apiTimePrettyPrint($entry['date'], 'Y-m-d');
@@ -101,10 +101,17 @@ class Wallet extends MY_Controller
                 $daily[$day][$entry['refTypeID']]['income'] += $entry['amount'];
                 $total[$day]['income'] += $entry['amount'];
             }
+			
+			if (!isset($balance[$day]))
+			{
+				/* Wallet journal is chronoligcally ordered, so we just want the topmost daily entry as that is the "last for that day" */
+				$balance[$day] = $entry['balance'];
+			}
         }
 
         $data['daily'] = $daily;
         $data['total'] = $total;
+		$data['balance'] = $balance;
 
         $template['title'] = "Wallet Journal for {$character}";
         $template['content'] = $this->load->view('walletdailyjournal', $data, True);

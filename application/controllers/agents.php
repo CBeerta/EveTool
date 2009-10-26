@@ -86,7 +86,6 @@ class Agents extends MY_Controller
             }
         }
         
-
         $data['regions'] = array('0' => '-') + $this->eveapi->get_eve_regions();
         $data['divisions'] = array('0' => '-') + $this->_agent_divisions($id);
         $data['corps'] = $this->eveapi->get_npc_corps();

@@ -47,7 +47,7 @@ class CharStandings extends MY_Controller
                 }
                 
                 $standing = isset($to['toName']) ? $to['standing'] : "{$realstanding} ({$to['standing']})";
-                $agent_info = Agent_Info::is_agent($id) ? Agent_Info::agent_snippet($id, $realstanding) : '';
+                $agent_info = Agent_Info::is_agent($id) ? Agent_Info::agent_snippet($id) : '';
                 
                 if ( $to['standing'] > 5.0)
                 {

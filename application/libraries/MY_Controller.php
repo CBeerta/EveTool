@@ -84,7 +84,8 @@ class MY_Controller extends Controller
         $character = urldecode($this->uri->segment($this->uri->total_segments()));
         if (in_array($character, array_keys($this->chars)))
         {
-            $this->session->set_flashdata('character', $character);
+			// This Happens when the user clicks on a portrait in the top navigation
+			$this->session->set_userdata('character', $character);
             $this->character = $character;
             
             // Pop the Charactername off the url, so we can build a new url for a different character
@@ -92,10 +93,10 @@ class MY_Controller extends Controller
             array_pop($full_uri);
             $data['base_url'] = !$this->uri->segment(1) ? site_url("/overview/skilltree") : site_url(implode('/', $full_uri));
         }
-        else if ($character = $this->session->flashdata('character'))
+        else if ($character = $this->session->userdata('character'))
         {
+			// This happens when there is a character selected in the session, and the user is just browsing sections
             $this->character = $character;
-            $this->session->set_flashdata('character', $character);
             $data['base_url'] = !$this->uri->segment(1) ? site_url("/overview/skilltree") : current_url();
         }
 
@@ -109,16 +110,16 @@ class MY_Controller extends Controller
                 $this->chars[$this->character]['charid']);
             $this->has_corpapi_access = EveApi::has_corpapi_access();
         }
+		/*
         else if ($data['tool'] != 'Overview')
         {
-            /**
-             * This is a Stupid Fix, more of a workaround. For some reason the Sessions sometimes resets on one of the contant pages,
-             * Which obviously doesnt work very well, so redirect home in that case.
-             * FIXME!
-            */
+             //* This is a Stupid Fix, more of a workaround. For some reason the Sessions sometimes resets on one of the contant pages,
+             //* Which obviously doesnt work very well, so redirect home in that case.
+             //* FIXME!
             redirect("/");
         }
-
+		*/
+		
         $user_timezone = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');
         date_default_timezone_set($user_timezone);
 
