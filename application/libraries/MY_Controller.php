@@ -25,7 +25,6 @@ class MY_Controller extends Controller
 
         $this->load->library('evecentral');
         $this->load->library('production');
-        $this->load->library('killmails');
 
         $accounts = array();
 

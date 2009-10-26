@@ -21,7 +21,6 @@
             <li><a href="<?php echo site_url("/industry/jobs/");?>">Industry Jobs</a>
             <li><a href="<?php echo site_url("/market/orders/");?>">Market Orders</a>
             <li><a href="<?php echo site_url("/charstandings/agents/");?>">Agents</a>
-            <li><a href="<?php echo site_url("/killboard/char/{$character}");?>">Killboard</a>
         </ul>
         <h2>T1 Production</h2>
         <ul>
