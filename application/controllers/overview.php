@@ -27,11 +27,10 @@ class Overview extends MY_Controller
             $data['chars'][$k]['training'] = $training;
             $data['chars'][$k]['charid'] = $v['charid'];
         }
-        /*
+        
         $this->simplepie->set_feed_url("http://myeve.eve-online.com/feed/rdfnews.asp?tid=1");
         $this->simplepie->init();
         $data['feed'] = $this->simplepie->get_items(0, 5);
-        */
         
         $template['content'] = $this->load->view('overview', $data, True);
         $this->load->view('maintemplate', $template);

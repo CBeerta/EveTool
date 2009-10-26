@@ -3,9 +3,7 @@
             <div class="yui-b" id="content"><?php print $content; ?></div>
         </div>
         <div class="yui-b" id="nav">
-        <ul>
-            <li><a href="<?php echo site_url();?>">Home</a>
-        </ul>
+		<h2><a href="<?php echo site_url();?>">Home</a></h2>
         <?php if(!empty($character)): ?>
         <h2>Information</h2>
         <ul>
@@ -40,7 +38,7 @@
         </div>
     </div>
 </div>
-<div id="ft"><a id="ft" href="mailto:claus@beerta.de">claus@beerta.de</a> &bull; Copyright &copy; 2008 Claus Beerta &bull; <?php echo $this->benchmark->elapsed_time(); ?>s</div>
+<div id="ft"><a id="ft" href="mailto:claus@beerta.de">claus@beerta.de</a> &bull; Copyright &copy; 2008 Claus Beerta &bull; <?php echo $this->benchmark->elapsed_time(); ?>s &bull; <?php echo date('r'); ?></div>
 <!--
     $Id$
 -->

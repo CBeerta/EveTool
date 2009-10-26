@@ -1,11 +1,12 @@
 body{
     color:#333;
-	background: #FFFFFF url(/files/images/bg.gif) repeat-x;
+	/* background: #FFFFFF url(/files/images/bg.gif) repeat-x; */
+	background: #fff;
     font-family: "Trebuchet MS", Verdana, Arial;
+	overflow-y: scroll; /* always show the scrollbar, i HATE jumping around of the content */
 }
 
 table {
-    /* border: 1px solid #121212; */
     padding: 2px;
     margin: 2px;
     border-collapse: separate;
@@ -37,7 +38,6 @@ th {
     padding: 5px;
     margin: 2px;
     color: white;
-    /* border: 1px solid #666; */
 }
 
 td.light {
@@ -52,7 +52,6 @@ td.light {
 td {
     padding: 2px;
     text-align: right;
-    /* border: 1px solid #666;  */
 }
 
 td#left {
@@ -106,27 +105,31 @@ li {
  *
  **/
 div#hd {
-    background-color: #313032;
+    /* background-color: #313032; */
+	background-color: #678B1D;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-left: -10px;
+	margin-right: -10px;
     color: white;
     font-size: 85%;
-    height: 84px;
-    padding-top: 16px;
+    height: 75px;
+    padding-top: 5px;
 }
 h1#hd {
     font-weight: bold;
     font-family: "Trebuchet MS", Verdana, Arial;
-    font-size: 197%;
+    font-size: 50px;
     text-align: left;
+	letter-spacing: -0.1em;
 }
 
-img#hd {
-    border-bottom: 2px solid #313032;
+img#hd{
+	border: 1px solid #aaa;
 }
-
 #bd {
     background: #fff;
 }
-
 
 /**
  *
@@ -135,20 +138,22 @@ img#hd {
  **/
 div#nav {
     border-bottom: 1px dotted #c0c0c0;
-    border-right: 1px dotted #c0c0c0;
+    /*border-right: 1px dotted #c0c0c0;*/
     border-left: 1px dotted #c0c0c0;
-    padding: 0px 5px 5px 5px;
+    padding: 0px 0px 0px 5px;
+	margin-right: -10px;
 }
 #nav {
-    background-color: #f2f2f2;
+    /*background-color: #f2f2f2;*/
     color: #333333;
     font-weight: bold;
     line-height: 175%;
+	
 }
 
 #nav a {
     color: #333;
-    border-bottom: 1px dotted #c0c0c0;
+    /*border-bottom: 1px dotted #c0c0c0;*/
     display: block;
     padding: 5px 0px 5px 0px;
 }
@@ -163,7 +168,7 @@ div#nav {
 	font-weight: bold;
 	margin: 20px 0px 0px 0px;
 	padding: 0px 0px 5px 0px;
-	border-bottom: 1px dotted #C0C0C0;
+	/*border-bottom: 1px dotted #C0C0C0;*/
 }
 
 /**
@@ -175,8 +180,6 @@ div#nav {
 #content {
     padding: 2px;
 }
-
-
 
 /**
  *
@@ -192,13 +195,12 @@ a:active#ft
 }
 div#ft {
     width: 100%;
-    background: #313032;
-    color: #FFF;
+    /*background: #313032;*/
+    color: #aaa;
 	margin: 20px auto 0px ;
 	padding: 10px 0px 10px 0px;
 	line-height: 17px;
-    position: relative;
-    bottom: 0px;
+	float: bottom;
 }
 
 

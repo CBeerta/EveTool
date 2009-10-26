@@ -1,4 +1,4 @@
-<div style="position: static; top: 0px; right: 0px; float: left; margin-right: 5px;">
+<div style="position: static; top: 0px; right: 0px; float: right; margin-right: 5px;">
     <table style="min-width:60%;">
     <?php foreach ($chars as $k => $v): ?>
         <tr>
@@ -35,12 +35,10 @@
     </tr>
     </table>
 </div>
-<!--
 <div style="position: static;top: 0px;">
-    <?php /* foreach ($feed as $item): ?>
+    <?php  foreach ($feed as $item): ?>
     <h4><?php echo $item->get_title();?></h4>
     <p><?php echo $item->get_description();?></p>
     <br />
-    <?php endforeach; */?>
+    <?php endforeach; ?>
 </div>    
--->

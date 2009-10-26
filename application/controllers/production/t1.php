@@ -35,7 +35,6 @@ class T1 extends MY_Controller
                 blueprints.productivityModifier,        
                 blueprints.materialModifier,        
                 blueprints.wasteFactor,        
-                blueprints.chanceOfReverseEngineering,        
                 blueprints.maxProductionLimit  
             FROM 
                 invBlueprintTypes AS blueprints  
