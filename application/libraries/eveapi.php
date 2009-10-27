@@ -17,15 +17,15 @@ require_once(BASEPATH.'../eveapi/eveapi/class.industryjobs.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.wallettransactions.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.walletjournal.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.characterid.php');
-require_once(BASEPATH.'../eveapi/eveapi/class.starbaselist.php');
-require_once(BASEPATH.'../eveapi/eveapi/class.starbasedetail.php');
+//require_once(BASEPATH.'../eveapi/eveapi/class.starbaselist.php');
+//require_once(BASEPATH.'../eveapi/eveapi/class.starbasedetail.php');
 
 class EveApi Extends Api {
 
     var $reftypes;
     var $skilltree;
     var $stationlist;
-    var $corp_members;
+    var $corpMembers = array();
 
     function __construct($params)
     {
@@ -54,7 +54,6 @@ class EveApi Extends Api {
         }
 	}
 
-
     function has_corpapi_access()
     {
         return False; //FIXME: this stuff isnt cached properly, thus making the entire site crawl
@@ -70,10 +69,8 @@ class EveApi Extends Api {
             }
             return True;
         }
-        
         return False;
     }
-
 	
     /**
     * Find the Skill level for a specific skill (ie Production efficience, Connections, etc)
@@ -131,6 +128,37 @@ class EveApi Extends Api {
         }
         return ($corps);
     }
+
+	
+	public function getSkillQueue($timeout = 1440, $cachethis = null)
+    {
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getSkillQueue: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1440;
+		}
+
+		if ($cachethis != null && !is_bool($cachethis))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getSkillQueue: Non-bool value of cachethis param, reverting to default value");
+			}
+			$cachethis = null;
+		}
+
+        $cachePath = array();
+        $cachePath[0] = 'userID';
+        $cachePath[1] = 'characterID';
+        $cachePath[2] = 'accountKey';
+
+		$contents = $this->retrieveXml("/char/SkillQueue.xml.aspx", $timeout, $cachePath, $cachethis);
+		return $contents;
+    }
+
     
     public function getAssetList($timeout = 1440, $cachethis = null)
     {
@@ -183,43 +211,12 @@ class EveApi Extends Api {
 		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout, null, $cachethis);
 		return $contents;
 	}
-
-/*
-	public function getMarketOrders($timeout = 60, $cachethis = null)
-	{
-		if (!is_numeric($timeout))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMarketOrders: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = 60;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMarketOrders: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
-		}
-
-        $cachePath = array();
-        $cachePath[0] = 'userID';
-        $cachePath[1] = 'characterID';
-        $cachePath[2] = 'accountKey';
-
-		$contents = $this->retrieveXml("/char/MarketOrders.xml.aspx", $timeout, $cachePath, $cachethis);
-		return $contents;
-	}
-*/
 }
 
 class Stations
 {
     static function getConquerableStationList($contents)
-    {       
+    {    
 		if (!empty($contents) && is_string($contents))
 		{
 			$xml = new SimpleXMLElement($contents);
@@ -237,6 +234,40 @@ class Stations
 		}
     }
 }
+
+class SkillQueue 
+{
+	static function getSkillQueue($contents)
+	{
+        $CI =& get_instance();
+	
+		if (!empty($contents) && is_string($contents))
+		{
+			$xml = new SimpleXMLElement($contents);
+			$output = array();
+        	foreach ($xml->result->rowset->row as $row)
+			{
+				$index = count($output);
+				foreach ($row->attributes() as $name => $value)
+				{
+					$output[$index][(string) $name] = (string) $value;
+					if ($name == 'typeID')
+					{
+						$output[$index]['typeName'] = $CI->eveapi->skilltree[(string) $value]['typeName'];
+						$output[$index]['rank'] = $CI->eveapi->skilltree[(string) $value]['rank'];
+						$output[$index]['description'] = $CI->eveapi->skilltree[(string) $value]['description'];
+					}
+				}
+			}
+			return $output;
+		}
+		else
+		{
+			return null;
+		}
+	}
+}
+
 
 class MY_IndustryJobs extends IndustryJobs
 {
@@ -279,34 +310,6 @@ class MY_IndustryJobs extends IndustryJobs
 	}
 }
 
-/*
-class MarketOrders
-{
-	static function getMarketOrders($contents)
-	{
-		$output = array();
-
-		if (!empty($contents) && is_string($contents))
-		{
-			$xml = new SimpleXMLElement($contents);
-			$index = 0;
-			foreach ($xml->result->rowset->row as $row)
-			{
-				foreach ($row->attributes() as $name => $value)
-                {
-					$output[$index][(string) $name] = (string) $value;
-				}
-				$index++;
-			}
-		}
-		else
-		{
-			return null;
-		}
-		return $output;
-	}
-}
-*/
 class AssetList
 {
 
@@ -395,7 +398,6 @@ class AssetList
 
         $output = array();
         $xml = new SimpleXMLElement($contents);
-
        
         /**
          * FIXME: how do we expire outdated assets?

@@ -29,6 +29,7 @@ class Overview extends MY_Controller
         }
         
         $this->simplepie->set_feed_url("http://myeve.eve-online.com/feed/rdfnews.asp?tid=1");
+		$this->simplepie->set_cache_duration(24*60*60);
         $this->simplepie->init();
         $data['feed'] = $this->simplepie->get_items(0, 5);
         
@@ -45,7 +46,9 @@ class Overview extends MY_Controller
 
         $training = CharacterSheet::getSkillInTraining($this->eveapi->getSkillInTraining());
         $charsheet = CharacterSheet::getCharacterSheet($this->eveapi->getcharactersheet());
-        
+		$queue = SkillQueue::getSkillQueue($this->eveapi->getSkillQueue());
+		$data['queue'] = $queue;
+		      
         $skillTree = array();
         $data['skillPointsTotal'] = 0;
         foreach ($charsheet['skills'] as $skill)
@@ -103,7 +106,6 @@ class Overview extends MY_Controller
         $template['content'] = $this->load->view('skilltree', $data, True);
         $this->load->view('maintemplate', $template);
     }
-
 
     function config()
     {
