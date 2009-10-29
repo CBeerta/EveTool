@@ -130,9 +130,9 @@ class EveApi Extends Api {
     }
 
 	
-	public function getSkillQueue($timeout = 1440, $cachethis = null)
+	public function getSkillQueue($timeout = null, $cachethis = null)
     {
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
