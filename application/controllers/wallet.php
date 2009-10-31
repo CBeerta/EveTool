@@ -62,57 +62,13 @@ class Wallet extends MY_Controller
     public function dailyjournal()
     {
         $character = $this->character;
-        $data['character'] = $character;
 
         $walletxml = $this->eveapi->getWalletJournal();
         $wallet = WalletJournal::getWalletJournal($walletxml);
 
-        $daily = array();
-			
-        foreach ($wallet as $entry)
-        {
-            $day = apiTimePrettyPrint($entry['date'], 'Y-m-d');
-            if (!isset($daily[$day]))
-            {
-                $total[$day]['prettydate'] = apiTimePrettyPrint($entry['date'], 'l, j F Y');
-                $total[$day]['expense'] = 0;
-                $total[$day]['income'] = 0;
-            }
-            if (!isset($daily[$day][$entry['refTypeID']]))
-            {
-                $daily[$day][$entry['refTypeID']] = array(
-                    'refTypeName' => $this->eveapi->reftypes[$entry['refTypeID']],
-                    );
-            }
-            if (!isset($daily[$day][$entry['refTypeID']]['expense']))
-            {
-                $daily[$day][$entry['refTypeID']]['expense'] = 0;
-                $daily[$day][$entry['refTypeID']]['income'] = 0;
-
-            }
-
-            if ($entry['amount'] < 0)
-            {
-                $daily[$day][$entry['refTypeID']]['expense'] += $entry['amount'];
-                $total[$day]['expense'] += $entry['amount'];
-            }
-            else
-            {
-                $daily[$day][$entry['refTypeID']]['income'] += $entry['amount'];
-                $total[$day]['income'] += $entry['amount'];
-            }
-			
-			if (!isset($balance[$day]))
-			{
-				/* Wallet journal is chronoligcally ordered, so we just want the topmost daily entry as that is the "last for that day" */
-				$balance[$day] = $entry['balance'];
-			}
-        }
-
-        $data['daily'] = $daily;
-        $data['total'] = $total;
-		$data['balance'] = $balance;
-
+		$data = $this->eveapi->get_daily_walletjournal($wallet);
+	    $data['character'] = $character;
+	
         $template['title'] = "Wallet Journal for {$character}";
         $template['content'] = $this->load->view('walletdailyjournal', $data, True);
         $this->load->view('maintemplate', $template);

@@ -17,6 +17,8 @@ require_once(BASEPATH.'../eveapi/eveapi/class.industryjobs.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.wallettransactions.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.walletjournal.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.characterid.php');
+require_once(BASEPATH.'../eveapi/eveapi/class.titles.php');
+
 //require_once(BASEPATH.'../eveapi/eveapi/class.starbaselist.php');
 //require_once(BASEPATH.'../eveapi/eveapi/class.starbasedetail.php');
 
@@ -211,6 +213,57 @@ class EveApi Extends Api {
 		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout, null, $cachethis);
 		return $contents;
 	}
+	
+	public function get_daily_walletjournal($wallet)
+	{
+		$data = array();
+        $daily = array();
+        foreach ($wallet as $entry)
+        {
+            $day = apiTimePrettyPrint($entry['date'], 'Y-m-d');
+            if (!isset($daily[$day]))
+            {
+                $total[$day]['prettydate'] = apiTimePrettyPrint($entry['date'], 'l, j F Y');
+                $total[$day]['expense'] = 0;
+                $total[$day]['income'] = 0;
+            }
+            if (!isset($daily[$day][$entry['refTypeID']]))
+            {
+                $daily[$day][$entry['refTypeID']] = array(
+                    'refTypeName' => $this->reftypes[$entry['refTypeID']],
+                    );
+            }
+            if (!isset($daily[$day][$entry['refTypeID']]['expense']))
+            {
+                $daily[$day][$entry['refTypeID']]['expense'] = 0;
+                $daily[$day][$entry['refTypeID']]['income'] = 0;
+			}
+
+            if ($entry['amount'] < 0)
+            {
+                $daily[$day][$entry['refTypeID']]['expense'] += $entry['amount'];
+                $total[$day]['expense'] += $entry['amount'];
+            }
+            else
+            {
+                $daily[$day][$entry['refTypeID']]['income'] += $entry['amount'];
+                $total[$day]['income'] += $entry['amount'];
+            }
+			
+			if (!isset($balance[$day]))
+			{
+				/* Wallet journal is chronoligcally ordered, so we just want the topmost daily entry as that is the "last for that day" */
+				$balance[$day] = $entry['balance'];
+			}
+        }
+
+        $data['daily'] = $daily;
+        $data['total'] = $total;
+		$data['balance'] = $balance;
+		
+		return ($data);
+	}
+
 }
 
 class Stations
@@ -267,7 +320,6 @@ class SkillQueue
 		}
 	}
 }
-
 
 class MY_IndustryJobs extends IndustryJobs
 {

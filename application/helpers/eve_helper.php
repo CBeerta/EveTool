@@ -71,9 +71,7 @@ function timeToComplete($endTime)
 	    }
 	}
 	return (trim($str));
-	//return (substr($str, 0, -1));
 }
-
 
 function regionIDToName($regionID)
 {
@@ -106,7 +104,9 @@ function locationIDToName($locationID)
     $row = $q->row();
     if (count($row)>0)
     {
-        return ($row->itemName);
+		preg_match("|^([a-z]+)\s|i", $row->itemName, $matches);
+		return ('<a href="http://evemaps.dotlan.net/system/'.$matches[1].'">'.$row->itemName.'</a>');
+        // return ($row->itemName);
     }
     else if (isset($CI->eveapi->stationlist[$locationID]))
     {
@@ -118,7 +118,6 @@ function locationIDToName($locationID)
         //return ('<a href="'.site_url("pos/detail/{$locationID}").'">POS</a>');
     }
 }
-
 
 function get_character_portrait($name, $size = 64)
 {
@@ -214,13 +213,6 @@ function getIconUrl($type, $size = 64, $background = 'black')
     {
         $row = $type;
     }
-    /*
-    // Don't trash the database with this anymore
-    else
-    {
-        $row = getInvType($type);
-    }
-    */
     
     if (!empty($row->categoryID) && $row->categoryID == 6)
     {

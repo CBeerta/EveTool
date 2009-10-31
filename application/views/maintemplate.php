@@ -24,6 +24,8 @@
         <h2>Corporation</h2>
         <ul>
             <li><a href="<?php echo site_url("/corp/memberlist/");?>">Memberlist</a>
+	        <li><a href="<?php echo site_url("/corp/wallet/");?>">Wallet Journal</a>
+	        <li><a href="<?php echo site_url("/corp/transactions/");?>">Transaction List</a>
         </ul>
 		<?php endif;?>
         <h2>T1 Production</h2>
