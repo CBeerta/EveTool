@@ -56,10 +56,10 @@ class EveApi Extends Api {
 
     function has_corpapi_access()
     {
-        return False; //FIXME: this stuff isnt cached properly, thus making the entire site crawl
+        //return False; //FIXME: this stuff isnt cached properly, thus making the entire site crawl
         
         $CI =& get_instance();
-        $data = MemberTrack::getMembers($CI->eveapi->getMemberTracking());
+        $data = MemberTrack::getMembers($CI->eveapi->getMemberTracking(24*60*60));
         
         if (!empty($data))
         {

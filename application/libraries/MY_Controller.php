@@ -108,16 +108,8 @@ class MY_Controller extends Controller
                 $this->chars[$this->character]['apikey'], 
                 $this->chars[$this->character]['charid']);
             $this->has_corpapi_access = EveApi::has_corpapi_access();
+			$data['has_corpapi_access'] = $this->has_corpapi_access;
         }
-		/*
-        else if ($data['tool'] != 'Overview')
-        {
-             //* This is a Stupid Fix, more of a workaround. For some reason the Sessions sometimes resets on one of the contant pages,
-             //* Which obviously doesnt work very well, so redirect home in that case.
-             //* FIXME!
-            redirect("/");
-        }
-		*/
 		
         $user_timezone = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');
         date_default_timezone_set($user_timezone);

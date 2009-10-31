@@ -20,6 +20,12 @@
             <li><a href="<?php echo site_url("/market/orders/");?>">Market Orders</a>
             <li><a href="<?php echo site_url("/charstandings/agents/");?>">Agents</a>
         </ul>
+		<?php if ($has_corpapi_access): ?>
+        <h2>Corporation</h2>
+        <ul>
+            <li><a href="<?php echo site_url("/corp/memberlist/");?>">Memberlist</a>
+        </ul>
+		<?php endif;?>
         <h2>T1 Production</h2>
         <ul>
             <li><a href="<?php echo site_url("/production/t1/index/");?>#ships">Ships</a>
