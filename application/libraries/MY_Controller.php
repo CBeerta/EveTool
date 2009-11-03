@@ -8,7 +8,7 @@ class MY_Controller extends Controller
     var $char;
     var $Auth;
     var $has_corpapi_access = False;
-
+	
     function __construct ()
     {
         parent::Controller();

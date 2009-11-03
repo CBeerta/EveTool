@@ -324,7 +324,6 @@ class Api
 			if (!$this->usecache || !$iscached)
 			{
 //    		    error_log(date('c')." EVEAPI: Start Fetching {$path}\n", 3, "/var/tmp/evetool.log");
-
 				// Presumably, if it's not set to '&', they might have had a reason for that - be a good citizen
 				$sep = ini_get('arg_separator.output');
 				// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers

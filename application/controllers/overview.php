@@ -149,18 +149,6 @@ class Overview extends MY_Controller
         $template['content'] = $this->load->view('config', $data, True);
         $this->load->view('maintemplate', $template);
     }
-
-    function standings()
-    {
-        $data['character'] = $this->character;
-        $standings = Standings::getStandings($this->eveapi->getStandings());
-    
-        print '<pre>';
-        print_r($standings);
-
-        exit;
-    }
-
 }
 
 ?>

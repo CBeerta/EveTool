@@ -17,8 +17,10 @@ function toggle_it(itemID){
     <th>Location</th>
 </tr>
 <?php foreach($assets as $asset): ?>
-<tr onClick="toggle_it(<?php echo $asset['assetItemID']; ?>)">
-    <th><img align="left" width="64" height="64" src="<?php echo getIconUrl($asset,64);?>"></th>
+<tr >
+    <th onClick="toggle_it(<?php echo $asset['assetItemID']; ?>)">
+		<img align="left" width="64" height="64" src="<?php echo getIconUrl($asset,64);?>">&darr;&darr;
+	</th>
     <th style="text-align: left;">
     <?php if (isset($asset['techLevel'])): ?>
         <a href="<?php echo site_url('/production/t'.$asset['techLevel'].'/detail/'.$asset['typeID']);?>"><?php echo $asset['typeName']; ?></a>
@@ -26,9 +28,9 @@ function toggle_it(itemID){
         <?php echo $asset['typeName']; ?>
     <?php endif; ?>
     <br />
-    <?php echo $asset['groupName']; ?>
+    <small><?php echo $asset['groupName']; ?></small>
     </th>
-    <th><?php echo locationIDToName($asset['locationID']); ?></th>
+    <th style="text-align: left;"><?php echo locationIDToName($asset['locationID']); ?></th>
 </tr>
 <?php if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
 <tbody style="display: none;" id="<?php echo $asset['assetItemID']; ?>">
