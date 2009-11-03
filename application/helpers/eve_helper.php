@@ -13,7 +13,7 @@
  * @param  string
 **/
 
-function apiTimePrettyPrint($time, $format = 'r')
+function apiTimePrettyPrint($time, $format = 'D d.m.Y H:i')
 {
     if (is_string($time))
     {

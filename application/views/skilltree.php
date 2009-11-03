@@ -1,11 +1,12 @@
 <!-- TABLE TERROR INCOMING !!! -->
-<table summary="Character Info" width="100%">
+<table summary="Character Info">
 <tbody>
   <tr>
     <td valign="top" width="258">
       <img style="border: 1px solid gray;" alt="<?php echo $character; ?>" src="/files/cache/char/<?php echo $charinfo['characterID'];?>/256/char.jpg" />
     </td>
-    <td valign="top" width="465"><table class="dataTable" border="0" cellpadding="2" cellspacing="0" width="460" summary="Character Info">
+    <td valign="top" width="465">
+	<table class="dataTable" border="0" cellpadding="2" cellspacing="0" width="460" summary="Character Info">
       <tbody>
         <tr>
           <th colspan="2">Info</th>
@@ -78,30 +79,26 @@
       </tbody>
       </table>
     </td>
-	<td style="text-align: left;" valign="top">
+  </tr>
+  <tr>
+	<td style="text-align: left;" valign="top" colspan="2">
 		<h4>Training Queue:</h4>
 		<?php //debug_popup($queue); ?>
 		<?php foreach ($queue as $entry): ?>
 		<div>
 			<div style="float: right;margin-top:4px;"><img alt="level<?php echo $entry['level']; ?>" src="/files/images/level<?php echo $entry['level'];?>_q.gif" /></div>
 			<div style="line-height: 1.45em; font-size: 11px;">
-			  <?php echo $entry['typeName']; ?> / <i>Rank <?php echo $entry['rank']; ?></i>
+			  <?php echo $entry['typeName']; ?> / Rank <?php echo $entry['rank']; ?>
                 <div>
                   <div style="line-height: 1.5em;margin-left:12px;font-size:11px">
                     <div>
                       <span class="navdot">&#xB7;</span><span>Training to: </span>
-                      <strong>Level <?php echo $entry['level']; ?></strong>
-                    </div>
-                    <div>
-                      <span class="navdot">&#xB7;</span><span>Started: </span>
-                      <?php echo apiTimePrettyPrint($entry['startTime']); ?>
-                    </div>
-                    <div>
-                      <span class="navdot">&#xB7;</span><span>Ending: </span>
-                      <?php echo apiTimePrettyPrint($entry['endTime']); ?>
-                    </div>
-                    <div>
-                      <span class="navdot">&#xB7;</span><span>Time left: </span>
+                      <strong>Level <?php echo $entry['level']; ?></strong> - 
+					  <span>Started: </span>
+                      <?php echo apiTimePrettyPrint($entry['startTime']); ?> - 
+					  <span>Ending: </span>
+                      <?php echo apiTimePrettyPrint($entry['endTime']); ?> - 
+					  <span>Time left: </span>
                       <?php echo timeToComplete($entry['endTime']); ?>
                     </div>
                   </div>
