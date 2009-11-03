@@ -35,6 +35,13 @@
             <li><a href="<?php echo site_url("/production/t1/index/");?>#charges">Ammunition</a>
             <li><a href="<?php echo site_url("/production/t1/index/");?>#drones">Drones</a>
         </ul>
+        <h2>T2 Production</h2>
+        <ul>
+            <li><a href="<?php echo site_url("/production/t2/index/");?>#ships">Ships</a>
+            <li><a href="<?php echo site_url("/production/t2/index/");?>#modules">Modules</a>
+            <li><a href="<?php echo site_url("/production/t2/index/");?>#charges">Ammunition</a>
+            <li><a href="<?php echo site_url("/production/t2/index/");?>#drones">Drones</a>
+        </ul>
         <?php endif; ?>
         <br />
         <h2>Configuration</h2>

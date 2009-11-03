@@ -58,6 +58,7 @@ class Production
                 bluePrint.materialModifier,
                 materials.quantity AS basequantity,
                 graphics.icon,
+				bluePrint.techLevel,
                 IF(typeReq.groupID = 332, materials.quantity, CEIL(materials.quantity * (1 + bluePrint.wasteFactor / 100) ) ) AS quantity, 
                 materials.damagePerJob,
                 (SELECT blueprintTypeID FROM invBlueprintTypes WHERE productTypeID=typeReq.typeID LIMIT 1) AS isPart
@@ -70,12 +71,12 @@ class Production
             WHERE 
                 materials.typeID = ? AND 
                 materials.activityID = 1 AND 
-                typeGroup.categoryID NOT IN (6, 7, 16)
+                typeGroup.categoryID NOT IN (/*6, */ 7, 16)
             ORDER BY 
             	typeReq.typeName;', $blueprintID);
 
         $data = $totalMineralUsage = array();
-
+				
         foreach ($q->result_array() as $row)
         {
             $waste  = round($row['basequantity']*(($row['wasteFactor']/100)/(1+$me) + 0.25 - 0.05 * $pe));
@@ -103,7 +104,7 @@ class Production
 
                 foreach ($row['partRequires'] as $part)
                 {
-                    if ($part['groupID'] == 18)
+                    if ($part['groupID'] == 18 || $part['groupID'] == 429)
                     {
                         $need = $row['requiresPerfect'] - $have[$row['typeID']];
 
@@ -121,12 +122,13 @@ class Production
                     }        
                 }
             }
-            $data[] = $row;
+			
+			if ($row['requiresPerfect'] > 0) 
+			{
+				$data[] = $row;
+			}
         }
         return (array($data, $totalMineralUsage));
     }
-
-
 }
-
 ?>

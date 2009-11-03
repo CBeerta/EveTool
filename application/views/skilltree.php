@@ -83,7 +83,7 @@
 		<?php //debug_popup($queue); ?>
 		<?php foreach ($queue as $entry): ?>
 		<div>
-			<div style="float: right;margin-top:4px;"><img alt="level<?php echo $entry['level']; ?>" src="/files/images/level<?php echo $entry['level'];?>.gif" /></div>
+			<div style="float: right;margin-top:4px;"><img alt="level<?php echo $entry['level']; ?>" src="/files/images/level<?php echo $entry['level'];?>_q.gif" /></div>
 			<div style="line-height: 1.45em; font-size: 11px;">
 			  <?php echo $entry['typeName']; ?> / <i>Rank <?php echo $entry['rank']; ?></i>
                 <div>
