@@ -12,7 +12,10 @@ function toggle_it(itemID){
 <table width="100%">
 <?php foreach ($assets as $location): ?>
 <tr>
-    <th colspan="5" onClick="toggle_it(<?php echo $location[0]['locationID']; ?>)"><div style="position: absolute; left: 30px;">&darr;</div>Assets located in: <?php echo locationIDToName($location[0]['locationID']); ?></th>
+    <th colspan="5">
+		<div title="Collapse Assets in Location" onClick="toggle_it(<?php echo $location[0]['locationID']; ?>)" style="position: absolute; left: 30px; font-weight: bold;">&darr;&darr;&darr;</div>
+		<div style="margin-left: 50px; text-align: left;"><?php echo locationIDToName($location[0]['locationID']); ?></div>
+	</th>
 </tr>
 <tbody style="display: none;" id="<?php echo $location[0]['locationID']; ?>">
 <tr>

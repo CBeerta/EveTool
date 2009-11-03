@@ -12,7 +12,6 @@
  * @param  string
  * @param  string
 **/
-
 function apiTimePrettyPrint($time, $format = 'D d.m.Y H:i')
 {
     if (is_string($time))
@@ -27,6 +26,12 @@ function apiTimePrettyPrint($time, $format = 'D d.m.Y H:i')
 }
 
 
+/**
+ * Return the Duration from Now till $endTime
+ * 
+ * @access public
+ * @param  string
+**/
 function timeToComplete($endTime)
 {
 	$format = '%Y-%m-%d %H:%M:%S';
@@ -73,6 +78,12 @@ function timeToComplete($endTime)
 	return (trim($str));
 }
 
+/**
+ * Return the Region Name for a $regionID
+ * 
+ * @access public
+ * @param  string
+**/
 function regionIDToName($regionID)
 {
     if (empty($regionID))
@@ -91,6 +102,12 @@ function regionIDToName($regionID)
     return 'Unknown';
 }
 
+/**
+ * Return the Location Name for a $locationID
+ * 
+ * @access public
+ * @param  string
+**/
 function locationIDToName($locationID)
 {
     if (empty($locationID))
@@ -104,9 +121,8 @@ function locationIDToName($locationID)
     $row = $q->row();
     if (count($row)>0)
     {
-		preg_match("|^([a-z]+)\s|i", $row->itemName, $matches);
-		return ('<a href="http://evemaps.dotlan.net/system/'.$matches[1].'">'.$row->itemName.'</a>');
-        // return ($row->itemName);
+		preg_match("|^([a-z]+)\s?|i", $row->itemName, $matches);
+		return ('<a target="_blank" href="http://evemaps.dotlan.net/system/'.$matches[1].'"><img title="Open Sytem with Dotlan" src="'.site_url("files/images/map.png").'"></a> '.$row->itemName);
     }
     else if (isset($CI->eveapi->stationlist[$locationID]))
     {
@@ -114,9 +130,9 @@ function locationIDToName($locationID)
     }
     else
     {
+		//FIXME: This is probably a POS somewhere?
         return ('Unknown');
-        //return ('<a href="'.site_url("pos/detail/{$locationID}").'">POS</a>');
-    }
+	}
 }
 
 function get_character_portrait($name, $size = 64)
@@ -176,28 +192,6 @@ function get_character_id($name)
     //$CI ->db->query("INSERT INTO kb_characters (name, characterID)  VALUES (?, ?) ON DUPLICATE KEY UPDATE characterID = ?;", array($name, $data[0]['characterID'], $data[0]['characterID']));
     return ($data[0]['characterID']);
 }
-
-
-/**
-* Return eveName for any available id
-*
-* @access public
-* @param int
-**/
-/*
-// doesnt seem to be used
-function get_eve_name($id)    
-{
-    $CI =& get_instance();
-    $q = $CI->db->query('SELECT itemName FROM eveNames WHERE itemID = ?', $id);
-    
-    if ($q->num_rows() > 0)
-    {
-        return($q->row()->itemName);
-    }
-    return ('Unknown');
-}
-*/
 
 function getIconUrl($type, $size = 64, $background = 'black')
 {

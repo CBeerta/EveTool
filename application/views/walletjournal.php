@@ -5,7 +5,9 @@
 <table width="100%">
     <caption>Wallet Journal</caption>
     <tr>
-        <td colspan="5" style="text-align:center; background-color: white;"><img src="<?php echo site_url("wallet/chart");?>"></td>
+        <td colspan="5" style="text-align:center; background-color: white;">
+			<img src="<?php echo site_url("wallet/chart");?>">
+		</td>
     </tr>
     <tr>
         <th>Date</th>

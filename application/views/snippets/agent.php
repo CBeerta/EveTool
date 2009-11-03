@@ -11,7 +11,7 @@
 	</td>
 	<td valign="top" style="padding-left:5px" id="left">
 	    <b>Corporation</b>: <?php echo $agent->corpName; ?> / <?php echo $agent->division; ?> <br>
-	    <b>Faction</b>: <?php echo $agent->faction; ?> -<b> Region</b>: <?php echo $agent->region; ?> - <b>System</b>: <?php echo $agent->systemName; ?> (<font color="<?php echo $agent->security_color; ?>"><?php echo $agent->security;?></font>)<br>
+	    <b>Faction</b>: <?php echo $agent->faction; ?> -<b> Region</b>: <?php echo $agent->region; ?> - <b>System</b>: <a target="_blank" href="http://evemaps.dotlan.net/system/<?php echo $agent->systemName; ?>"><img title="Open with Dotlan" src="<?php echo site_url("files/images/map.png"); ?>"></a> <?php echo $agent->systemName; ?> (<font color="<?php echo $agent->security_color; ?>"><?php echo $agent->security;?></font>)<br>
 
 	    <b>Station</b>: <?php echo $agent->station; ?><br>
 	    <b>Required Standing</b>: <?php echo $agent->required_standing; ?> - <b>Type</b>: <?php print_r(preg_replace("|(\p{Lu})|", ' $1', $agent->agentType));?><br>

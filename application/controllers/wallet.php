@@ -20,7 +20,7 @@ class Wallet extends MY_Controller
             $day = date('z', strtotime($row['date']));
             if ($day != $prevday)
             {
-                $chartdata[apiTimePrettyPrint($row['date'], 'j M')] = $row['balance'];
+                $chartdata[apiTimePrettyPrint($row['date'], 'j M')] = round($row['balance'] / 1000.0 / 1000.0) ;
                 $prevday = $day;
                 $days++;
             }
@@ -30,9 +30,10 @@ class Wallet extends MY_Controller
             }
         }
         $this->phpgraphlib->addData($chartdata);
-        $this->phpgraphlib->setBars(true);
-        $this->phpgraphlib->setDataPoints(false);
-        $this->phpgraphlib->setLine(false);
+        $this->phpgraphlib->setBars(false);
+        $this->phpgraphlib->setDataPoints(true);
+        $this->phpgraphlib->setDataValues(true);
+        $this->phpgraphlib->setLine(true);
         $this->phpgraphlib->setGradient("red", "maroon");
         $this->phpgraphlib->setTitle("30 Day Wallet History");
 
@@ -53,7 +54,7 @@ class Wallet extends MY_Controller
         $walletxml = $this->eveapi->getWalletJournal();
         $data['wallet'] = WalletJournal::getWalletJournal($walletxml);
         $data['reftypes'] = $this->eveapi->reftypes;
-
+				
         $template['title'] = "Wallet Journal for {$character}";
         $template['content'] = $this->load->view('walletjournal', $data, True);
         $this->load->view('maintemplate', $template);
@@ -65,6 +66,7 @@ class Wallet extends MY_Controller
 
         $walletxml = $this->eveapi->getWalletJournal();
         $wallet = WalletJournal::getWalletJournal($walletxml);
+		
 
 		$data = $this->eveapi->get_daily_walletjournal($wallet);
 	    $data['character'] = $character;
