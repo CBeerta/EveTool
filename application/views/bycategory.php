@@ -19,7 +19,7 @@ function toggle_it(itemID){
 <?php foreach($assets as $asset): ?>
 <tr >
     <th onClick="toggle_it(<?php echo $asset['assetItemID']; ?>)">
-		<img align="left" width="64" height="64" src="<?php echo getIconUrl($asset,64);?>">&darr;&darr;
+		<img align="left" width="64" height="64" src="<?php echo getIconUrl($asset,64);?>">
 	</th>
     <th style="text-align: left;">
     <?php if (isset($asset['techLevel'])): ?>

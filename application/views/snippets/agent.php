@@ -1,4 +1,4 @@
-<table style="min-width: 600px;">
+<table style="min-width: 650px;">
 <tr>
     <?php if ($chars_standing !== False): ?>
     <td bgcolor="<?php echo ($agent->required_standing <= $chars_standing) ? 'green' : 'red'; ?>">

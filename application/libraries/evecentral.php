@@ -97,7 +97,6 @@ class EveCentral
         
         }
 
-
         if ( $user_prices !== False )
         {
             // Apply user mineral Prices over the fetched ones
