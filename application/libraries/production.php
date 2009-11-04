@@ -33,6 +33,65 @@ class Production
         }
         return ($skillReq);
     }
+	
+	/**
+	 * Extract Materials from a "AssetList::getAssetsFromDB" Array
+	 *
+	 **/
+	static function getMaterials($assets)
+	{
+		$CI =& get_instance();
+		$CI->load->database();
+		
+		$q = $CI->db->query('
+			SELECT 
+				typeID 
+			FROM 
+				invTypes, 
+				invGroups 
+			WHERE 
+				invTypes.groupID=invGroups.groupID AND 
+				(
+					invGroups.categoryID=4 OR 
+					invGroups.categoryID=6 OR
+					invGroups.categoryID=17
+				);
+			');
+		
+		$typeIDList = array();
+		foreach ($q->result() as $row)
+		{
+			$typeIDList[] = $row->typeID;
+		}
+		
+		$totalMaterials = array();
+		foreach ($typeIDList as $typeID) 
+		{
+			$totalMaterials[$typeID] = 0;
+		}
+
+		foreach ($assets as $locitems)
+		{   
+			foreach ($locitems as $asset)
+			{
+				if (in_array($asset['typeID'], $typeIDList))
+				{
+					$totalMaterials[$asset['typeID']] += $asset['quantity'];
+				}
+				if (isset($asset['contents']))
+				{
+					foreach ($asset['contents'] as $content)
+					{
+						if (in_array($content['typeID'], $typeIDList))
+						{
+							$totalMaterials[$content['typeID']] += $content['quantity'];
+						}
+					}
+				}
+			}
+		}
+		return(array($totalMaterials, $typeIDList));
+	}
 
     public function getBlueprint($character, $blueprintID, $me = 0, $have = False, $pe = False)
     {

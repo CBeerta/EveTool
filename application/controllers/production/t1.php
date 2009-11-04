@@ -79,8 +79,7 @@ class T1 extends MY_Controller
         $character = $this->character;
         $data = array();
         
-        list($data['have']) = getMaterials(array(18, 754, 873), AssetList::getAssetsFromDB($this->chars[$character]['charid']));
-        
+		list($data['have']) = Production::getMaterials(AssetList::getAssetsFromDB($this->chars[$character]['charid']));
         if (is_numeric($this->input->post('me')))
         {
             $me = $this->input->post('me');

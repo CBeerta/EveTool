@@ -61,7 +61,7 @@ class T2 extends MY_Controller
         $this->load->view('maintemplate', $template);
         return;
     }
-/*	
+	
     public function detail($blueprintID)
     {
         $character = $this->character;
@@ -109,6 +109,6 @@ class T2 extends MY_Controller
         $data['content'] = $this->load->view('production/t1', $data, True);
         $this->load->view('maintemplate', $data);
     }	
-*/
+
 }
 ?>
