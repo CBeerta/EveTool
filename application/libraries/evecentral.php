@@ -62,7 +62,9 @@ class EveCentral
     {
         $prices = array();
 
-        $typeIdList = array_merge($typeIDList, $this->mineralTypes); // Always fetch mineral prices
+        $typeIdList = array_unique(array_merge($typeIDList, $this->mineralTypes)); // Always fetch mineral prices
+		sort($typeIdList);
+		
         foreach ($typeIDList as $typeID)
         {
             foreach (array('median','avg','max') as $kind)
@@ -77,9 +79,8 @@ class EveCentral
             }
         }
         
-        for ( $i = 1 ; $i <= count($typeIDList) ; $i+=20 )
+        foreach (array_chunk($typeIdList, 20) as $splitted)
         {
-            $splitted = array_splice($typeIDList, $i-1, 20, True);
             $xml = $this->retrieveXml($splitted, $region);
             if ($xml !== False)
             {
@@ -94,9 +95,8 @@ class EveCentral
                     }
                 }
             }
-        
         }
-
+	
         if ( $user_prices !== False )
         {
             // Apply user mineral Prices over the fetched ones

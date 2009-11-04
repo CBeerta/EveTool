@@ -23,7 +23,7 @@ function toggle_it(itemID){
 	</th>
     <th style="text-align: left;">
     <?php if (isset($asset['techLevel'])): ?>
-        <a href="<?php echo site_url('/production/t'.$asset['techLevel'].'/detail/'.$asset['typeID']);?>"><?php echo $asset['typeName']; ?></a>
+        <a href="<?php echo site_url('/manufacturing/detail/'.$asset['typeID']);?>"><?php echo $asset['typeName']; ?></a>
     <?php else: ?>
         <?php echo $asset['typeName']; ?>
     <?php endif; ?>
