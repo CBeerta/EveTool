@@ -6,7 +6,7 @@ $(document).ready(function(){
     $("#bpForm").ajaxStart(function(request, settings){
       $("#bpSpinner").show();
     });
-    $.getJSON("<?php echo site_url('production/t1/update/'.$blueprintID); ?>", loadResults);
+    $.getJSON("<?php echo site_url('manufacturing/update/'.$blueprintID); ?>", loadResults);
     $("#bpForm").submit(formProcess);
     
     function loadResults(data) {
@@ -46,7 +46,7 @@ $(document).ready(function(){
       me = $("#me").val();
       amount = $("#amount").val();
       custom_prices = $("#custom_prices").val();
-      $.post("<?php echo site_url('production/t1/update/'.$blueprintID);?>", {me: me, amount: amount, custom_prices: custom_prices},loadResults, "json");
+      $.post("<?php echo site_url('manufacturing/update/'.$blueprintID);?>", {me: me, amount: amount, custom_prices: custom_prices},loadResults, "json");
     }
 });
 </script>
@@ -64,7 +64,7 @@ $(document).ready(function(){
         <th colspan="5">
         <span>
             <img style="padding-left: 20px;" id="bpSpinner" align="left" src="<?php echo site_url('/files/spinner-light.gif'); ?>">
-            <form action="<?php echo site_url('production/t1/update/'.$blueprintID); ?>" method="post" id="bpForm">
+            <form action="<?php echo site_url('manufacturing/update/'.$blueprintID); ?>" method="post" id="bpForm">
             ME: <input type="text" name="me" id="me" value="0" size="1" />
             Amount: <input type="text" name="amount" id="amount" value="1" size="1">
             <!-- Use Custom Mineral Prices: <?php echo form_checkbox('custom_prices', 'accept', False); ?> -->
@@ -84,7 +84,7 @@ $(document).ready(function(){
         <td width="32"><img src="<?php echo getIconUrl($r, 32); ?>"></td>
         <td style="text-align: left">
         <?php if(is_numeric($r['isPart'])): ?>
-        <a href="<?php echo site_url('production/t1/detail/'.$r['isPart']); ?>"><?php echo $r['typeName']; ?></a>        <?php else: ?>
+        <a href="<?php echo site_url('manufacturing/detail/'.$r['isPart']); ?>"><?php echo $r['typeName']; ?></a>        <?php else: ?>
         <?php echo $r['typeName']; ?></td>
         <?php endif; ?>
         <td><p class="req<?php echo $r['typeID'];?>"></p></td>

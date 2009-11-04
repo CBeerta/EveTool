@@ -1,18 +1,18 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class T2 extends MY_Controller
+class Manufacturing extends MY_Controller
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->library('production');
     }
 
-    public function index()
+    public function index($techLevel)
     {
-		//FIXME: This is code dublication, it's identical to the t1 part apart from the template loaded (which is almost identical aswell)
         $character = $this->character;
         $data['character'] = $character;
+        $data['tl'] = $techLevel;
 
         $q = $this->db->query('
             SELECT 
@@ -54,17 +54,104 @@ class T2 extends MY_Controller
         
         foreach ($q->result() as $row)
         {
-            $data['t'.$row->techLevel][$row->categoryID][$row->groupName][$row->blueprintTypeID] = $row->Item;
+            $data['blueprints'][$row->techLevel][$row->categoryID][$row->groupName][$row->blueprintTypeID] = $row->Item;
         }
-        
-        $template['content'] = $this->load->view('production/t2_blueprints', $data, True);
+		
+        $template['content'] = $this->load->view('blueprints', $data, True);
         $this->load->view('maintemplate', $template);
         return;
     }
-	
+    
+    public function redirect($blueprintID = 24699)
+    {
+        $q = $this->db->query('SELECT groupName FROM invGroups WHERE invGroups.categoryID=6 OR invGroups.categoryID=7 OR invGroups.categoryID=18 OR invGroups.categoryID=8;');
+        
+        foreach ($q->result() as $row)
+        {
+            $groupName = str_replace(' ', '_', $row->groupName);
+            $blueprintID = is_numeric($this->input->post($groupName)) ? $this->input->post($groupName) : $blueprintID;
+        }
+        
+        redirect("manufacturing/detail/{$blueprintID}");
+    }
+   
+    public function update($blueprintID)
+    {
+        $character = $this->character;
+        $data = array();
+        
+		list($data['have']) = Production::getMaterials(AssetList::getAssetsFromDB($this->chars[$character]['charid']));
+        if (is_numeric($this->input->post('me')))
+        {
+            $me = $this->input->post('me');
+            $q = $this->db->query('
+                INSERT INTO blueprintData
+                (characterID, blueprintTypeID, me) VALUES (?,?,?)
+                ON DUPLICATE KEY UPDATE me=?', array($this->chars[$character]['charid'], $blueprintID, $me, $me));
+        }
+        else
+        {
+            $q = $this->db->query('SELECT me FROM blueprintData WHERE characterID=? AND blueprintTypeID=?', array($this->chars[$character]['charid'], $blueprintID));
+            $res = $q->row();
+            if ($q->num_rows() > 0)
+            {
+                $me = $res->me;
+            }
+            else
+            {
+                $me = 0;
+            }
+        }
+        $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
+        $custom_prices = False; // This is all not working yet
+                
+        $data['me'] = $me;
+        $data['custom_prices'] = $custom_prices;
+        $data['totalVolume'] = $data['totalMineralVolume'] = $data['totalMineralVolumeValue'] = $data['totalValue'] = 0;
+
+        $pe = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : 5;
+        
+        list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
+        
+		$typeIds = array();
+		foreach($components as $row) 
+        {
+			array_push($typeIds, $row['typeID']);
+		}
+		foreach($totalMineralUsage as $k => $v) 
+        {
+			array_push($typeIds, $k);
+		}
+		$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
+		
+    	$prices = $this->evecentral->getPrices($typeIds, $regionID, $custom_prices);
+
+		foreach ($components as $row)
+        {
+            $req = ceil($row['requiresPerfect'] * $amount);
+ 	   
+	 	    $data['price'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'];
+		    $data['value'][$row['typeID']] = $prices[$row['typeID']]['buy']['median'] * $req;
+	 	    $data['req'][$row['typeID']] = $req;
+	        $data['totalVolume'] += $req * $row['volume'];
+            $data['totalValue'] += $req  * $prices[$row['typeID']]['buy']['median'];
+		}
+        foreach ($totalMineralUsage as $k => $v)
+        {
+        	$data['price'][$k] = $prices[$k]['buy']['median'];
+        	$data['totalMineralValue'][$k] = $v['amount'] * $amount * $prices[$k]['buy']['median'];
+            $data['totalMineralUsage'][$k] = $v['amount'] * $amount;
+            $data['totalMineralVolume'] += $v['volume'] * $amount;
+            $data['totalMineralVolumeValue'] += $v['amount'] * $amount * $prices[$k]['buy']['median'];
+        }
+        echo json_encode($data);
+        exit;
+    }
+
     public function detail($blueprintID)
     {
         $character = $this->character;
+
         
         $data['character'] = $character;
         $data['blueprintID'] = $blueprintID;
@@ -100,15 +187,10 @@ class T2 extends MY_Controller
             $data['data'][$index] = $row;
             $index++;
         }
-		
-		print '<pre>';
-		print_r($components);
-		print '</pre>';
-		die();
+        
         $data['skillreq'] = Production::getSkillReq($blueprintID);
-        $data['content'] = $this->load->view('production/t1', $data, True);
+        $data['content'] = $this->load->view('manufacturing', $data, True);
         $this->load->view('maintemplate', $data);
-    }	
-
+    }
 }
 ?>

@@ -93,7 +93,7 @@ class Production
 		return(array($totalMaterials, $typeIDList));
 	}
 
-    public function getBlueprint($character, $blueprintID, $me = 0, $have = False, $pe = False)
+    public static function getBlueprint($character, $blueprintID, $me = 0, $have = False, $pe = False)
     {
         $CI =& get_instance();
         if (!$pe)
@@ -134,7 +134,7 @@ class Production
             ORDER BY 
             	typeReq.typeName;', $blueprintID);
 
-        $data = $totalMineralUsage = array();
+        $data = $totalMineralUsage = $totalMoonGoo = array();
 				
         foreach ($q->result_array() as $row)
         {
@@ -154,7 +154,7 @@ class Production
                     $row['me'] = 0;
                 }
 
-                list($row['partRequires'], $childMats) = Production::getBlueprint($character, $row['isPart'], $row['me'], $have, $pe);
+				list($row['partRequires'], $childMats, $moonGoo) = Production::getBlueprint($character, $row['isPart'], $row['me'], $have, $pe);
 
                 if (!isset($have[$row['typeID']]))
                 {
@@ -180,14 +180,20 @@ class Production
                         }
                     }        
                 }
+				
             }
+			else if ($row['groupID'] == 429)
+			{
+				// T2 Component
+				$row['moonGoo'][43523] = 31012;
+			}
 			
 			if ($row['requiresPerfect'] > 0) 
 			{
 				$data[] = $row;
 			}
         }
-        return (array($data, $totalMineralUsage));
+        return (array($data, $totalMineralUsage, $totalMoonGoo));
     }
 }
 ?>

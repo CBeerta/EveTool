@@ -30,17 +30,17 @@
 		<?php endif;?>
         <h2>T1 Production</h2>
         <ul>
-            <li><a href="<?php echo site_url("/production/t1/index/");?>#ships">Ships</a>
-            <li><a href="<?php echo site_url("/production/t1/index/");?>#modules">Modules</a>
-            <li><a href="<?php echo site_url("/production/t1/index/");?>#charges">Ammunition</a>
-            <li><a href="<?php echo site_url("/production/t1/index/");?>#drones">Drones</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/1");?>#ships">Ships</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/1");?>#modules">Modules</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/1");?>#charges">Ammunition</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/1");?>#drones">Drones</a>
         </ul>
         <h2>T2 Production</h2>
         <ul>
-            <li><a href="<?php echo site_url("/production/t2/index/");?>#ships">Ships</a>
-            <li><a href="<?php echo site_url("/production/t2/index/");?>#modules">Modules</a>
-            <li><a href="<?php echo site_url("/production/t2/index/");?>#charges">Ammunition</a>
-            <li><a href="<?php echo site_url("/production/t2/index/");?>#drones">Drones</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/2");?>#ships">Ships</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/2");?>#modules">Modules</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/2");?>#charges">Ammunition</a>
+            <li><a href="<?php echo site_url("/manufacturing/index/2");?>#drones">Drones</a>
         </ul>
         <?php endif; ?>
         <br />
