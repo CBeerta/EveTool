@@ -21,16 +21,8 @@ class Assets extends MY_Controller
         $template['content'] = $this->load->view('assets', $data, True);
         $this->load->view('maintemplate', $template);
     }
-    
-    public function search($query, $character)
-    {
-        $character = $this->character;
-        
-        print '<pre>';
-            
-    }
 
-    private function _byCategory($charid, $categoryID = 9, $filter = array(31, 237) )
+    private function _byCategory($charid, $categoryID = 9, $filter = array(29,31, 237) )
     {
         $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => $categoryID));
 
@@ -80,31 +72,72 @@ class Assets extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
-/*
-    public function search($query, $character)
+    public function search()
     {
         $data = array();
         $character = $this->character;
         $data['character'] = $this->character;
-        print '<pre>';
+		
+		if (!is_string($this->input->post('search')))
+		{
+			die('<h1>You need to enter something to search</h1>');
+		}
+		else
+		{
+			$query = $this->input->post('search');
+		}
+		
+		$assets = $this->db->query('	
+			SELECT 
+				assets.characterID,
+				itemID,
+				invTypes.typeID,
+				locationID,
+				typeName,
+				quantity,
+				volume,
+				categoryID,
+				icon
+			FROM 
+				assets, 
+				invTypes,
+				invGroups,
+				eveGraphics
+			WHERE 
+				invTypes.graphicID=eveGraphics.graphicID AND
+				invTypes.groupID=invGroups.groupID AND
+				assets.typeID=invTypes.typeID AND
+				invTypes.typeName LIKE ?;', "%{$query}%");
+		$contents = $this->db->query('
+			SELECT 
+				contents.characterID,
+				contents.itemID,
+				invTypes.typeID,
+				assets.typeID AS containedIn, 
+				typeName, 
+				assets.locationID,
+				contents.quantity,
+				invTypes.volume,
+				categoryID,
+				icon
+			FROM 
+				assets, 
+				contents, 
+				invTypes,
+				invGroups,
+				eveGraphics
+			WHERE 
+				invTypes.graphicID=eveGraphics.graphicID AND
+				invTypes.groupID=invGroups.groupID AND
+				assets.itemID=contents.locationItemID AND 
+				contents.typeID=invTypes.typeID AND 
+				invTypes.typeName LIKE ?;', "%{$query}%");
 
-        $res = $this->db->query('SELECT typeName,typeID FROM invTypes WHERE typeName like ?;', "%{$query}%");
-        $typeIdList = array();
-        foreach ($res->result() as $row)
-        {
-                $typeIdList[$row->typeID] = "invTypes.typeName";
-        }
-        print_r($typeIdList);             
-        $data['assets'] = AssetList::getAssetsFromDB($this->chars[$character]['charid'], $typeIdList );
-        
-        print_r($data['assets']);
-
-
-        exit;
-        $template['content'] = $this->load->view('assets', $data, True);
+		$data['found'] = array_merge($assets->result_array(), $contents->result_array());
+		
+        $template['content'] = $this->load->view('search', $data, True);
         $this->load->view('maintemplate', $template);
     }
-*/
 
 }
 ?>

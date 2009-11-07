@@ -56,27 +56,14 @@ class EveApi Extends Api {
 
     function has_corpapi_access()
     {
-        return False; 
-		/*
-		FIXME: this stuff isnt cached properly, thus making the entire site crawl
+		$CI =& get_instance();
+		$data = CharacterSheet::getCharacterSheet($this->eveapi->getcharactersheet());
 		
-		if the getmembertracking encounters a "not authorized" from the api, it doesnt cache it
-		we really need to find another way of figuring out what rights a char has in corp
-	
-		*/
-        
-        $CI =& get_instance();
-        $data = MemberTrack::getMembers($CI->eveapi->getMemberTracking(24*60*60));
-        
-        if (!empty($data))
-        {
-            foreach ($data as $row)
-            {
-                $CI->eveapi->corp_members[$row['characterID']] = (object) $row;
-            }
-            return True;
-        }
-        return False;
+		if (!empty($data['corporationRoles']))
+		{
+			return True;
+		}
+        return False; 
     }
 	
     /**

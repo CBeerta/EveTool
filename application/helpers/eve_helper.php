@@ -121,7 +121,7 @@ function locationIDToName($locationID)
     $row = $q->row();
     if (count($row)>0)
     {
-		preg_match("|^([a-z]+)\s?|i", $row->itemName, $matches);
+		preg_match("|^([a-z0-9-]+)\s?|i", $row->itemName, $matches);
 		return ('<a target="_blank" href="http://evemaps.dotlan.net/system/'.$matches[1].'"><img title="Open System with Dotlan" src="'.site_url("files/images/map.png").'"></a> '.$row->itemName);
     }
     else if (isset($CI->eveapi->stationlist[$locationID]))

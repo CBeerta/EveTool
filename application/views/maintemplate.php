@@ -12,6 +12,9 @@
             <li><a href="<?php echo site_url("/wallet/dailyjournal/");?>">Wallet Journal</a>
             <li><a href="<?php echo site_url("/assets/index");?>">Assets</a>
             <ul class="submenu">
+				<form method="post" action="<?php echo site_url("/assets/search");?>" id="assetSearch">
+					<li><input type="text" name="search" id="search" value="" size="16" />
+				</form>
                 <li><a href="<?php echo site_url("/materials/index/18");?>">Materials</a>
                 <li><a href="<?php echo site_url("/assets/blueprints/");?>">Blueprints</a>
                 <li><a href="<?php echo site_url("/assets/ships/");?>">Ships</a>
