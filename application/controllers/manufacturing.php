@@ -103,16 +103,14 @@ class Manufacturing extends MY_Controller
             }
         }
         $amount = is_numeric($this->input->post('amount')) ? $this->input->post('amount') : 1;
-        $custom_prices = False; // This is all not working yet
                 
         $data['me'] = $me;
-        $data['custom_prices'] = $custom_prices;
         $data['totalVolume'] = $data['totalMineralVolume'] = $data['totalMineralVolumeValue'] = $data['totalValue'] = 0;
 
         $pe = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : 5;
         
-        list ($components, $totalMineralUsage) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
-        
+        list ($components, $totalMineralUsage, $totalMoonGoo) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
+
 		$typeIds = array();
 		foreach($components as $row) 
         {
@@ -124,7 +122,7 @@ class Manufacturing extends MY_Controller
 		}
 		$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
 		
-    	$prices = $this->evecentral->getPrices($typeIds, $regionID, $custom_prices);
+    	$prices = $this->evecentral->getPrices($typeIds, $regionID);
 
 		foreach ($components as $row)
         {
@@ -151,7 +149,6 @@ class Manufacturing extends MY_Controller
     public function detail($blueprintID)
     {
         $character = $this->character;
-
         
         $data['character'] = $character;
         $data['blueprintID'] = $blueprintID;
@@ -181,7 +178,8 @@ class Manufacturing extends MY_Controller
         $allowsFor = $data['data'] = array();
 
         $index = 0;
-        list ($components, $data['totalMineralUsage']) = Production::getBlueprint($character, $blueprintID, 0);
+        list ($components, $data['totalMineralUsage'], $totalMoonGoo) = Production::getBlueprint($character, $blueprintID, 0);
+		
         foreach ($components as $row)
         {
             $data['data'][$index] = $row;

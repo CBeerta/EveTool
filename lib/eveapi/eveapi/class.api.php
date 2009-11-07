@@ -30,7 +30,6 @@ class Api
 	private $userid = null;
 	private $charid = null;
 	private $apisite = "api.eve-online.com";
-	/* private $apisite = "eveapiproxy.appspot.com"; */
 	private $cachedir = './xmlcache';
 	private $debug = false;
 	private $msg = array();
@@ -42,37 +41,25 @@ class Api
 	{
 		if (empty($userid) || empty ($apikey))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","setCredentials: userid and apikey must not be empty");
-			}
+			$this->addMsg("Error","setCredentials: userid and apikey must not be empty");
 			return false;
 		}
 
 		if (!is_numeric($userid))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","setCredentials: userid must be a numeric value");
-			}
+			$this->addMsg("Error","setCredentials: userid must be a numeric value");
 			return true;
 		}
 		
 		if (!is_string($apikey))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","setCredentials: apikey must be a string value");
-			}
+			$this->addMsg("Error","setCredentials: apikey must be a string value");
 			return false;
 		}
 		
 		if ($charid != null && !is_numeric($charid))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","setCredentials: charid must be a numeric value");
-			}
+			$this->addMsg("Error","setCredentials: charid must be a numeric value");
 			return false;
 		}
 	
@@ -85,7 +72,9 @@ class Api
 		if (!empty($charid) && is_numeric($charid))
 		{
 			$this->charid = $charid;
-		} else {
+		} 
+		else 
+		{
 			$this->charid = null;
 		}
 		
@@ -111,10 +100,7 @@ class Api
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","debug: parameter must be present and boolean");
-			}
+			$this->addMsg("Error","debug: parameter must be present and boolean");
 			return false;
 		}
 	}
@@ -138,10 +124,7 @@ class Api
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","cache: parameter must be present and boolean");
-			}
+			$this->addMsg("Error","cache: parameter must be present and boolean");
 			return false;
 		}
 	}
@@ -165,10 +148,7 @@ class Api
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","setCacheDir: parameter must be present and a string");
-			}
+			$this->addMsg("Error","setCacheDir: parameter must be present and a string");
 			return false;
 		}
 	}
@@ -187,10 +167,7 @@ class Api
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","setCacheStatus: parameter must be present and boolean");
-			}
+			$this->addMsg("Error","setCacheStatus: parameter must be present and boolean");
 			return false;
 		}
 
@@ -207,14 +184,14 @@ class Api
 		{
 			$this->timetolerance = $tolerance;
 			return true;
-		} else {
-			if ($this->debug)
-				$this->addMsg("Error","setTimeTolerance: parameter must be present and an integer");
+		} 
+		else 
+		{
+			$this->addMsg("Error","setTimeTolerance: parameter must be present and an integer");
 			return false;
 		}
 
 	}
-
 
 	public function getTimeTolerance()
 	{
@@ -227,9 +204,10 @@ class Api
 		{
 			$this->apisite = $site;
 			return true;
-		} else {
-			if ($this->debug)
-				$this->addMsg("Error","setApiSite: parameter must be present and a string");
+		} 
+		else 
+		{
+			$this->addMsg("Error","setApiSite: parameter must be present and a string");
 			return false;
 		}
 	}
@@ -252,10 +230,7 @@ class Api
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","addMsg: type and message must not be empty");
-			}
+			$this->addMsg("Error","addMsg: type and message must not be empty");
 			return 0;
 		}
 	}
@@ -266,6 +241,30 @@ class Api
 		{
 			echo ("<b>" . $msg['type'] . "</b>: " . $msg['msg'] . "</br>\n");
 		}
+	}
+	
+	public function debugPopup()
+	{
+		$message = "";
+		foreach ($this->msg as $msg)
+		{
+			$message .= "<b>" . $msg['type'] . "</b>: " . $msg['msg'] . "</br>\n";
+		}
+
+		$txt  = '<div style="font-size: small;">';
+		$txt .= '<pre>'.strtr($message, array('\\'=>'\\\\',"'"=>"\\'",'"'=>'\\"',"\r"=>'\\r',"\n"=>'\\n','</'=>'<\/')).'</pre>';
+		$txt .= '</div>';
+		
+		$js = '
+			<script type="text/javascript">
+		//    <![CDATA[
+				_console = window.open("","Debug Console","width=680,height=600,resizable,scrollbars=yes");
+				_console.document.write(\''.$txt.'\');
+				_console.document.close();
+		//      ]]>
+			</script>
+		';
+		echo $js;
 	}
 	
 	/**********************
@@ -283,19 +282,13 @@ class Api
 		$this->setCacheStatus(false);
 		if ($cachePath != null && !is_array($cachePath))
 		{			
-			if ($this->debug)
-			{
-				$this->addMsg("Error","retrieveXml: Non-array value of cachePath param, reverting to default value");
-			}
+			$this->addMsg("Error","retrieveXml: Non-array value of cachePath param, reverting to default value");
 			$cachePath = null;
 		}
 		
 		if ($params != null && !is_array($params))
 		{			
-			if ($this->debug)
-			{
-				$this->addMsg("Error","retrieveXml: Non-array value of params param, reverting to default value");
-			}
+			$this->addMsg("Error","retrieveXml: Non-array value of params param, reverting to default value");
 			$params = null;
 		}
 
@@ -319,20 +312,25 @@ class Api
 			
 			// Save ourselves some calls and figure caching status out once for this function
 			if ($this->usecache)
+			{
 				$iscached = $this->isCached($path,$params,$cachePath,$timeout,$binary);
+			}
 			// continue when not cached
 			if (!$this->usecache || !$iscached)
 			{
-//    		    error_log(date('c')." EVEAPI: Start Fetching {$path}\n", 3, "/var/tmp/evetool.log");
 				// Presumably, if it's not set to '&', they might have had a reason for that - be a good citizen
 				$sep = ini_get('arg_separator.output');
 				// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers
 				ini_set('arg_separator.output','&');
 				// poststring
 				if (count($params) > 0)
+				{
 					$poststring = http_build_query($params); // which has been forced to use '&' by ini_set, at the end of this file
+				}
 				else
+				{
 					$poststring = "";
+				}
 				// And set it back to whatever sensical or non-sensical value it was in the 1st place
 				ini_set('arg_separator.output',$sep);
 
@@ -342,11 +340,12 @@ class Api
 
 				if (!$fp)
 				{
-					if ($this->debug)
-						$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
+					$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
 					// If we do have this in cache regardless of freshness, return it
 					if ($this->usecache && $this->isCached($path,$params,$cachePath,0,$binary))
+					{
 						return $this->loadCache($path, $params, $cachePath,$binary);
+					}
 				}
 				else
 				{
@@ -358,7 +357,9 @@ class Api
 					fputs ($fp, "Content-Length: " . strlen($poststring) . "\r\n");
 					fputs ($fp, "Connection: close\r\n\r\n");
 					if (strlen($poststring) > 0)
+					{
 						fputs ($fp, $poststring."\r\n");
+					}
 					
 					// retrieve contents
 					$contents = "";
@@ -383,21 +384,17 @@ class Api
 							$error = (string) $xml->error;
 							if (!empty($error))
 							{
-								if ($this->debug)
-								{ //BUGBUG - should also add the error code here
-									$this->addMsg("API Error", $error);
-								}
+								$this->addMsg("API Error", $error);
 
 								// If we do have this in cache regardless of freshness, return it
 								if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
+								{
 									return $this->loadCache($path, $params, $cachePath);
-								
+								}
 								return null;
 							}
-							
 							unset ($xml); // reduce memory footprint
 						}
-//            		    error_log(date('c')." EVEAPI: Done Fetching {$path}\n", 3, "/var/tmp/evetool.log");
 
 						if ($this->usecache && !$iscached)
 						{
@@ -405,12 +402,7 @@ class Api
 						}
 						return $contents;
 					}
-					
-					if ($this->debug)
-					{
-						$this->addMsg("Error", "retrieveXml: Could not parse contents");
-					}
-					
+					$this->addMsg("Error", "retrieveXml: Could not parse contents");
 					return null;
 				}
 			}
@@ -419,11 +411,10 @@ class Api
 				return $this->loadCache($path, $params, $cachePath,$binary);
 			}
 		}
-		elseif ($this->debug)
+		else
 		{
 			$this->addMsg("Error", "retrieveXml: path is empty");
 		}
-		
 		return null; //empty path, calling error
 	}
 	
@@ -488,19 +479,12 @@ class Api
 			fwrite($fp, $contents);
 			fclose($fp);
 			
-			if ($this->debug)
-			{
-				$this->addMsg("Info","store: Created cache file:" . $file);
-			}
+			$this->addMsg("Info","store: Created cache file:" . $file);
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error", "store: Could not open cache file for writing: " . $file);
-			}
+			$this->addMsg("Error", "store: Could not open cache file for writing: " . $file);
 		}
-		
 	}
 	
 	private function loadCache($path, $params, $cachePath, $binary = false)
@@ -514,17 +498,11 @@ class Api
 			$contents = fread($fp, filesize($file));
 			fclose($fp);
 			$this->setCacheStatus(true);
-			if ($this->debug)
-			{
-				$this->addMsg("Info","loadCache: Fetched cache file:" . $file);
-			}
+			$this->addMsg("Info","loadCache: Fetched cache file:" . $file);
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error", "loadCache: Could not open cache file for reading: " . $file);
-			}
+			$this->addMsg("Error", "loadCache: Could not open cache file for reading: " . $file);
 		}
 
 		return $contents;
@@ -542,7 +520,9 @@ class Api
 		if (file_exists($file) && filesize($file) > 0) // Added filesize to catch error on 0 length files. 
 		{
 			if ($timeout === 0) // timeout is 0, not NULL - magic value to indicate we want to know whether the file is there, never mind the caching time
+			{
 				return true;
+			}
 
 			$fp = fopen($file, "r");
 			
@@ -564,7 +544,9 @@ class Api
 				unset($xml); // and free memory for this one, too
 
 				if ($time === $until) // currentTime and cachedUntil are equal - CCP's way of telling us "don't cache"
+				{
 					return false;
+				}
 				
 				// get GMT time
 				$timenow = time();
@@ -579,31 +561,31 @@ class Api
 				if ($timeout === NULL) // no explicit timeout given, use the cachedUntil time CCP gave us
 				{
 					if (($until + $this->timetolerance * 60) < $now) // time to fetch again, with some minutes leeway
+					{
 						return false;
-				} else {
+					}
+				} 
+				else 
+				{
 					// if now is $timeout minutes ahead of the cached time, pretend this file is not cached
 					$minutes = ($timeout + $this->timetolerance) * 60;
 					if ($now >= $time + $minutes)
+					{
 						return false;
+					}
 				}
 
 				return true; // default fall-through - cache is still valid
 			}
 			else
 			{
-				if ($this->debug)
-				{
-					$this->addMsg("Error", "isCached: Could not open cache file for reading: " . $file);
-				}
+				$this->addMsg("Error", "isCached: Could not open cache file for reading: " . $file);
 				return false;
 			}
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Info", "isCached: Cache file does not (yet?) exist: " . $file);
-			}
+			$this->addMsg("Info", "isCached: Cache file does not (yet?) exist: " . $file);
 			return false;
 		}
 	}
@@ -615,19 +597,13 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAccountBalance: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getAccountBalance: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAccountBalance: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getAccountBalance: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 
@@ -651,10 +627,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillInTraining: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getSkillInTraining: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -671,10 +644,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterSheet: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getCharacterSheet: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -691,10 +661,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacters: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getCharacters: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -710,10 +677,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getServerStatus: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getServerStatus: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -726,10 +690,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillTree: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getSkillTree: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -742,10 +703,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCertificateTree: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getCertificateTree: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -758,10 +716,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getRefTypes: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getRefTypes: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -774,10 +729,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMemberTracking: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMemberTracking: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -794,10 +746,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseList: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getStarbaseList: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -814,10 +763,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getStarbaseDetail: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -837,10 +783,7 @@ class Api
 		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of id param, returning null");
-			}
+			$this->addMsg("Error","getStarbaseDetail: Non-numeric value of id param, returning null");
 			return null;
 		}
 	}
@@ -850,28 +793,19 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getWalletTransactions: Non-numeric value of timeout param, reverting to default value");
 			$timeout = 65;
 		}
 
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getWalletTransactions: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 		
 		if ($transid != null && !is_numeric($transid))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-numeric value of transid param, reverting to default value");
-			}
+			$this->addMsg("Error","getWalletTransactions: Non-numeric value of transid param, reverting to default value");
 			$transid = null;
 		}
 
@@ -879,13 +813,12 @@ class Api
 		
 		// accountKey
 		if (is_numeric($accountkey))
+		{
 			$params['accountKey'] = $accountkey;
+		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-numeric value of accountkey param, defaulting to '1000'");
-			}
+			$this->addMsg("Error","getWalletTransactions: Non-numeric value of accountkey param, defaulting to '1000'");
 			$params['accountKey'] = 1000;
 		}
 
@@ -918,28 +851,19 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getWalletJournal: Non-numeric value of timeout param, reverting to default value");
 			$timeout = 65;
 		}
 
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getWalletJournal: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 		
 		if ($refid != null && !is_numeric($refid))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-numeric value of refid param, reverting to default value");
-			}
+			$this->addMsg("Error","getWalletJournal: Non-numeric value of refid param, reverting to default value");
 			$refid = null;
 		}
 
@@ -947,13 +871,12 @@ class Api
 		
 		// accountKey
 		if (is_numeric($accountkey))
+		{
 			$params['accountKey'] = $accountkey;
+		}
 		else
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-numeric value of accountkey param, defaulting to '1000'");
-			}
+			$this->addMsg("Error","getWalletJournal: Non-numeric value of accountkey param, defaulting to '1000'");
 			$params['accountKey'] = 1000;
 		}
 
@@ -985,19 +908,13 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCorporationSheet: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getCorporationSheet: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		
 		if ($corpid != null && !is_numeric($corpid))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCorporationSheet: Non-numeric value of corpid param, reverting to default value");
-			}
+			$this->addMsg("Error","getCorporationSheet: Non-numeric value of corpid param, reverting to default value");
 			$corpid = null;
 		}
 
@@ -1021,10 +938,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAllianceList: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getAllianceList: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -1037,19 +951,13 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAssetList: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getAssetList: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAssetList: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getAssetList: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 	   
@@ -1072,19 +980,13 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getIndustryJobs: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getIndustryJobs: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getIndustryJobs: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getIndustryJobs: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 		
@@ -1107,10 +1009,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarSystems: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getFacWarSystems: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -1123,19 +1022,13 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarStats: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getFacWarStats: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarStats: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getFacWarStats: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 		$cachePath = array();
@@ -1156,10 +1049,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarTopStats: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getFacWarTopStats: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -1172,10 +1062,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMapJumps: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMapJumps: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -1188,10 +1075,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMapSovereignty: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMapSovereignty: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$contents = $this->retrieveXml("/map/Sovereignty.xml.aspx", $timeout);
@@ -1202,10 +1086,7 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMapKills: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMapKills: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$contents = $this->retrieveXml("/map/Kills.xml.aspx", $timeout);
@@ -1216,28 +1097,19 @@ class Api
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getKillLog: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getKillLog: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 	 
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getKillLog: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getKillLog: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 		
 		if ($killid != null && !is_numeric($killid))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getKillLog: Non-numeric value of killid param, reverting to default value");
-			}
+			$this->addMsg("Error","getKillLog: Non-numeric value of killid param, reverting to default value");
 			$killid = null;
 		}
 		
@@ -1265,14 +1137,11 @@ class Api
 		return $contents;
 	}
 
-public function getMemberMedals($timeout = null)
+	public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMedals: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMedals: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$cachePath = array();
@@ -1286,18 +1155,12 @@ public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMedals: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMedals: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMedals: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getMedals: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 		$cachePath = array();
@@ -1318,18 +1181,12 @@ public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMarketOrders: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMarketOrders: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		if (!is_bool($corp))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMarketOrders: Non-bool value of corp param, reverting to default value");
-			}
+			$this->addMsg("Error","getMarketOrders: Non-bool value of corp param, reverting to default value");
 			$corp = false;
 		}
 		$cachePath = array();
@@ -1350,10 +1207,7 @@ public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getConquerableStationList: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getConquerableStationList: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout);
@@ -1366,10 +1220,7 @@ public function getMemberMedals($timeout = null)
 
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getStandings: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getStandings: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$cachePath = array();
@@ -1391,10 +1242,7 @@ public function getMemberMedals($timeout = null)
 
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getContainerLog: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getContainerLog: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$cachePath = array();
@@ -1409,10 +1257,7 @@ public function getMemberMedals($timeout = null)
 
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getShareHolders: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getShareHolders: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$cachePath = array();
@@ -1427,10 +1272,7 @@ public function getMemberMedals($timeout = null)
 
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMemberSecurity: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMemberSecurity: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$cachePath = array();
@@ -1445,10 +1287,7 @@ public function getMemberMedals($timeout = null)
 
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMemberSecurityLog: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getMemberSecurityLog: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$cachePath = array();
@@ -1462,10 +1301,7 @@ public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getTitles: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getTitles: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$cachePath = array();
@@ -1479,10 +1315,7 @@ public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getErrorList: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getErrorList: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 		$contents = $this->retrieveXml("/eve/ErrorList.xml.aspx", $timeout);
@@ -1496,10 +1329,7 @@ public function getMemberMedals($timeout = null)
 
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterName: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getCharacterName: Non-numeric value of timeout param, reverting to default value");
 			$timeout = null;
 		}
 
@@ -1535,10 +1365,7 @@ public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-				if ($this->debug)
-				{
-					$this->addMsg("Error","getCharacterID: Non-numeric value of timeout param, reverting to default value");
-				}
+				$this->addMsg("Error","getCharacterID: Non-numeric value of timeout param, reverting to default value");
 				$timeout = null;
 		}
 
@@ -1568,10 +1395,7 @@ public function getMemberMedals($timeout = null)
 
 		if (!is_numeric($size)) // possible values are 64 and 256, but that's not checked, as CCP may change their mind
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterPortrait: Non-numeric value of size param, reverting to default value");
-			}
+			$this->addMsg("Error","getCharacterPortrait: Non-numeric value of size param, reverting to default value");
 			$size = 64;
 		}
 		if (is_int($id))

@@ -11,7 +11,6 @@ class EveCentral
     {
         $uri  = 'http://eve-central.com/api/marketstat?';
         $uri .= 'regionlimit='.$region;
-        
         foreach (array_unique($typeIdList) as $typeId)
         {
             $uri .= '&typeid='.$typeId;
@@ -41,9 +40,10 @@ class EveCentral
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_exec($ch);
+            $res = curl_getinfo($ch);
+            curl_close($ch);
             fclose($fp);
 
-            $res = curl_getinfo($ch);
             if ($res['http_code'] >= 400 || $res['http_code'] == 0 || $res === False)
             {
                 /* Something went wrong */
@@ -53,9 +53,8 @@ class EveCentral
             {
                 rename($destFile.'.tmp', $destFile);
             }
-            curl_close($ch);
         }
-        return(@simplexml_load_file($destFile));
+        return(simplexml_load_file($destFile));
     }
 
     public function getPrices($typeIDList, $region = 10000002, $user_prices = False )

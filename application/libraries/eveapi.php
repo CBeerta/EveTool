@@ -19,9 +19,6 @@ require_once(BASEPATH.'../eveapi/eveapi/class.walletjournal.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.characterid.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.titles.php');
 
-//require_once(BASEPATH.'../eveapi/eveapi/class.starbaselist.php');
-//require_once(BASEPATH.'../eveapi/eveapi/class.starbasedetail.php');
-
 class EveApi Extends Api {
 
     var $reftypes;
@@ -143,19 +140,13 @@ class EveApi Extends Api {
     {
 		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillQueue: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getSkillQueue: Non-numeric value of timeout param, reverting to default value");
 			$timeout = 1440;
 		}
 
 		if ($cachethis != null && !is_bool($cachethis))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillQueue: Non-bool value of cachethis param, reverting to default value");
-			}
+			$this->addMsg("Error","getSkillQueue: Non-bool value of cachethis param, reverting to default value");
 			$cachethis = null;
 		}
 
@@ -173,19 +164,13 @@ class EveApi Extends Api {
     {
 		if (!is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAssetList: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getAssetList: Non-numeric value of timeout param, reverting to default value");
 			$timeout = 1440;
 		}
 
 		if ($cachethis != null && !is_bool($cachethis))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAssetList: Non-bool value of cachethis param, reverting to default value");
-			}
+			$this->addMsg("Error","getAssetList: Non-bool value of cachethis param, reverting to default value");
 			$cachethis = null;
 		}
 
@@ -202,19 +187,13 @@ class EveApi Extends Api {
 	{
 		if (!is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getConquerableStationList: Non-numeric value of timeout param, reverting to default value");
-			}
+			$this->addMsg("Error","getConquerableStationList: Non-numeric value of timeout param, reverting to default value");
 			$timeout = 1500;
 		}
 
 		if ($cachethis != null && !is_bool($cachethis))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getConquerableStationList: Non-bool value of cachethis param, reverting to default value");
-			}
+			$this->addMsg("Error","getConquerableStationList: Non-bool value of cachethis param, reverting to default value");
 			$cachethis = null;
 		}
 		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout, null, $cachethis);

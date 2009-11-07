@@ -14,8 +14,6 @@ function msg_forward($heading, $message, $destination, $delay = 5, $template = '
 
 function debug_popup( $message )
 {
-    $CI =& get_instance();
-    
     if ( !is_string($message) )
     {
         $message = print_r($message, True);

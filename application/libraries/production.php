@@ -2,14 +2,40 @@
 
 class Production
 {
-    public function getBlueprintInfo($blueprintID)
+    public static function getBlueprintInfo($blueprintID)
     {   
         $CI =& get_instance();
         $q = $CI->db->query('SELECT * FROM invBlueprintTypes WHERE blueprintTypeID=?', $blueprintID);
         return($q->row_array());
     }
+	
+	public static function getReaction($reactionTypeID)
+	{
+		$CI =& get_instance();
+		$q = $CI->db->query('
+			SELECT 
+				* 
+			FROM 
+				invTypeReactions, 
+				invTypes 
+			WHERE 
+				invTypeReactions.reactionTypeID=? AND 
+				invTypeReactions.typeID=invTypes.typeID AND
+				invTypeReactions.input > 0'
+			, $reactionTypeID);
+			
+		/**
+		 * If Things were that easy, haha.
+		 *
+		 * FIXME: all this doesnt include the fact that you need x>1 moonGoo of each, and you get y
+		 * where x is mostly 100
+		 * and y is completely random
+		 *
+		 **/
+		return($q->result_array());
+	}
 
-    public function getSkillReq($blueprintID)
+    public static function getSkillReq($blueprintID)
     {
         $CI =& get_instance();
         $q = $CI->db->query('
@@ -120,7 +146,8 @@ class Production
 				bluePrint.techLevel,
                 IF(typeReq.groupID = 332, materials.quantity, CEIL(materials.quantity * (1 + bluePrint.wasteFactor / 100) ) ) AS quantity, 
                 materials.damagePerJob,
-                (SELECT blueprintTypeID FROM invBlueprintTypes WHERE productTypeID=typeReq.typeID LIMIT 1) AS isPart
+                (SELECT blueprintTypeID FROM invBlueprintTypes WHERE productTypeID=typeReq.typeID LIMIT 1) AS isPart,
+				(SELECT reactionTypeID FROM invTypeReactions WHERE invTypeReactions.typeID=typeReq.typeID) AS reactionTypeID
             FROM 
                 typeActivityMaterials AS materials
 	            INNER JOIN invTypes AS typeReq ON materials.requiredtypeID = typeReq.typeID
@@ -180,12 +207,15 @@ class Production
                         }
                     }        
                 }
-				
             }
-			else if ($row['groupID'] == 429)
+			else if (is_numeric($row['reactionTypeID']))
 			{
 				// T2 Component
-				$row['moonGoo'][43523] = 31012;
+				$moonGoo = Production::getReaction($row['reactionTypeID']);
+				foreach ($moonGoo as $v)
+				{
+					$totalMoonGoo[$v['typeID']] = empty($totalMoonGoo[$v['typeID']]) ? $v['quantity'] : $totalMoonGoo[$v['typeID']] += $v['quantity'];
+				}
 			}
 			
 			if ($row['requiresPerfect'] > 0) 
