@@ -87,6 +87,12 @@ class Assets extends MY_Controller
 			$query = $this->input->post('search');
 		}
 		
+		$char_ids = array(-1);
+		foreach ($this->chars as $char)
+		{
+			$char_ids[] = $char['charid'];
+		}
+		
 		$assets = $this->db->query('	
 			SELECT 
 				assets.characterID,
@@ -107,7 +113,8 @@ class Assets extends MY_Controller
 				invTypes.graphicID=eveGraphics.graphicID AND
 				invTypes.groupID=invGroups.groupID AND
 				assets.typeID=invTypes.typeID AND
-				invTypes.typeName LIKE ?;', "%{$query}%");
+				assets.characterID IN ('.implode(',', $char_ids).') AND
+				invTypes.typeName LIKE ?;',  "%{$query}%");
 		$contents = $this->db->query('
 			SELECT 
 				contents.characterID,
@@ -131,6 +138,7 @@ class Assets extends MY_Controller
 				invTypes.groupID=invGroups.groupID AND
 				assets.itemID=contents.locationItemID AND 
 				contents.typeID=invTypes.typeID AND 
+				contents.characterID IN ('.implode(',', $char_ids).') AND
 				invTypes.typeName LIKE ?;', "%{$query}%");
 
 		$data['found'] = array_merge($assets->result_array(), $contents->result_array());
