@@ -21,10 +21,10 @@ require_once(BASEPATH.'../eveapi/eveapi/class.titles.php');
 
 class EveApi Extends Api {
 
-    var $reftypes;
-    var $skilltree;
-    var $stationlist;
-    var $corpMembers = array();
+    public $reftypes;
+    public $skilltree;
+    public $stationlist;
+    public $corpMembers = array();
 
     function __construct($params)
     {
@@ -52,6 +52,7 @@ class EveApi Extends Api {
             }
         }
 	}
+
 
     function has_corpapi_access()
     {

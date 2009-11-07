@@ -27,7 +27,7 @@ class Overview extends MY_Controller
             $data['chars'][$k]['training'] = $training;
             $data['chars'][$k]['charid'] = $v['charid'];
         }
-        $this->eveapi->debugPopup();
+		
         $this->simplepie->set_feed_url("http://myeve.eve-online.com/feed/rdfnews.asp?tid=1");
 		$this->simplepie->set_cache_duration(24*60*60);
         $this->simplepie->init();

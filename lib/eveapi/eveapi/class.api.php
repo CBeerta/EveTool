@@ -248,7 +248,7 @@ class Api
 		$message = "";
 		foreach ($this->msg as $msg)
 		{
-			$message .= "<b>" . $msg['type'] . "</b>: " . $msg['msg'] . "</br>\n";
+			$message .= "<b>" . $msg['type'] . "</b>: " . $msg['msg'] . "<br />";
 		}
 
 		$txt  = '<div style="font-size: small;">';
