@@ -1,7 +1,7 @@
 body{
     color:#333;
 	/* background: #FFFFFF url(/files/images/bg.gif) repeat-x; */
-	background: #fff;
+	/* background: #fff; */
     font-family: "Trebuchet MS", Verdana, Arial;
 	overflow-y: scroll; /* always show the scrollbar, i HATE jumping around of the content */
 }
@@ -106,6 +106,7 @@ li {
  **/
 div#hd {
     /* background-color: #313032; */
+	background: #678810;
 	background-color: #678B1D;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -169,6 +170,15 @@ div#nav {
 	margin: 20px 0px 0px 0px;
 	padding: 0px 0px 5px 0px;
 	/*border-bottom: 1px dotted #C0C0C0;*/
+}
+
+#search {
+	border: 1px solid #999;
+	color: #999;
+}
+#search:focus {
+	border: 1px solid #999;
+	color: #000;
 }
 
 /**

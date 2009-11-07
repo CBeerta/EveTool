@@ -43,7 +43,8 @@ class CharStandings extends MY_Controller
                 else
                 {
                     // FIXME: this needs diplomacy
-                    $realstanding = $to['standing'];
+					// <effective standing> = <raw standing> + (( 10 - <raw standing> ) x ( <level of diplomacy> x 0.04 ))
+					$realstanding = number_format($to['standing'] + (( 10.0 - $to['standing'] ) * ( 0.04 * $this->eveapi->get_skill_level(3357) )), 2);
                 }
                 
                 $standing = isset($to['toName']) ? $to['standing'] : "{$realstanding} ({$to['standing']})";
