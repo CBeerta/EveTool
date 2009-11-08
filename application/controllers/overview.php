@@ -28,10 +28,8 @@ class Overview extends MY_Controller
             $data['chars'][$k]['charid'] = $v['charid'];
         }
 		
-        //$this->simplepie->set_feed_url("http://myeve.eve-online.com/feed/rdfnews.asp?tid=1");
-        //$this->simplepie->set_feed_url("http://www.eveonline.com/feed/rdfdevblog.asp");
 		$this->simplepie->set_feed_url("http://svnfeed.com/convert?url=http%3A%2F%2Fclaus.beerta.de%2Fsvn%2Fevetool%2Ftrunk%2F&x=0&y=0");
-		$this->simplepie->set_cache_duration(24*60*60);
+		$this->simplepie->set_cache_duration(12*60*60);
         $this->simplepie->init();
         $data['feed'] = $this->simplepie->get_items(0, 5);
         

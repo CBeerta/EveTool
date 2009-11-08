@@ -80,7 +80,8 @@ class Assets extends MY_Controller
 		
 		if (!is_string($this->input->post('search')))
 		{
-			die('<h1>You need to enter something to search</h1>');
+			redirect('overview/skilltree');
+			exit;
 		}
 		else
 		{

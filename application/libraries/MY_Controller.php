@@ -22,6 +22,7 @@ class MY_Controller extends Controller
         $this->load->helper('fitting');
         $this->load->helper('inventory');
         $this->load->helper('agent');
+        $this->load->helper('random_functions');
 
         $this->load->library('evecentral');
         $this->load->library('production');

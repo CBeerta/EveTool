@@ -3,7 +3,7 @@
 class CharStandings extends MY_Controller
 {
     public $standings;
-        
+	        
     public function __construct()
     {
         parent::__construct();
@@ -21,8 +21,6 @@ class CharStandings extends MY_Controller
     
     private function _get_standings ( $rawstandings )
     {
-        // calculate real standing after skills:        
-        // (((0.04*Connections level)*(10-Base Agent Standing))+Base Agent Standing)
         
         $standings = array();     
         foreach ( $rawstandings as $k => $v )
@@ -38,11 +36,12 @@ class CharStandings extends MY_Controller
                 
                 if ($to['standing'] >= 0)
                 {
+					// calculate real standing after skills:        
+					// (((0.04*Connections level)*(10-Base Agent Standing))+Base Agent Standing)
                     $realstanding = number_format((((0.04*$this->eveapi->get_skill_level(3359))*(10-$to['standing']))+$to['standing']), 2);
                 }
                 else
                 {
-                    // FIXME: this needs diplomacy
 					// <effective standing> = <raw standing> + (( 10 - <raw standing> ) x ( <level of diplomacy> x 0.04 ))
 					$realstanding = number_format($to['standing'] + (( 10.0 - $to['standing'] ) * ( 0.04 * $this->eveapi->get_skill_level(3357) )), 2);
                 }
@@ -71,10 +70,12 @@ class CharStandings extends MY_Controller
                     'name' => $name,
                     'id' => $id,
                     'standing' => $standing,
+					'realstanding' => $realstanding,
                     'agent_info' => $agent_info,
                     'sta_icon' => $sta_icon,
-                    );            
+                    );
             }
+			masort($standings[$title], array('realstanding', 'name'));
         }
         $data['standings'] = $standings;
         return ($this->load->view('charstandings', $data, True));
