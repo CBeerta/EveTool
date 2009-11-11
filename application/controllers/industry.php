@@ -37,15 +37,15 @@ class Industry extends MY_Controller
             {
                 continue;
             }
-            $data['data'][$index] = (array) getInvType($job['outputTypeID']);
+            $data['data'][$index] = (array) get_inv_type($job['outputTypeID']);
             $data['data'][$index] += array(
                     'status' => MY_IndustryJobs::statusIDToString($job['completedStatus']),
                     'activity' => MY_IndustryJobs::activityIDToString($job['activityID']),
                     'amount' => $job['runs'],
                     'outputLocationID' => $job['outputLocationID'],
-                    'ends' => timeToComplete($job['endProductionTime']),
+                    'ends' => api_time_to_complete($job['endProductionTime']),
                     'installerID' => $job['installerID'],
-                    'location' => locationIDToName($job['outputLocationID']));
+                    'location' => locationid_snippet($job['outputLocationID']));
 
             if ($job['activityID'] == 1 && $job['completedStatus'] == 0)
             {

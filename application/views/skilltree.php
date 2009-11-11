@@ -70,7 +70,7 @@
         </tr>
         <tr>
           <td colspan="2" class="dataTableCell">Finishes in</td>
-          <td colspan="2"><?php echo timeToComplete($training['trainingEndTime']); ?></td>
+          <td colspan="2"><?php echo api_time_to_complete($training['trainingEndTime']); ?></td>
         </tr>
         <?php endif; ?>
         <tr>
@@ -80,10 +80,10 @@
       </table>
     </td>
   </tr>
+  <?php if (count($queue) > 0): ?>
   <tr>
 	<td style="text-align: left;" valign="top" colspan="2">
 		<h4>Training Queue:</h4>
-		<?php //debug_popup($queue); ?>
 		<?php foreach ($queue as $entry): ?>
 		<div>
 			<div style="float: right;margin-top:4px;"><img alt="level<?php echo $entry['level']; ?>" src="/files/images/level<?php echo $entry['level'];?>_q.gif" /></div>
@@ -95,11 +95,11 @@
                       <span class="navdot">&#xB7;</span><span>Training to: </span>
                       <strong>Level <?php echo $entry['level']; ?></strong> - 
 					  <span>Started: </span>
-                      <?php echo apiTimePrettyPrint($entry['startTime']); ?> - 
+                      <?php echo api_time_print($entry['startTime']); ?> - 
 					  <span>Ending: </span>
-                      <?php echo apiTimePrettyPrint($entry['endTime']); ?> - 
+                      <?php echo api_time_print($entry['endTime']); ?> - 
 					  <span>Time left: </span>
-                      <?php echo timeToComplete($entry['endTime']); ?>
+                      <?php echo api_time_print($entry['endTime']); ?>
                     </div>
                   </div>
                 </div>
@@ -108,6 +108,7 @@
 		<?php endforeach; ?>
 	</td>
   </tr>
+  <?php endif; ?>
 </tbody>
 </table>
 
@@ -138,15 +139,15 @@
                     -->
                     <div>
                       <span class="navdot">&#xB7;</span><span>Started: </span>
-                      <?php echo apiTimePrettyPrint($training['trainingStartTime']); ?>
+                      <?php echo api_time_print($training['trainingStartTime']); ?>
                     </div>
                     <div>
                       <span class="navdot">&#xB7;</span><span>Ending: </span>
-                      <?php echo apiTimePrettyPrint($training['trainingEndTime']); ?>
+                      <?php echo api_time_print($training['trainingEndTime']); ?>
                     </div>
                     <div>
                       <span class="navdot">&#xB7;</span><span>Time left: </span>
-                      <?php echo timeToComplete($training['trainingEndTime']); ?>
+                      <?php echo api_time_print($training['trainingEndTime']); ?>
                     </div>
                   </div>
                 </div>

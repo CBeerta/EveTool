@@ -10,7 +10,7 @@
     </tr>
     <?php foreach($translist as $trans):?>
     <tr>
-        <td><?php print apiTimePrettyPrint($trans['transactionDateTime'], 'Y.m.d H:i'); ?></td>
+        <td><?php print api_time_print($trans['transactionDateTime'], 'Y.m.d H:i'); ?></td>
         <td><?php print number_format($trans['quantity']); ?></td>
         <td><?php print $trans['typeName']; ?></td>
         <?php if ($trans['transactionType'] == 'buy'): ?>

@@ -12,7 +12,7 @@
  * @param  string
  * @param  string
 **/
-function apiTimePrettyPrint($time, $format = 'D d.m.Y H:i')
+function api_time_print($time, $format = 'D d.m.Y H:i')
 {
     if (is_string($time))
     {
@@ -32,7 +32,7 @@ function apiTimePrettyPrint($time, $format = 'D d.m.Y H:i')
  * @access public
  * @param  string
 **/
-function timeToComplete($endTime)
+function api_time_to_complete($endTime)
 {
 	$format = '%Y-%m-%d %H:%M:%S';
 
@@ -78,13 +78,46 @@ function timeToComplete($endTime)
 	return (trim($str));
 }
 
+
+function surrounding_systems($system, $maxDepth = 1, $currentDepth = 1)
+{
+    $CI =& get_instance();
+    $CI->load->database();
+	
+	$q = $CI->db->query('
+		SELECT 
+			a.solarSystemName 
+		FROM 
+			mapSolarSystems a, 
+			mapSolarSystems b, 
+			mapSolarSystemJumps j 
+		WHERE 
+			a.solarsystemID = j.fromSolarSystemID AND 
+			b.solarSystemID = j.toSolarSystemID AND 
+			b.solarSystemName = ?;', $system);
+			
+	
+	foreach ($q->result_array()  as $row)
+	{
+		$systems[] = $row['solarSystemName'];
+		if ($currentDepth < $maxDepth && $row['solarSystemName'] != $system)
+		{
+			$systems = array_merge($systems, surroundingSystems($row['solarSystemName'], $maxDepth, $currentDepth + 1));
+		}
+	}
+	
+	return (array_unique($systems));
+}
+
 /**
  * Return the Region Name for a $regionID
  * 
  * @access public
  * @param  string
+ *
+ * @todo Convert to return a html snippet like locationid_snippet
 **/
-function regionIDToName($regionID)
+function regionid_snippet($regionID)
 {
     if (empty($regionID))
     {
@@ -103,36 +136,51 @@ function regionIDToName($regionID)
 }
 
 /**
- * Return the Location Name for a $locationID
+ * Return the Location as a HTML snippet
  * 
  * @access public
  * @param  string
 **/
-function locationIDToName($locationID)
+function locationid_snippet($locationID)
 {
+
     if (empty($locationID))
     {
         return False;
     }
+    
     $CI =& get_instance();
     $CI->load->database();
-
-    $q = $CI->db->query('SELECT * FROM eveNames WHERE itemID = ?;', $locationID);
-    $row = $q->row();
+    
+    $q = $CI->db->query('
+		SELECT 
+			* 
+		FROM 
+			eveNames 
+		WHERE 
+			itemID = ? LIMIT 1;', $locationID);
+			
+    $row = $q->result_array();
     if (count($row)>0)
     {
-		preg_match("|^([a-z0-9-]+)\s?|i", $row->itemName, $matches);
-		return ('<a target="_blank" href="http://evemaps.dotlan.net/system/'.$matches[1].'"><img title="Open System with Dotlan" src="'.site_url("files/images/map.png").'"></a> '.$row->itemName);
-    }
-    else if (isset($CI->eveapi->stationlist[$locationID]))
-    {
-        return ($CI->eveapi->stationlist[$locationID]);
+        $loc = $row[0];
+        $loc['displayName'] = $loc['itemName'];
     }
     else
     {
 		//FIXME: This is probably a POS somewhere?
         return ('Unknown');
 	}
+
+    if (!empty($CI->eveapi->stationlist[$locationID]))
+    {
+        $loc['displayName'] = $CI->eveapi->stationlist[$locationID]['stationName'];
+    }
+	
+	preg_match("|^([A-Z0-9\-]+)\s?|i", $loc['itemName'], $matches);
+	$loc['systemName'] = $matches[1];
+	
+    return ($CI->load->view('snippets/location', $loc, True));
 }
 
 function get_character_portrait($name, $size = 64)
@@ -193,7 +241,7 @@ function get_character_id($name)
     return ($data[0]['characterID']);
 }
 
-function getIconUrl($type, $size = 64, $background = 'black')
+function get_icon_url($type, $size = 64, $background = 'black')
 {
     if (empty($type))
     {
@@ -240,7 +288,7 @@ function getIconUrl($type, $size = 64, $background = 'black')
 }
 
 
-function slotIcon($flag)
+function slot_icon($flag)
 {
     switch (True)
     {
@@ -259,7 +307,7 @@ function slotIcon($flag)
     }
 }
 
-function getUserConfig($acctID, $keyName)
+function get_user_config($acctID, $keyName)
 {
     $CI =& get_instance();
     $q = $CI->db->query('SELECT value FROM config WHERE acctID=? AND keyname=?', array($acctID, $keyName));
@@ -273,7 +321,7 @@ function getUserConfig($acctID, $keyName)
     }
 }
 
-function setUserConfig($acctID, $keyName, $value)
+function set_uset_config($acctID, $keyName, $value)
 {
     $CI =& get_instance();
     $q = $CI->db->query('
@@ -292,7 +340,7 @@ function setUserConfig($acctID, $keyName, $value)
 
 }
 
-function isPublic()
+function is_public()
 {
     $CI =& get_instance();
     $page = implode('_', array_slice($CI->uri->segment_array(), 0, -1));

@@ -18,7 +18,7 @@
         </tr>
         <tr>
           <td class="light" class="dataTableCell">Finishes in</td>
-          <td><?php echo timeToComplete($v['training']['trainingEndTime']); ?></td>
+          <td><?php echo api_time_to_complete($v['training']['trainingEndTime']); ?></td>
         </tr>
         <?php else: ?>
         <tr>

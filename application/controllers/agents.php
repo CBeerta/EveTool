@@ -7,7 +7,18 @@ class Agents extends MY_Controller
     {
         // empty
     }
-    
+
+/*
+	function surrounding_agents($system)
+	{
+		print '<pre>';
+		
+		print_r(surroundingSystems($system, 10));
+	
+		die();
+	}
+*/
+
     private function _agent_divisions($corp_id)
     {
         $divisions = array();

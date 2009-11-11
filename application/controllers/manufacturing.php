@@ -107,7 +107,7 @@ class Manufacturing extends MY_Controller
         $data['me'] = $me;
         $data['totalVolume'] = $data['totalMineralVolume'] = $data['totalMineralVolumeValue'] = $data['totalValue'] = 0;
 
-        $pe = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : 5;
+        $pe = !get_user_config($this->Auth['user_id'], 'use_perfect') ? False : 5;
         
         list ($components, $totalMineralUsage, $totalMoonGoo) = Production::getBlueprint($character, $blueprintID, $me, $data['have'], $pe);
 
@@ -120,7 +120,7 @@ class Manufacturing extends MY_Controller
         {
 			array_push($typeIds, $k);
 		}
-		$regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
+		$regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
 		
     	$prices = $this->evecentral->getPrices($typeIds, $regionID);
 
@@ -173,7 +173,7 @@ class Manufacturing extends MY_Controller
                     invTypes.typeID = invBlueprintTypes.productTypeID AND 
                     invBlueprintTypes.blueprintTypeID = ?", $blueprintID);
         $data['product'] = $q->row();
-        $data['caption'] = getInvType($blueprintID)->typeName;
+        $data['caption'] = get_inv_type($blueprintID)->typeName;
         
         $allowsFor = $data['data'] = array();
 

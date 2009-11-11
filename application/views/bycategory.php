@@ -19,7 +19,7 @@ function toggle_it(itemID){
 <?php foreach($assets as $asset): ?>
 <tr >
     <th onClick="toggle_it(<?php echo $asset['assetItemID']; ?>)">
-		<img align="left" width="64" height="64" src="<?php echo getIconUrl($asset,64);?>">
+		<img align="left" width="64" height="64" src="<?php echo get_icon_url($asset,64);?>">
 	</th>
     <th style="text-align: left;">
     <?php if (isset($asset['techLevel'])): ?>
@@ -30,7 +30,7 @@ function toggle_it(itemID){
     <br />
     <small><?php echo $asset['groupName']; ?></small>
     </th>
-    <th style="text-align: left;"><?php echo locationIDToName($asset['locationID']); ?></th>
+    <th style="text-align: left;"><?php echo locationid_snippet($asset['locationID']); ?></th>
 </tr>
 <?php if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
 <tbody style="display: none;" id="<?php echo $asset['assetItemID']; ?>">

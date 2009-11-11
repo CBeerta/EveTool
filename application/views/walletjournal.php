@@ -18,7 +18,7 @@
     </tr>
     <?php foreach($wallet as $trans):?>
     <tr>
-        <td><?php print apiTimePrettyPrint($trans['date'], 'D, j F H:i'); ?></td>
+        <td><?php print api_time_print($trans['date'], 'D, j F H:i'); ?></td>
         <td><?php print $reftypes[$trans['refTypeID']]; ?></td>
         <?php if ($trans['amount'] > 0): ?>
         <td><font color="green"><?php print number_format($trans['amount']); ?></font></td>

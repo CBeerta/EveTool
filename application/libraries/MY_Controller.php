@@ -112,7 +112,7 @@ class MY_Controller extends Controller
 			$data['has_corpapi_access'] = $this->has_corpapi_access;
         }
 		
-        $user_timezone = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');
+        $user_timezone = !get_user_config($this->Auth['user_id'], 'user_timezone') ? 'GMT' : get_user_config($this->Auth['user_id'], 'user_timezone');
         date_default_timezone_set($user_timezone);
 
         $this->load->view('header.php', $data);

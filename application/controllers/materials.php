@@ -18,7 +18,7 @@ class Materials extends MY_Controller
         $character = $this->character; 
         $data['character'] = $character;
 
-        $regionID = !getUserConfig($this->Auth['user_id'], 'market_region') ? 10000067 : getUserConfig($this->Auth['user_id'], 'market_region');
+        $regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
         
         //FIXME: Make it possible again to check for categoryID's
         $sID = 'groupID'; // What ID to search for
@@ -36,7 +36,7 @@ class Materials extends MY_Controller
             if ($row->groupID == $groupID)
             {
                 $data['caption'] = $row->groupName;
-                $data['caption'] .= ' - Prices from the "'.regionIDToName($regionID).'" region';
+                $data['caption'] .= ' - Prices from the "'.regionid_snippet($regionID).'" region';
             }
             if (in_array($row->groupID, $this->groupList))
             {
@@ -80,7 +80,7 @@ class Materials extends MY_Controller
             $data['sums']['sellprice'] += $v['quantity']*$data['prices'][$k]['sell']['median'];
             $data['sums']['buyprice'] += $v['quantity']*$data['prices'][$k]['buy']['median'];
         }
-        $data['caption'] = 'Materials - Prices from the "'.regionIDToName($regionID).'" region';
+        $data['caption'] = 'Materials - Prices from the "'.regionid_snippet($regionID).'" region';
 
         $template['content'] = $this->load->view('materials', $data, True);
         $this->load->view('maintemplate', $template);

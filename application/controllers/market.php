@@ -48,8 +48,8 @@ class Market extends MY_Controller
             $row->remaining = $order['volRemaining'];
             $row->total = $order['volEntered'];
             $row->charID = $order['charID'];
-            $row->ends = timeToComplete($issued);
-            $row->location = locationIDToName($order['stationID']);
+            $row->ends = api_time_to_complete($issued);
+            $row->location = locationid_snippet($order['stationID']);
             
             $type = ($order['bid'] == 1) ? 'buy' : 'sell';
 

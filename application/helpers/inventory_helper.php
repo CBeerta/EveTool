@@ -56,7 +56,7 @@ function get_slots($itemNames)
 }
 
 
-function getInvType($type)
+function get_inv_type($type)
 {
     if (empty($type))
     {

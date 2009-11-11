@@ -20,7 +20,7 @@ class Wallet extends MY_Controller
             $day = date('z', strtotime($row['date']));
             if ($day != $prevday)
             {
-                $chartdata[apiTimePrettyPrint($row['date'], 'j M')] = round($row['balance'] / 1000.0 / 1000.0) ;
+                $chartdata[api_time_print($row['date'], 'j M')] = round($row['balance'] / 1000.0 / 1000.0) ;
                 $prevday = $day;
                 $days++;
             }
@@ -40,6 +40,7 @@ class Wallet extends MY_Controller
         $this->phpgraphlib->createGraph();
         exit;
     }
+    
     /**
      * walletjournal
      *
@@ -66,7 +67,6 @@ class Wallet extends MY_Controller
 
         $walletxml = $this->eveapi->getWalletJournal();
         $wallet = WalletJournal::getWalletJournal($walletxml);
-		
 
 		$data = $this->eveapi->get_daily_walletjournal($wallet);
 	    $data['character'] = $character;

@@ -56,7 +56,7 @@ $(document).ready(function(){
     </tr>
     <tr>
         <td colspan="5" style="text-align: left;">
-            <img src="<?php echo getIconUrl($product, 64); ?>" align="left">
+            <img src="<?php echo get_icon_url($product, 64); ?>" align="left">
             <p style="padding-left: 140px;"><?php echo nl2br($product->description); ?></p>
         </td>
     </tr>
@@ -81,7 +81,7 @@ $(document).ready(function(){
     </tr>
 <?php foreach($data as $r): ?>
     <tr>
-        <td width="32"><img src="<?php echo getIconUrl($r, 32); ?>"></td>
+        <td width="32"><img src="<?php echo get_icon_url($r, 32); ?>"></td>
         <td style="text-align: left">
         <?php if(is_numeric($r['isPart'])): ?>
         <a href="<?php echo site_url('manufacturing/detail/'.$r['isPart']); ?>"><?php echo $r['typeName']; ?></a>        <?php else: ?>
@@ -110,8 +110,8 @@ $(document).ready(function(){
     </tr>
     <?php foreach ($totalMineralUsage as $k => $v):?>
     <tr>        
-        <td width="32"><img src="<?php echo getIconUrl($v, 32); ?>"></td>
-        <td style="text-align: left"><?php echo getInvType($k)->typeName; ?></td>
+        <td width="32"><img src="<?php echo get_icon_url($v, 32); ?>"></td>
+        <td style="text-align: left"><?php echo get_inv_type($k)->typeName; ?></td>
         <td><p class="totalReq<?php echo $k;?>"></p></td>
         <td><p class="totalHave<?php echo $k;?>"></p></td>
 	    <td><p class="totalValue<?php echo $k;?>"></p></td>

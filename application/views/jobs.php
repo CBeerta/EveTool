@@ -23,7 +23,7 @@ Days to show:
     <?php else: ?>
     <td><?php echo get_character_portrait($row['installerID'], 32); ?></td>
     <?php endif; ?>
-	<td style="text-align: left;"><img src="<?php echo getIconUrl($row,32);?>" width="32" height="32"></td>
+	<td style="text-align: left;"><img src="<?php echo get_icon_url($row,32);?>" width="32" height="32"></td>
     <td style="text-align: left;"><?php echo $row['typeName']; ?></td>
     <td><?php echo $row['status']; ?></td>
     <td><?php echo $row['activity']; ?></td>

@@ -40,7 +40,7 @@ class EveApi Extends Api {
         $skilltree = SkillTree::getSkillTree($this->getSkillTree());
         $this->stationlist = Stations::getConquerableStationList($this->getConquerableStationList());
         $this->corpMembers = array(); // this is filled by 'has_corpapi_access()
-
+        
         foreach ($skilltree as $group)
         {
             foreach ($group['skills'] as $skill)
@@ -194,10 +194,10 @@ class EveApi Extends Api {
         $daily = array();
         foreach ($wallet as $entry)
         {
-            $day = apiTimePrettyPrint($entry['date'], 'Y-m-d');
+            $day = api_time_print($entry['date'], 'Y-m-d');
             if (!isset($daily[$day]))
             {
-                $total[$day]['prettydate'] = apiTimePrettyPrint($entry['date'], 'l, j F Y');
+                $total[$day]['prettydate'] = api_time_print($entry['date'], 'l, j F Y');
                 $total[$day]['expense'] = 0;
                 $total[$day]['income'] = 0;
             }
@@ -251,7 +251,10 @@ class Stations
             
         	foreach ($xml->result->rowset->row as $row)
 			{
-				$output[(int) $row['stationID']] = (string) $row['stationName'];
+				foreach ($row->attributes() as $name => $value)
+				{
+    				$output[(int) $row['stationID']][(string) $name] = (string) $value;
+				}
 			}
 			return $output;
 		}

@@ -22,7 +22,7 @@
 </tr>
 <?php foreach ($data as $k => $v): ?>
 <tr>
-	<td style="text-align: left;" colspan="2"><img src="<?php echo getIconUrl($v,32);?>"></td>
+	<td style="text-align: left;" colspan="2"><img src="<?php echo get_icon_url($v,32);?>"></td>
     <td style="text-align: left;"><?php echo $v['typeName'];?></td>
     <td><?php echo number_format($v['quantity']); ?></td>
     <td><?php echo number_format($v['volume']*$v['quantity']); ?> m&sup3;</td>

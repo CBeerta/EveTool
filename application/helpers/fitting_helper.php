@@ -133,9 +133,9 @@ class Ship_Fitting
         $fitting = $cargo = array();
         for ( $i = 0 ; $i < 8 ; $i++ )
         {
-            $high = slotIcon($i + 27);
-            $low = slotIcon($i + 11);
-            $med = slotIcon($i + 19);
+            $high = slot_icon($i + 27);
+            $low = slot_icon($i + 11);
+            $med = slot_icon($i + 19);
             
             $fitting["high.{$i}.Icon"] = site_url('/files/images/panel/blank.png');
             $fitting["high.{$i}.Alt"] = 'Empty';
@@ -179,7 +179,7 @@ class Ship_Fitting
                 switch ($row->categoryID)
                 {
                     case 7: // Module
-                        $fitting['low.'.($row->flag - 11).'.Icon'] = getIconUrl($row, 64);
+                        $fitting['low.'.($row->flag - 11).'.Icon'] = get_icon_url($row, 64);
                         $fitting['low.'.($row->flag - 11).'.Alt'] = $row->typeName;
                         $eft['low'][] = $row->typeName;
                         break;
@@ -192,12 +192,12 @@ class Ship_Fitting
                 switch ($row->categoryID)
                 {
                     case 7:
-                        $fitting['med.'.($row->flag - 19).'.Icon'] = getIconUrl($row, 64);
+                        $fitting['med.'.($row->flag - 19).'.Icon'] = get_icon_url($row, 64);
                         $fitting['med.'.($row->flag - 19).'.Alt'] = $row->typeName;
                         $eft['mid'][] = $row->typeName;
                         break;
                     case 8:
-                        $fitting['ammo_mid.'.($row->flag - 19).'.type'] = '<img src="'.getIconUrl($row, 32).'" width="24" height="24" title="'.$row->typeName.'">';
+                        $fitting['ammo_mid.'.($row->flag - 19).'.type'] = '<img src="'.get_icon_url($row, 32).'" width="24" height="24" title="'.$row->typeName.'">';
                         $fitting['ammo_mid.'.($row->flag - 19).'.show'] = '<img src="'.site_url('/files/images/panel/ammo_CoolGray.png').'" width="32" height="32">';
                         break;
                 }
@@ -207,19 +207,19 @@ class Ship_Fitting
                 switch ($row->categoryID)
                 {
                     case 7:
-                        $fitting['high.'.($row->flag - 27).'.Icon'] = getIconUrl($row, 64);
+                        $fitting['high.'.($row->flag - 27).'.Icon'] = get_icon_url($row, 64);
                         $fitting['high.'.($row->flag - 27).'.Alt'] = $row->typeName;
                         $eft['high'][] = $row->typeName;
                         break;   
                     case 8:
-                        $fitting['ammo_high.'.($row->flag - 27).'.type'] = '<img src="'.getIconUrl($row, 32).'" width="24" height="24" title="'.$row->typeName.'">';
+                        $fitting['ammo_high.'.($row->flag - 27).'.type'] = '<img src="'.get_icon_url($row, 32).'" width="24" height="24" title="'.$row->typeName.'">';
                         $fitting['ammo_high.'.($row->flag - 27).'.show'] = '<img src="'.site_url('/files/images/panel/ammo_CoolGray.png').'" width="32" height="32">';
                         break;
                 }
             }
             else if ($row->flag >= 92 && $row->flag <= 99) //rig
             {
-                $fitting['rig.'.($row->flag - 92).'.Icon'] = getIconUrl($row, 32);
+                $fitting['rig.'.($row->flag - 92).'.Icon'] = get_icon_url($row, 32);
                 $fitting['rig.'.($row->flag - 92).'.Alt'] = $row->typeName;
                 $eft['rig'][] = $row->typeName;
             }
@@ -249,7 +249,7 @@ class Ship_Fitting
             $x = 0;    
             foreach ($cargo as $row)    
             {
-                $table .= '<td><img src="'.getIconUrl($row, 64).'" title="'.$row->quantity.' - '.$row->typeName.'" width="48" height="48"></td>';
+                $table .= '<td><img src="'.get_icon_url($row, 64).'" title="'.$row->quantity.' - '.$row->typeName.'" width="48" height="48"></td>';
                 $x++;
                 if ( $x > 7 )
                     {

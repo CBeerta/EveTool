@@ -15,6 +15,6 @@
 	<td><?php echo apiTimePrettyPrint($row['startDateTime']);?></td>
 	<td><?php echo $row['title'];?></td>
 	<td><?php echo $row['base'];?></td>
-</tr
+</tr>
 <?php endforeach; ?>
 </table>
