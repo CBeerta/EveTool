@@ -19,38 +19,78 @@ require_once(BASEPATH.'../eveapi/eveapi/class.walletjournal.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.characterid.php');
 require_once(BASEPATH.'../eveapi/eveapi/class.titles.php');
 
+
+/**
+ * Empty Memcache class so we can just go ahead and use memcache functions even if it is not available
+ *
+ **/
+class NoMemcache {
+
+	function get()
+	{
+		return False;
+	}
+
+	function set()
+	{
+		return False;
+	}
+}
+
 class EveApi Extends Api {
 
     public $reftypes;
     public $skilltree;
     public $stationlist;
     public $corpMembers = array();
+	
+	private $memcache;
 
     function __construct($params)
     {
         $CI =& get_instance();
+		$CI->config->load('evetool');
+
 
         if (!empty($params['cachedir']))
         {
             $this->cache(true);
             $this->setCacheDir($params['cachedir']);
         }
+		
+		if (function_exists("memcache_connect"))
+		{
+			$this->memcache = new Memcache;
+			list($_host, $_port) = explode(':', $CI->config->item('memcache_host'));
+			$this->memcache->connect($_host, $_port);
+		}
+		else
+		{
+			$this->memcache = new NoMemcache;
+		}
 
-        $this->reftypes = RefTypes::getRefTypes($this->getRefTypes());
-        $skilltree = SkillTree::getSkillTree($this->getSkillTree());
-        $this->stationlist = Stations::getConquerableStationList($this->getConquerableStationList());
-        $this->corpMembers = array(); // this is filled by 'has_corpapi_access()
-        
-        foreach ($skilltree as $group)
-        {
-            foreach ($group['skills'] as $skill)
-            {
-                foreach (array('typeName', 'description', 'groupID', 'rank') as $field)
-                {
-                    $this->skilltree[$skill['typeID']][$field] = $skill[$field];
-                }
-            }
-        }
+        $this->reftypes = $this->memcache->get('evetool_reftypes') ? $this->memcache->get('evetool_reftypes') : RefTypes::getRefTypes($this->getRefTypes());
+		$this->memcache->set('evetool_reftypes', $this->reftypes, 0, 86400);
+
+		$this->stationlist = $this->memcache->get('evetool_stationlist') ? $this->memcache->get('evetool_stationlist') : Stations::getConquerableStationList($this->getConquerableStationList());;
+		$this->memcache->set('evetool_stationlist', $this->stationlist, 0, 86400);
+
+		if ( ($this->skilltree = $this->memcache->get('evetool_skilltree')) === False )
+		{
+			$skilltree = SkillTree::getSkillTree($this->getSkillTree());
+			
+			foreach ($skilltree as $group)
+			{
+				foreach ($group['skills'] as $skill)
+				{
+					foreach (array('typeName', 'description', 'groupID', 'rank') as $field)
+					{
+						$this->skilltree[$skill['typeID']][$field] = $skill[$field];
+					}
+				}
+			}
+		}
+		$this->memcache->set('evetool_skilltree', $this->skilltree, 0, 86400);
 	}
 
 

@@ -8,4 +8,10 @@
  */
 $config['image_cache_path'] = '/var/www/evetool/files/cache/';
 
+/**
+ * Memcache Host
+ **/
+$config['memcache_host'] = 'localhost:11211';
+
+
 ?>

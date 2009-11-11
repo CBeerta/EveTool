@@ -42,8 +42,8 @@ $db['default']['dbprefix'] = "";
 $db['default']['active_r'] = FALSE;
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
-$db['default']['cache_on'] = FALSE;
-$db['default']['cachedir'] = "";
+$db['default']['cache_on'] = TRUE;
+$db['default']['cachedir'] = "/var/tmp/ci_dbcache";
 
 
 ?>
