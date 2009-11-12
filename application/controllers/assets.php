@@ -1,16 +1,20 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Asset Pages
+ *
+ * Various Functions to access Characters Assets 
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
 
-class Assets extends MY_Controller
-{
+class Assets extends MY_Controller {
+
     /**
-     * assets
+     * Asset Display
      *
      * Display a Table with all the characters assets, ordered by Location
-     *
-     * @param   string
      */
-
     public function index()
     {
         $data = array();
@@ -21,7 +25,11 @@ class Assets extends MY_Controller
         $template['content'] = $this->load->view('assets', $data, True);
         $this->load->view('maintemplate', $template);
     }
-
+    
+    /**
+     * Filter Assets by categoryID
+     *
+     */
     private function _byCategory($charid, $categoryID = 9, $filter = array(29,31, 237) )
     {
         $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => $categoryID));
@@ -49,7 +57,10 @@ class Assets extends MY_Controller
         }
         return ($data);
     }
-
+    
+    /**
+     * Displays a Table of Blueprints owned by the selected character
+     */
     public function blueprints()
     {
         $character = $this->character;
@@ -61,6 +72,9 @@ class Assets extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+    /**
+     * Displays a Table of Ships owned by the selected character
+     */
     public function ships()
     {
         $character = $this->character;
@@ -72,6 +86,11 @@ class Assets extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+    /**
+     * Search for assets
+     *
+     * This Functions searches all the assets on all Characters this login has
+     */
     public function search()
     {
         $data = array();

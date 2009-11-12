@@ -1,9 +1,11 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * These Functions are here to completely Trash the MySQL database.
  *
- * FIXME: Some Caching would be nice.
-**/
+ * @todo Some Caching would be nice.
+ * @package eve_helper
+ */
 
 /**
  * Convert a Timestamp from the Eve Api to something human readable
@@ -11,7 +13,7 @@
  * @access public
  * @param  string
  * @param  string
-**/
+ */
 function api_time_print($time, $format = 'D d.m.Y H:i')
 {
     if (is_string($time))
@@ -31,7 +33,7 @@ function api_time_print($time, $format = 'D d.m.Y H:i')
  * 
  * @access public
  * @param  string
-**/
+ */
 function api_time_to_complete($endTime)
 {
 	$format = '%Y-%m-%d %H:%M:%S';

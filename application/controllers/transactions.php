@@ -1,5 +1,12 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Transaction List Pages
+ *
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
+  
 class Transactions extends MY_Controller
 {
     /**
@@ -7,8 +14,6 @@ class Transactions extends MY_Controller
      *
      * Display a List with Transaction by the Character
      *
-     * @param   string
-     * @param   int
      */
     public function index()
     {

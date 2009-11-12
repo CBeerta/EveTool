@@ -1,7 +1,18 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Wallet Pages
+ *
+ * Various Functions to access Characters Wallet 
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
+
 class Wallet extends MY_Controller
 {
+    /**
+     * Chart the Characters last 30 days of Wallet History
+     */
     public function chart()
     {
         $character = $this->character;
@@ -42,7 +53,7 @@ class Wallet extends MY_Controller
     }
     
     /**
-     * walletjournal
+     * journal
      *
      * Display a Journal with the latest Wallet Transactions
      *
@@ -60,7 +71,13 @@ class Wallet extends MY_Controller
         $template['content'] = $this->load->view('walletjournal', $data, True);
         $this->load->view('maintemplate', $template);
     }
-
+    
+    /**
+     * daily journal
+     *
+     * Wallet Journal broken down on a Days basis
+     *
+     */
     public function dailyjournal()
     {
         $character = $this->character;

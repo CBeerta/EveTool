@@ -1,13 +1,16 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Agent Pages
+ *
+ * Information about Agents with characters standings towards them 
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
+
 class Agents extends MY_Controller
 {
     
-    public function index ()
-    {
-        // empty
-    }
-
 /*
 	function surrounding_agents($system)
 	{
@@ -19,6 +22,9 @@ class Agents extends MY_Controller
 	}
 */
 
+    /**
+     * Return a list of Agent Divisions
+     */
     private function _agent_divisions($corp_id)
     {
         $divisions = array();
@@ -44,6 +50,9 @@ class Agents extends MY_Controller
     }  
     
     
+    /**
+     * Figure out what type an agent of $id is, and redirect accordingly
+     */
     public function by_id($id)
     {
         if ( Agent_Info::is_agent($id) )
@@ -65,6 +74,9 @@ class Agents extends MY_Controller
         }
     }
 
+    /**
+     * Details about the selected Corp, with its agents
+     */
     public function npccorp($id)
     {
         $standings = Standings::getStandings($this->eveapi->getStandings());
@@ -156,6 +168,10 @@ class Agents extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+
+    /**
+     * A List of Agents belonging to the Selected Faction
+     */
     public function faction($id)
     {
         $q = $this->db->query ("
@@ -176,6 +192,10 @@ class Agents extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+    /**
+     * Details about a single Agent
+     * @todo needs to be finished
+     */
     public function npc($id)
     {
         $template['content'] = "This is a NPC Agent, and this isn't done yet!";

@@ -1,15 +1,40 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Controller Class that initializes the environment for all PAges
+ *
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
+
 class MY_Controller extends Controller
 {
-    var $chars = array();
-    var $character = Null;
-    var $corp = Null;
-    var $char;
-    var $Auth;
-    var $has_corpapi_access = False;
+    /**
+     * Array with all characters on this account
+     */
+    public $chars = array();
+    
+    /**
+     * The Current and Active Character
+     **/
+    public $character = Null;
+    
+    /**
+     * Corp the current character is in
+     */
+    public $corp = Null;
+    
+    /**
+     * Authentication details of the current session
+     */
+    public $Auth;
+    
+    /**
+     * Bool that describes if the current selected character has corpapi roles
+     */
+    public $has_corpapi_access = False;
 	
-    function __construct ()
+    public function __construct ()
     {
         parent::Controller();
         
@@ -33,28 +58,28 @@ class MY_Controller extends Controller
         if (!$this->users->isLoggedIn())
         {
             redirect('user/login');
+            exit;
         }
-        else
-        {
-            $this->Auth['user_id'] = $this->users->getInfo($this->users->user, 'id');
-            $this->Auth['username'] = $this->users->user;
+        
+        $this->Auth['user_id'] = $this->users->getInfo($this->users->user, 'id');
+        $this->Auth['username'] = $this->users->user;
 
-            $q = $this->db->query(
-                'SELECT apiUser, apiFullKey 
-                FROM asc_apikeys 
-                WHERE acctID = ? AND apiFullKey != "";', $this->Auth['user_id']);
-            $index = 0;
+        $q = $this->db->query(
+            'SELECT apiUser, apiFullKey 
+            FROM asc_apikeys 
+            WHERE acctID = ? AND apiFullKey != "";', $this->Auth['user_id']);
+        $index = 0;
 
-            foreach ($q->result()as $row)
-            {   
-                $accounts[$index]['apiuser'] = $row->apiUser;
-                $accounts[$index]['apikey'] = $row->apiFullKey;
-                $index++;
-            }
+        foreach ($q->result()as $row)
+        {   
+            $accounts[$index]['apiuser'] = $row->apiUser;
+            $accounts[$index]['apikey'] = $row->apiFullKey;
+            $index++;
         }
+        
         /**
-         * FIXME: Maybe move this to the database, instead of using the Api?
-         **/
+         * @todo Maybe move this to the database, instead of using the Api?
+         */
         foreach ($accounts as $account)
         {
             $this->eveapi->setCredentials($account['apiuser'], $account['apikey']);

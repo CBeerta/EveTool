@@ -1,15 +1,37 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Standings and Agent information
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
+
 class CharStandings extends MY_Controller
 {
+    /**
+     * The Standings pulled from the eveapi for this Character
+     * 
+     * @todo maybe drop these into memcached aswell?
+     */
     public $standings;
-	        
+
+    /**
+     * Pull Current Characters Standings and store
+     */	        
     public function __construct()
     {
         parent::__construct();
         $this->standings = Standings::getStandings($this->eveapi->getStandings());
     }   
     
+    /**
+     * The Main Entry page with Standings
+     *
+     * Shows a page with standings towards:
+     * - Faction
+     * - Corporations
+     * - And Characters (NPC)
+     */
     public function agents ()
     {
         $data['character'] = $this->character;
@@ -19,6 +41,9 @@ class CharStandings extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
     
+    /**
+     * Convert Characters Standings from the api in a drilled down array
+     */
     private function _get_standings ( $rawstandings )
     {
         

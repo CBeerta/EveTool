@@ -4,7 +4,7 @@
 class Materials extends MY_Controller
 {
 
-    var $groupList = array(18, 754, /* 886,*/ 334, 873, 913, 427, 428, 429, 465, 423);
+    public $groupList = array(18, 754, /* 886,*/ 334, 873, 913, 427, 428, 429, 465, 423);
 
     /**
      * minerals

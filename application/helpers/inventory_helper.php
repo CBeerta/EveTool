@@ -2,14 +2,14 @@
 
 class emptyInvType
 {
-    var $typeName = 'Unknown Item';
-    var $description = 'Unknown Item - There is no Description in the Database for this Item Yet';
-    var $volume = 0.0;
-    var $mass = 0;
-    var $typeID = -1;
-    var $groupID = -1;
-    var $categoryID = -1;
-    var $groupName = 'Unknown';
+    public $typeName = 'Unknown Item';
+    public $description = 'Unknown Item - There is no Description in the Database for this Item Yet';
+    public $volume = 0.0;
+    public $mass = 0;
+    public $typeID = -1;
+    public $groupID = -1;
+    public $categoryID = -1;
+    public $groupName = 'Unknown';
 }
 
 function get_slots($itemNames)

@@ -42,7 +42,7 @@ $db['default']['dbprefix'] = "";
 $db['default']['active_r'] = FALSE;
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
-$db['default']['cache_on'] = TRUE;
+$db['default']['cache_on'] = FALSE; # This doesnt work with sessions in the database
 $db['default']['cachedir'] = "/var/tmp/ci_dbcache";
 
 

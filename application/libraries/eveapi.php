@@ -1,5 +1,13 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * EveApi Exented Class
+ *
+ * Extends base EveApi by functions that EveTool requires
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
+ 
 @set_include_path(@get_include_path() . PATH_SEPARATOR . BASEPATH.'../eveapi/eveapi/');
 
 require_once(BASEPATH.'../eveapi/eveapi/class.api.php');
@@ -25,18 +33,16 @@ require_once(BASEPATH.'../eveapi/eveapi/class.titles.php');
  *
  **/
 class NoMemcache {
-
-	function get()
-	{
-		return False;
-	}
-
-	function set()
-	{
-		return False;
-	}
+    function __call($name, $arguments)
+    {
+        return False;
+    }
 }
 
+/**
+ * EveApi that class extends the Basic Api Class
+ *
+ */
 class EveApi Extends Api {
 
     public $reftypes;
@@ -46,6 +52,11 @@ class EveApi Extends Api {
 	
 	private $memcache;
 
+    /**
+     * Initializes Api, pulls needed XML
+     *
+     *
+     */
     function __construct($params)
     {
         $CI =& get_instance();
@@ -62,7 +73,11 @@ class EveApi Extends Api {
 		{
 			$this->memcache = new Memcache;
 			list($_host, $_port) = explode(':', $CI->config->item('memcache_host'));
-			$this->memcache->connect($_host, $_port);
+			$mc = @$this->memcache->pconnect($_host, $_port);
+			if (!$mc)
+			{
+			    $this->memcache = new NoMemcache;
+			}
 		}
 		else
 		{
@@ -73,7 +88,7 @@ class EveApi Extends Api {
 		$this->memcache->set('evetool_reftypes', $this->reftypes, 0, 86400);
 
 		$this->stationlist = $this->memcache->get('evetool_stationlist') ? $this->memcache->get('evetool_stationlist') : Stations::getConquerableStationList($this->getConquerableStationList());;
-		$this->memcache->set('evetool_stationlist', $this->stationlist, 0, 86400);
+		$this->memcache->set('evetool_stationlist', $this->stationlist, MEMCACHE_COMPRESSED, 86400);
 
 		if ( ($this->skilltree = $this->memcache->get('evetool_skilltree')) === False )
 		{
@@ -93,7 +108,10 @@ class EveApi Extends Api {
 		$this->memcache->set('evetool_skilltree', $this->skilltree, 0, 86400);
 	}
 
-
+    /**
+     * Figure out if the current character has access to corp api functions
+     *
+     **/
     function has_corpapi_access()
     {
 		$CI =& get_instance();

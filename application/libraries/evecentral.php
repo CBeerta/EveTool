@@ -2,8 +2,8 @@
 
 class EveCentral
 {
-    var $mineralTypes = array(34,35,36,37,38,39,40,11399);
-    var $cacheDir = '/var/tmp';
+    public $mineralTypes = array(34,35,36,37,38,39,40,11399);
+    public $cacheDir = '/var/tmp';
 
     /* region 10000002 == Jita */
     /* region 10000030 == Heimatar */

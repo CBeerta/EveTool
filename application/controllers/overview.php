@@ -1,7 +1,21 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Main Entry Pages
+ *
+ * Shows the Liste of current Characters with info on what they're training, and their wallets
+ * Aswell as an RSS dump of the Development Tree History
+ *
+ * @todo This could use something creative
+ * @author Claus Beerta <claus@beerta.de>
+ */
+
 class Overview extends MY_Controller
 {
+    /**
+     * Enty Page with Characters and RSS feed
+     *
+     */
     public function index()
     {
         $this->load->library('simplepie');
@@ -37,6 +51,17 @@ class Overview extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+    /**
+     * Display a Characters Skilltree
+     * 
+     * - Current Training info
+     * - Skill Queue
+     * - Clone info
+     * - Skill Tree
+     *
+     * @todo Should be in a different controller
+     * @todo Add Certificates
+     */
     function skilltree()
     {
         $data['character'] = $this->character;
@@ -107,6 +132,9 @@ class Overview extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+    /**
+     * Global Configuration Settings
+     */
     function config()
     {
         $data = array();
