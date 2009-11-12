@@ -116,13 +116,13 @@ class MY_Controller extends Controller
             // Pop the Charactername off the url, so we can build a new url for a different character
             $full_uri = explode('/', $this->uri->uri_string());
             array_pop($full_uri);
-            $data['base_url'] = !$this->uri->segment(1) ? site_url("/overview/skilltree") : site_url(implode('/', $full_uri));
+            $data['base_url'] = !$this->uri->segment(1) ? site_url("/character/skilltree") : site_url(implode('/', $full_uri));
         }
         else if ($character = $this->session->userdata('character'))
         {
 			// This happens when there is a character selected in the session, and the user is just browsing sections
             $this->character = $character;
-            $data['base_url'] = !$this->uri->segment(1) ? site_url("/overview/skilltree") : current_url();
+            $data['base_url'] = !$this->uri->segment(1) ? site_url("/character/skilltree") : current_url();
         }
 
         if (!is_null($this->character))

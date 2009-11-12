@@ -16,7 +16,7 @@ class Corp extends MY_Controller
         
 		if (!$this->has_corpapi_access)
 		{
-			redirect("/overview/skilltree");
+			redirect("/character/skilltree");
 		}
 		$this->corpname = $this->chars[$this->character]["corpname"];		
 	}

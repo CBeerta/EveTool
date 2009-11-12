@@ -99,7 +99,7 @@ class Assets extends MY_Controller {
 		
 		if (!is_string($this->input->post('search')))
 		{
-			redirect('overview/skilltree');
+			redirect('/character/skilltree');
 			exit;
 		}
 		else

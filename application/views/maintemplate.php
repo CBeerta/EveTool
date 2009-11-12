@@ -7,7 +7,7 @@
         <?php if(!empty($character)): ?>
         <h2>Information</h2>
         <ul>
-            <li><a href="<?php echo site_url("/overview/skilltree/");?>">Skilltree</a>
+            <li><a href="<?php echo site_url("/character/skilltree/");?>">Skilltree</a>
             <li><a href="<?php echo site_url("/transactions/index/");?>">Transaction List</a>
             <li><a href="<?php echo site_url("/wallet/dailyjournal/");?>">Wallet Journal</a>
             <li><a href="<?php echo site_url("/assets/index");?>">Assets</a>
