@@ -1,7 +1,19 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Controller that gets called by the 'cli.php' entry script
+ *
+ *
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
+
 class Cli extends Controller
 {
+
+    /**
+     * Constructor to load the libraries we need 
+     */
     public function __construct()
     {
         parent::__construct();
@@ -12,6 +24,9 @@ class Cli extends Controller
         $this->load->helper('eve');
     }
     
+    /**
+     * Cron Updater updates the EveApi XML Caches for all characters found in the Database
+     */
 	public function cron_update()
 	{
 		print date('r')." - Updating XML Cache:\n";

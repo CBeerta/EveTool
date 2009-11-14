@@ -20,7 +20,9 @@
         <td><font color="green"><?php print number_format($trans['price']); ?></font></td>
         <td><font color="green"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
         <?php endif; ?>
-        <td><?php print $trans['stationName']; ?></td>
+        <td>
+    		<a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$trans['stationID']); ?>"><?php echo $trans['stationName'];?></a>
+        </td>
     </tr>
     <?php endforeach;?>
 </table>

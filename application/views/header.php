@@ -6,10 +6,14 @@
     <!-- css --> 
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/reset-fonts-grids/reset-fonts-grids.css"> 
     <!-- <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/container/assets/skins/sam/container.css">  -->
-    <link rel="stylesheet" type="text/css" href="<?php echo site_url();?>/files/eve.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo site_url('/files/eve.css');?>">
     <!-- js --> 
     <!-- <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.5.2/build/yahoo-dom-event/yahoo-dom-event.js&2.5.2/build/container/container-min.js"></script> -->
     <script type="text/javascript" src="<?php echo site_url('/files/jquery.js');?>"></script>
+    <!-- fancybox -->
+    <script type="text/javascript" src="<?php echo site_url('/files/fancybox/jquery.fancybox-1.2.5.pack.js');?>"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo site_url('/files/fancybox/jquery.fancybox-1.2.5.css');?>">
+    
     <script type="text/javascript" src="<?php echo site_url('/files/eve.js');?>"></script>
     <script type="text/javascript" src="<?php echo site_url('/files/sorttable.js');?>"></script>
 </head>

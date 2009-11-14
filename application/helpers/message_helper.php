@@ -12,7 +12,7 @@ function msg_forward($heading, $message, $destination, $delay = 5, $template = '
 }
 
 
-function debug_popup( $message )
+function debug_popup( $message = '' )
 {
     if ( !is_string($message) )
     {
@@ -21,6 +21,7 @@ function debug_popup( $message )
 
     $txt  = '<div style="font-size: small;">';
     $txt .= '<pre>'.strtr($message, array('\\'=>'\\\\',"'"=>"\\'",'"'=>'\\"',"\r"=>'\\r',"\n"=>'\\n','</'=>'<\/')).'</pre>';
+    #$txt .= '<pre>'.print_r(debug_backtrace(), True).'</pre>';
     $txt .= '</div>';
     
     $js = '

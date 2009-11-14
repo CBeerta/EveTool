@@ -41,4 +41,5 @@
     <p><?php echo $item->get_description();?></p>
     <br />
     <?php endforeach; ?>
-</div>    
+</div>
+

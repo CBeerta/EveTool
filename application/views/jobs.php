@@ -29,7 +29,9 @@ Days to show:
     <td><?php echo $row['activity']; ?></td>
     <td><?php echo $row['amount']; ?></td>
     <td><?php echo $row['ends']; ?></td>
-    <td><?php echo $row['location']; ?></td>
+    <td>
+		<a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$row['location']); ?>"><?php echo locationid_to_name($row['location']);?></a>
+    </td>
 <tr>
 <?php endforeach; ?>
 </table>

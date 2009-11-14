@@ -51,7 +51,7 @@ td.light {
 
 td {
     padding: 2px;
-    text-align: right;
+    /* text-align: right; */
 }
 
 td#left {
@@ -80,6 +80,13 @@ h3 {
 a, a:hover, a:visited, a:active {
     color: #995555;
     text-decoration: none;
+}
+
+a#fb_location {
+	background-image: url('/files/images/map.png');
+	background-repeat: no-repeat;
+    padding-left: 20px;
+    color: white;
 }
 
 div#buttan {

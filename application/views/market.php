@@ -28,7 +28,9 @@ Days to show:
 	<td><?php echo number_format($row->remaining*$row->price);?> ISK</td>
 	<!-- <td><?php echo number_format($row->total*$row->price);?> ISK</td> -->
 	<td><?php echo $row->ends;?></td>
-	<td><?php echo $row->location;?></td>
+	<td>
+        <a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$row->locationid); ?>"><?php echo $row->location;?></a>
+    </td>
 </tr>
 <?php endforeach;?>
 <tr>

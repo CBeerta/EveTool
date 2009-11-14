@@ -3,7 +3,7 @@
 class Agent_Info
 {
     
-    private static function _get_agent($agent_id, $filter = array('1=1'), $on_what = 'eveNames.itemID')
+    public static function _get_agent($agent_id, $filter = array('1=1'), $on_what = 'eveNames.itemID')
     {
         $CI =& get_instance();
         

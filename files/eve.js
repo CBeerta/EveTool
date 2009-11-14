@@ -25,3 +25,8 @@ function numberFormat(nStr)
 	
 	return x1 + x2;
 }
+
+$(document).ready(function() { 
+    $("a#fb_location").fancybox();
+});
+

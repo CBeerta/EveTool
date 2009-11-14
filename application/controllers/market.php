@@ -43,13 +43,14 @@ class Market extends MY_Controller
             $issued = strtotime($order['issued']);
             $issued += $order['duration'] * 24 * 60 * 60;
 
-            $row = getInvType($order['typeID']);
+            $row = get_inv_type($order['typeID']);
             $row->price = $order['price'];
             $row->remaining = $order['volRemaining'];
             $row->total = $order['volEntered'];
             $row->charID = $order['charID'];
             $row->ends = api_time_to_complete($issued);
-            $row->location = locationid_snippet($order['stationID']);
+            $row->location = locationid_to_name($order['stationID']);
+            $row->locationid = $order['stationID'];
             
             $type = ($order['bid'] == 1) ? 'buy' : 'sell';
 

@@ -45,7 +45,7 @@ class Industry extends MY_Controller
                     'outputLocationID' => $job['outputLocationID'],
                     'ends' => api_time_to_complete($job['endProductionTime']),
                     'installerID' => $job['installerID'],
-                    'location' => locationid_snippet($job['outputLocationID']));
+                    'location' => $job['outputLocationID']);
 
             if ($job['activityID'] == 1 && $job['completedStatus'] == 0)
             {

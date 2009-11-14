@@ -7,6 +7,7 @@
  * @author Claus Beerta <claus@beerta.de>
  */
 
+
 class MY_Controller extends Controller
 {
     /**
@@ -51,7 +52,7 @@ class MY_Controller extends Controller
 
         $this->load->library('evecentral');
         $this->load->library('production');
-
+        
         $accounts = array();
 
         $data['character'] = '';
@@ -78,29 +79,33 @@ class MY_Controller extends Controller
         }
         
         /**
-         * @todo Maybe move this to the database, instead of using the Api?
+         * @todo Maybe move this to the database, instead of using the Api? It's now cached with memcache, though if that really does anything remains to be seen
          */
-        foreach ($accounts as $account)
+        if ( ($this->chars = $this->eveapi->memcache->get('evetool_accounts_'.$this->Auth['user_id'])) === False )
         {
-            $this->eveapi->setCredentials($account['apiuser'], $account['apikey']);
-            $chars = Characters::getCharacters($this->eveapi->getCharacters());
-            if (!is_array($chars))
+            foreach ($accounts as $account)
             {
-                continue;
-            }
-            foreach ($chars as $char)
-            {   
-                $this->chars[$char['charname']]['charid'] = $char['charid'];
-                $this->chars[$char['charname']]['apiuser'] = $account['apiuser'];
-                $this->chars[$char['charname']]['apikey'] = $account['apikey'];
-                $this->chars[$char['charname']]['corpname'] = $char['corpname'];
-                $this->chars[$char['charname']]['corpid'] = $char['corpid'];
-                if (in_array($char['charname'], $this->uri->segment_array()))
+                $this->eveapi->setCredentials($account['apiuser'], $account['apikey']);
+                $chars = Characters::getCharacters($this->eveapi->getCharacters());
+                if (!is_array($chars))
                 {
-                    $data['character'] = $char['charname'];
+                    continue;
+                }
+                foreach ($chars as $char)
+                {   
+                    $this->chars[$char['charname']]['charid'] = $char['charid'];
+                    $this->chars[$char['charname']]['apiuser'] = $account['apiuser'];
+                    $this->chars[$char['charname']]['apikey'] = $account['apikey'];
+                    $this->chars[$char['charname']]['corpname'] = $char['corpname'];
+                    $this->chars[$char['charname']]['corpid'] = $char['corpid'];
+                    if (in_array($char['charname'], $this->uri->segment_array()))
+                    {
+                        $data['character'] = $char['charname'];
+                    }
                 }
             }
         }
+        $this->eveapi->memcache->set('evetool_accounts_'.$this->Auth['user_id'], $this->chars, MEMCACHE_COMPRESSED, 86400);
         
         $data['tool'] = $this->uri->segment(1, 'Overview');
         $data['chars'] = empty($this->chars) ? array() : $this->chars;

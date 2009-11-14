@@ -30,7 +30,9 @@ function toggle_it(itemID){
     <br />
     <small><?php echo $asset['groupName']; ?></small>
     </th>
-    <th style="text-align: left;"><?php echo locationid_snippet($asset['locationID']); ?></th>
+    <th style="text-align: left;">
+        <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$asset['locationID']); ?>"><?php echo locationid_to_name($asset['locationID']);?></a>
+    </th>
 </tr>
 <?php if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
 <tbody style="display: none;" id="<?php echo $asset['assetItemID']; ?>">

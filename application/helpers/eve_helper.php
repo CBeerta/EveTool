@@ -119,7 +119,7 @@ function surrounding_systems($system, $maxDepth = 1, $currentDepth = 1)
  *
  * @todo Convert to return a html snippet like locationid_snippet
 **/
-function regionid_snippet($regionID)
+function regionid_to_name($regionID)
 {
     if (empty($regionID))
     {
@@ -143,7 +143,7 @@ function regionid_snippet($regionID)
  * @access public
  * @param  string
 **/
-function locationid_snippet($locationID)
+function locationid_to_name($locationID)
 {
 
     if (empty($locationID))
@@ -166,7 +166,7 @@ function locationid_snippet($locationID)
     if (count($row)>0)
     {
         $loc = $row[0];
-        $loc['displayName'] = $loc['itemName'];
+        $displayName = $loc['itemName'];
     }
     else
     {
@@ -176,14 +176,12 @@ function locationid_snippet($locationID)
 
     if (!empty($CI->eveapi->stationlist[$locationID]))
     {
-        $loc['displayName'] = $CI->eveapi->stationlist[$locationID]['stationName'];
+        $displayName = $CI->eveapi->stationlist[$locationID]['stationName'];
     }
 	
-	preg_match("|^([A-Z0-9\-]+)\s?|i", $loc['itemName'], $matches);
-	$loc['systemName'] = $matches[1];
-	
-    return ($CI->load->view('snippets/location', $loc, True));
+    return($displayName);	
 }
+
 
 function get_character_portrait($name, $size = 64)
 {

@@ -1,10 +1,11 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-function name_cmp($a, $b)
-{
-	return strcmp($a["name"], $b["name"]);	
-}
-
+/**
+ * Corporation Info Pages
+ *
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ */
 
 class Corp extends MY_Controller
 {
@@ -26,7 +27,7 @@ class Corp extends MY_Controller
 		$data = array();
 		$data["memberlist"] = MemberTrack::getMembers($this->eveapi->getMemberTracking());
 		
-		usort($data["memberlist"], "name_cmp");
+		usort($data["memberlist"], create_function('$a, $b', 'return strcmp($a["name"], $b["name"]);'));
 		$data["corpname"] = $this->chars[$this->character]["corpname"];
         $template['content'] = $this->load->view('corp/memberlist', $data, True);
         $this->load->view('maintemplate', $template);

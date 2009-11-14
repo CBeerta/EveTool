@@ -6,6 +6,7 @@
  * Extends base EveApi by functions that EveTool requires
  *
  * @author Claus Beerta <claus@beerta.de>
+ * @todo it doesn't really make much sense to have the memcache stuff in here, while we need it everywhere
  */
  
 @set_include_path(@get_include_path() . PATH_SEPARATOR . BASEPATH.'../eveapi/eveapi/');
@@ -39,6 +40,7 @@ class NoMemcache {
     }
 }
 
+
 /**
  * EveApi that class extends the Basic Api Class
  *
@@ -50,7 +52,7 @@ class EveApi Extends Api {
     public $stationlist;
     public $corpMembers = array();
 	
-	private $memcache;
+	public $memcache;
 
     /**
      * Initializes Api, pulls needed XML
@@ -61,7 +63,6 @@ class EveApi Extends Api {
     {
         $CI =& get_instance();
 		$CI->config->load('evetool');
-
 
         if (!empty($params['cachedir']))
         {
@@ -84,10 +85,12 @@ class EveApi Extends Api {
 			$this->memcache = new NoMemcache;
 		}
 
-        $this->reftypes = $this->memcache->get('evetool_reftypes') ? $this->memcache->get('evetool_reftypes') : RefTypes::getRefTypes($this->getRefTypes());
+        $_mc = $this->memcache->get('evetool_reftypes');
+        $this->reftypes = $_mc ? $_mc : RefTypes::getRefTypes($this->getRefTypes());
 		$this->memcache->set('evetool_reftypes', $this->reftypes, 0, 86400);
 
-		$this->stationlist = $this->memcache->get('evetool_stationlist') ? $this->memcache->get('evetool_stationlist') : Stations::getConquerableStationList($this->getConquerableStationList());;
+        $_mc = $this->memcache->get('evetool_stationlist');
+		$this->stationlist = $_mc ? $_mc : Stations::getConquerableStationList($this->getConquerableStationList());;
 		$this->memcache->set('evetool_stationlist', $this->stationlist, MEMCACHE_COMPRESSED, 86400);
 
 		if ( ($this->skilltree = $this->memcache->get('evetool_skilltree')) === False )
@@ -105,7 +108,7 @@ class EveApi Extends Api {
 				}
 			}
 		}
-		$this->memcache->set('evetool_skilltree', $this->skilltree, 0, 86400);
+		$this->memcache->set('evetool_skilltree', $this->skilltree, MEMCACHE_COMPRESSED, 86400);
 	}
 
     /**
