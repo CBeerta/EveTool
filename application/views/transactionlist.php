@@ -3,7 +3,7 @@
     <tr>
         <th>Date</th>
         <th>Units</th>
-        <th>Name</th>
+        <th colspan="2">Name</th>
         <th>Unit</th>
         <th>Total</th>
         <th>Station</th>
@@ -12,7 +12,14 @@
     <tr>
         <td><?php print api_time_print($trans['transactionDateTime'], 'Y.m.d H:i'); ?></td>
         <td><?php print number_format($trans['quantity']); ?></td>
-        <td><?php print $trans['typeName']; ?></td>
+        <td>
+            <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$trans['typeID']); ?>">
+                <img src="<?php echo get_icon_url(get_inv_type($trans['typeID']),32);?>" width="32" height="32">
+            </a>
+        </td>
+        <td>
+            <?php print $trans['typeName']; ?>
+        </td>
         <?php if ($trans['transactionType'] == 'buy'): ?>
         <td><font color="red"><?php print number_format($trans['price']); ?></font></td>
         <td><font color="red"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>

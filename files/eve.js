@@ -28,5 +28,7 @@ function numberFormat(nStr)
 
 $(document).ready(function() { 
     $("a#fb_location").fancybox();
+    $("a#fb_character").fancybox();
+    $("a#fb_item").fancybox();
 });
 

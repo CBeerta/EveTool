@@ -13,7 +13,7 @@
             <li><a href="<?php echo site_url("/assets/index");?>">Assets</a>
             <ul class="submenu">
 				<form method="post" action="<?php echo site_url("/assets/search");?>" id="assetSearch">
-					<li><input type="text" name="search" id="search" id="search" value="Search.." size="16" onfocus="if(this.value == 'Search..') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search..';}"/>
+					<li><input type="text" name="search" id="search" id="search" value="Search.." size="10" onfocus="if(this.value == 'Search..') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search..';}"/>
 				</form>
                 <li><a href="<?php echo site_url("/materials/index/18");?>">Materials</a>
                 <li><a href="<?php echo site_url("/assets/blueprints/");?>">Blueprints</a>

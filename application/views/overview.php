@@ -12,7 +12,7 @@
         <?php if (!empty($v['training']['skillInTraining'])): ?>
         <tr>
             <td class="light">Currently Training:</td>
-            <td style="text-align: right;" class="dataTableCell">
+            <td class="dataTableCell">
                 <img alt="<?php echo $v['training']['trainingToLevel']; ?>" src="/files/images/level<?php echo $v['training']['trainingToLevel']; ?>_act.gif" align="right"/><?php echo $v['training']['trainingTypeName']; ?>
             </td>
         </tr>

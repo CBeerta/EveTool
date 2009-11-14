@@ -1,8 +1,6 @@
-body{
-    color:#333;
-	/* background: #FFFFFF url(/files/images/bg.gif) repeat-x; */
-	/* background: #fff; */
-    font-family: "Trebuchet MS", Verdana, Arial;
+body {
+	color:#333;
+	font-family: "Trebuchet MS", Verdana, Arial;
 	overflow-y: scroll; /* always show the scrollbar, i HATE jumping around of the content */
 }
 

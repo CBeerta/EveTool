@@ -18,12 +18,16 @@ Days to show:
 </tr>
 <?php foreach ($data as $row): ?>
 <tr>
-    <?php if (isset($corpmates[$row['installerID']])): ?>
-    <td><?php echo get_character_portrait($row['installerID'], 32); ?></td>
-    <?php else: ?>
-    <td><?php echo get_character_portrait($row['installerID'], 32); ?></td>
-    <?php endif; ?>
-	<td style="text-align: left;"><img src="<?php echo get_icon_url($row,32);?>" width="32" height="32"></td>
+    <td>
+        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$row['installerID']); ?>">       
+            <?php echo get_character_portrait($row['installerID'], 32); ?>
+        </a>
+    </td>
+	<td style="text-align: left;">
+        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$row['typeID']); ?>">       
+    	    <img src="<?php echo get_icon_url($row,32);?>" width="32" height="32">
+        </a>
+    </td>
     <td style="text-align: left;"><?php echo $row['typeName']; ?></td>
     <td><?php echo $row['status']; ?></td>
     <td><?php echo $row['activity']; ?></td>

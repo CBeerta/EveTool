@@ -17,7 +17,9 @@
 	    <b>Required Standing</b>: <?php echo $agent->required_standing; ?> - <b>Type</b>: <?php print_r(preg_replace("|(\p{Lu})|", ' $1', $agent->agentType));?><br>
 	</td>
 	<td>
-	    <img src="<?php echo "/files/cache/char/{$agent->itemID}/64/char.jpg"; ?>">
+        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$agent->itemID); ?>">
+    	    <img src="<?php echo "/files/cache/char/{$agent->itemID}/64/char.jpg"; ?>">
+	    </a>
 	</td>
 </tr>
 </table>

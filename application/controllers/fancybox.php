@@ -9,9 +9,25 @@
 
 class Fancybox extends Controller
 {
-    function location($id)
+
+    /**
+     * Constructor to load the libraries we need 
+     */
+    public function __construct()
     {
-        print "<h1>HOLY SHIT, AWESOMEBOX!</h1>";
+        parent::__construct();
+
+        $this->config->load('evetool');
+		$this->load->library('eveapi', array('cachedir' => '/var/tmp'));
+
+        $this->load->helper('eve');
+        $this->load->helper('inventory');
+    }
+
+
+    public function location($id)
+    {
+        print "<h1>HOLY SHIT, LOCATION BOX!</h1>";
         print $id;    
         
         /*
@@ -21,5 +37,20 @@ class Fancybox extends Controller
         return ($CI->load->view('snippets/location', $loc, True));
         */
     }
+    
+    public function character($id)
+    {
+        print "<h1>HOLY SHIT, CHARACTER BOX!</h1>";
+        print $id;    
+    }
+    
+    public function item($id)
+    {
+        print "<h1>HOLY SHIT, ITEM BOX!</h1>";
+        print '<pre>';
+        
+        print_r (get_inv_type($id));
+    }
+
 }
 

@@ -110,7 +110,7 @@ class MY_Controller extends Controller
         $data['tool'] = $this->uri->segment(1, 'Overview');
         $data['chars'] = empty($this->chars) ? array() : $this->chars;
 
-        $data['base_url'] = site_url("/overview/skilltree");
+        $data['base_url'] = site_url("/character/skilltree");
         $character = urldecode($this->uri->segment($this->uri->total_segments()));
         if (in_array($character, array_keys($this->chars)))
         {

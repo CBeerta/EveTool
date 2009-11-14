@@ -20,8 +20,16 @@ Days to show:
 </tr>
 <?php foreach ($$type as $row): ?>
 <tr>
-    <td><img src="<?php echo site_url("files/cache/char/{$row->charID}/64/char.jpg"); ?>" width="32" height="32"></td>
-	<td style="text-align: left;"><img src="<?php echo get_icon_url($row,32);?>"></td>
+    <td>
+        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$row->charID); ?>">       
+            <img src="<?php echo site_url("files/cache/char/{$row->charID}/64/char.jpg"); ?>" width="32" height="32">
+        </a>
+    </td>
+	<td style="text-align: left;">
+        <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$row->typeID); ?>">       
+    	    <img src="<?php echo get_icon_url($row,32);?>">
+	    </a>
+    </td>
     <td style="text-align: left;"><?php echo $row->typeName;?></td>
 	<td><?php echo number_format($row->price, 2);?> ISK</td>
     <td width="5"><?php echo $row->remaining.'/'.$row->total; ?></td>
