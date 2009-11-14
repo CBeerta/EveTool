@@ -24,7 +24,7 @@ Days to show:
         </a>
     </td>
 	<td style="text-align: left;">
-        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$row['typeID']); ?>">       
+        <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$row['typeID']); ?>">       
     	    <img src="<?php echo get_icon_url($row,32);?>" width="32" height="32">
         </a>
     </td>

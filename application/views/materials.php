@@ -22,14 +22,18 @@
 </tr>
 <?php foreach ($data as $k => $v): ?>
 <tr>
-	<td style="text-align: left;" colspan="2"><img src="<?php echo get_icon_url($v,32);?>"></td>
+	<td style="text-align: left;" colspan="2">
+		<a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$v['typeID']); ?>">       
+			<img src="<?php echo get_icon_url($v,32);?>">
+		</a>
+	</td>
     <td style="text-align: left;"><?php echo $v['typeName'];?></td>
     <td><?php echo number_format($v['quantity']); ?></td>
     <td><?php echo number_format($v['volume']*$v['quantity']); ?> m&sup3;</td>
     <td width="5"><i><?php echo number_format($prices[$k]['sell']['median'], 2); ?></i></td>
-    <td><?php echo number_format($prices[$k]['sell']['avg']*$v['quantity'], 2); ?> ISK</td>
+    <td style="text-align: right;"><?php echo number_format($prices[$k]['sell']['avg']*$v['quantity'], 2); ?> ISK</td>
     <td width="5"><i><?php echo number_format($prices[$k]['buy']['median'], 2); ?></i></td>
-    <td><?php echo number_format($prices[$k]['buy']['avg']*$v['quantity'], 2); ?> ISK</td>
+    <td style="text-align: right;"><?php echo number_format($prices[$k]['buy']['avg']*$v['quantity'], 2); ?> ISK</td>
 <tr>
 <?php endforeach; ?>
 <th colspan="4">Sum:</td>

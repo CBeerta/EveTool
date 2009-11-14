@@ -6,7 +6,6 @@
     <th>Volume</th>
 	<th colspan="2">Location</th>
 </td>
-<?php debug_popup($found); ?>
 <?php foreach ($found as $row): ?>
 <tr>
     <td>

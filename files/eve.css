@@ -231,3 +231,17 @@ div#ft {
   position: relative;
 }
 
+
+/**
+ *
+ * Snippets
+ *
+ **/
+#location_snippet {
+	text-align: left;
+}
+div#location_snippet {
+	padding: 5px;
+	background-color: #efefef;
+}
+

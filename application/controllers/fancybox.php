@@ -27,15 +27,43 @@ class Fancybox extends Controller
 
     public function location($id)
     {
-        print "<h1>HOLY SHIT, LOCATION BOX!</h1>";
-        print $id;    
-        
-        /*
-    	preg_match("|^([A-Z0-9\-]+)\s?|i", $loc['itemName'], $matches);
-    	$loc['systemName'] = $matches[1];
-        
-        return ($CI->load->view('snippets/location', $loc, True));
-        */
+		$playerStation = array();
+		$query = "
+			SELECT
+				*
+			/*
+				sol.regionID,
+				sol.solarSystemName,
+				sol.security,
+				sol.solarSystemID,
+				reg.regionName
+			*/
+			FROM
+				mapSolarSystems AS sol,
+				mapRegions AS reg";
+		
+		if (!empty($this->eveapi->stationlist[$id]))
+		{
+			$playerStation = $this->eveapi->stationlist[$id];
+			$query .= "
+			WHERE
+				sol.solarSystemID={$this->eveapi->stationlist[$id]['solarSystemID']} AND
+				reg.regionID=sol.regionID";
+		}
+		else
+		{
+			$query .= ",
+				staStations AS sta
+			WHERE
+				sta.stationID={$id} AND
+				sta.solarSystemID=sol.solarSystemID AND
+				reg.regionID=sol.regionID";
+		}
+		
+		$res = $this->db->query ($query);
+		
+		$loc = array_merge((array) $res->row(), $playerStation);
+        $this->load->view('snippets/location', array('loc' => $loc));
     }
     
     public function character($id)
@@ -46,10 +74,7 @@ class Fancybox extends Controller
     
     public function item($id)
     {
-        print "<h1>HOLY SHIT, ITEM BOX!</h1>";
-        print '<pre>';
-        
-        print_r (get_inv_type($id));
+        $this->load->view('snippets/item', array('item' => (array) get_inv_type($id)));
     }
 
 }

@@ -255,7 +255,7 @@ function get_icon_url($type, $size = 64, $background = 'black')
     {
         $row = $type;
     }
-    
+	
     if (!empty($row->categoryID) && $row->categoryID == 6)
     {
         // Ship
@@ -271,7 +271,6 @@ function get_icon_url($type, $size = 64, $background = 'black')
         //structure
         return ("/files/itemdb/types/structuretypes_png/{$size}_{$size}/{$row->typeID}.png");
     }
-
     else if (!empty($row->categoryID) && $row->categoryID == 9)
     {
         //blueprint
@@ -281,6 +280,11 @@ function get_icon_url($type, $size = 64, $background = 'black')
     {
         return ("/files/itemdb/icons/icons_items_png/{$size}_{$size}/icon{$row->icon}.png");
     }
+	else if (!empty($row->stationTypeID))
+	{
+		//Station
+		return ("/files/itemdb/types/stationtypes_png/{$size}_{$size}/{$row->stationTypeID}.png");
+	}
     else
     {
         return ("/files/itemdb/icons/icons_items_png/{$size}_{$size}/icon07_15.png");
