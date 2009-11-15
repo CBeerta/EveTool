@@ -5,11 +5,14 @@
         <div class="yui-b" id="nav">
 		<h2><a href="<?php echo site_url();?>">Home</a></h2>
         <?php if(!empty($character)): ?>
-        <h2>Information</h2>
-        <ul>
+        <h2 class="information menu_slider">Information</h2>
+        <ul id="information">
             <li><a href="<?php echo site_url("/character/skilltree/");?>">Skilltree</a>
             <li><a href="<?php echo site_url("/transactions/index/");?>">Transaction List</a>
-            <li><a href="<?php echo site_url("/wallet/dailyjournal/");?>">Wallet Journal</a>
+            <li><a href="<?php echo site_url("/wallet/journal/");?>">Wallet Journal</a>
+            <ul class="submenu">
+                <li><a href="<?php echo site_url("/wallet/dailyjournal/");?>">grouped by Day</a>
+            </ul>
             <li><a href="<?php echo site_url("/assets/index");?>">Assets</a>
             <ul class="submenu">
 				<form method="post" action="<?php echo site_url("/assets/search");?>" id="assetSearch">
@@ -31,24 +34,23 @@
 	        <li><a href="<?php echo site_url("/corp/transactions/");?>">Transaction List</a>
         </ul>
 		<?php endif;?>
-        <h2>T1 Production</h2>
-        <ul>
+        <h2 class="t1production menu_slider">T1 Production</h2>
+        <ul id="t1production"  style="display: none;">
             <li><a href="<?php echo site_url("/manufacturing/index/1");?>#ships">Ships</a>
             <li><a href="<?php echo site_url("/manufacturing/index/1");?>#modules">Modules</a>
             <li><a href="<?php echo site_url("/manufacturing/index/1");?>#charges">Ammunition</a>
             <li><a href="<?php echo site_url("/manufacturing/index/1");?>#drones">Drones</a>
         </ul>
-        <h2>T2 Production</h2>
-        <ul>
+        <h2 class="t2production menu_slider">T2 Production</h2>
+        <ul id="t2production" style="display: none;">
             <li><a href="<?php echo site_url("/manufacturing/index/2");?>#ships">Ships</a>
             <li><a href="<?php echo site_url("/manufacturing/index/2");?>#modules">Modules</a>
             <li><a href="<?php echo site_url("/manufacturing/index/2");?>#charges">Ammunition</a>
             <li><a href="<?php echo site_url("/manufacturing/index/2");?>#drones">Drones</a>
         </ul>
         <?php endif; ?>
-        <br />
-        <h2>Configuration</h2>
-        <ul>
+        <h2 class="configuration menu_slider">Configuration</h2>
+        <ul id="configuration" style="display: none;">
             <li><?php echo anchor('overview/config', 'Options'); ?>
             <li><?php echo anchor('apikeys/add', 'Add Character'); ?>
             <li><?php echo anchor('user/logout', 'Logout'); ?>

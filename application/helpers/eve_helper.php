@@ -325,7 +325,7 @@ function get_user_config($acctID, $keyName)
     }
 }
 
-function set_uset_config($acctID, $keyName, $value)
+function set_user_config($acctID, $keyName, $value)
 {
     $CI =& get_instance();
     $q = $CI->db->query('

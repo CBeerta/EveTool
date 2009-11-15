@@ -1,7 +1,9 @@
+<!--
 <div id="buttan">
-<a id="buttan" href="<? echo site_url("/wallet/journal");?>">Wallet Journal</a>
-<a id="buttan" href="<? echo site_url("/wallet/dailyjournal");?>">Group by Day</a>
+    <a id="buttan" href="<? echo site_url("/wallet/journal");?>">Wallet Journal</a>
+    <a id="buttan" href="<? echo site_url("/wallet/dailyjournal");?>">Group by Day</a>
 </div>
+-->
 <table width="100%">
     <caption>Wallet Journal</caption>
     <tr>

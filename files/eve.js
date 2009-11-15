@@ -26,9 +26,47 @@ function numberFormat(nStr)
 	return x1 + x2;
 }
 
+function toggle_it(itemID){
+    // Toggle visibility between none and inline
+    if ((document.getElementById(itemID).style.display == 'none'))
+    {
+        document.getElementById(itemID).style.display = '';
+    } 
+	else 
+	{
+        document.getElementById(itemID).style.display = 'none';
+    }
+}
+
+
+
+// jQuery Stuff in here
 $(document).ready(function() { 
-    $("a#fb_location").fancybox();
-    $("a#fb_character").fancybox();
-    $("a#fb_item").fancybox();
+
+	// Fancybox Popups
+    $("a#fb_location").fancybox({ 'hideOnContentClick': false });
+    $("a#fb_character").fancybox({ 'hideOnContentClick': false });
+    $("a#fb_item").fancybox({ 'hideOnContentClick': false });
+    $("a#fb_fitting").fancybox({ 'hideOnContentClick': false, 'frameWidth': 850, 'frameHeight': 550});
+	
+	
+	// Navigation Effects
+	$("h2.t1production").click(function(){
+		$("ul#t1production").toggle("slow");
+	});
+	
+	$("h2.t2production").click(function(){
+		$("ul#t2production").toggle("slow");
+	});
+
+	$("h2.information").click(function(){
+		$("ul#information").toggle("slow");
+	});
+
+	$("h2.configuration").click(function(){
+		$("ul#configuration").toggle("slow");
+	});
+
+	
 });
 

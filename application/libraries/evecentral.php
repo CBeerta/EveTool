@@ -54,7 +54,7 @@ class EveCentral
                 rename($destFile.'.tmp', $destFile);
             }
         }
-        return(simplexml_load_file($destFile));
+        return(@simplexml_load_file($destFile));
     }
 
     public function getPrices($typeIDList, $region = 10000002, $user_prices = False )
@@ -100,7 +100,7 @@ class EveCentral
         {
             // Apply user mineral Prices over the fetched ones
             $CI =& get_instance();
-            $mineral_prices = getUserConfig($CI->Auth['user_id'], 'mineral_prices');
+            $mineral_prices = get_user_config($CI->Auth['user_id'], 'mineral_prices');
             if ( $mineral_prices !== False )
             {
                 $mineral_prices = unserialize($mineral_prices);

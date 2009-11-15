@@ -1,21 +1,8 @@
-<script language="javascript">
-
-function toggle_it(itemID){
-    // Toggle visibility between none and inline
-    if ((document.getElementById(itemID).style.display == 'none'))
-    {
-        document.getElementById(itemID).style.display = '';
-    } else {
-        document.getElementById(itemID).style.display = 'none';
-    }
-}
-
-</script> 
 <table width="100%">
 <?php foreach ($assets as $location): ?>
 <tr>
     <th colspan="5">
-		<div title="Collapse Assets in Location" onClick="toggle_it(<?php echo $location[0]['locationID']; ?>)" style="position: absolute; left: 30px; font-weight: bold;">&darr;&darr;&darr;</div>
+		<h2 class="menu_slider" title="Collapse Assets in Location" onClick="toggle_it(<?php echo $location[0]['locationID']; ?>)" style="position: absolute; left: 30px; font-weight: bold;">&darr;&darr;&darr;</h2>
 		<div style="margin-left: 50px; text-align: left;">
 		<a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$location[0]['locationID']); ?>"><?php echo locationid_to_name($location[0]['locationID']);?></a>
 	    </div>

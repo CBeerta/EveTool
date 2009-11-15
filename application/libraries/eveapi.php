@@ -30,18 +30,6 @@ require_once(BASEPATH.'../eveapi/eveapi/class.titles.php');
 
 
 /**
- * Empty Memcache class so we can just go ahead and use memcache functions even if it is not available
- *
- **/
-class NoMemcache {
-    function __call($name, $arguments)
-    {
-        return False;
-    }
-}
-
-
-/**
  * EveApi that class extends the Basic Api Class
  *
  */
@@ -52,8 +40,6 @@ class EveApi Extends Api {
     public $stationlist;
     public $corpMembers = array();
 	
-	public $memcache;
-
     /**
      * Initializes Api, pulls needed XML
      *
@@ -64,36 +50,23 @@ class EveApi Extends Api {
         $CI =& get_instance();
 		$CI->config->load('evetool');
 
+		$CI->load->library('cache');
+
         if (!empty($params['cachedir']))
         {
             $this->cache(true);
             $this->setCacheDir($params['cachedir']);
         }
-		
-		if (function_exists("memcache_connect"))
-		{
-			$this->memcache = new Memcache;
-			list($_host, $_port) = explode(':', $CI->config->item('memcache_host'));
-			$mc = @$this->memcache->pconnect($_host, $_port);
-			if (!$mc)
-			{
-			    $this->memcache = new NoMemcache;
-			}
-		}
-		else
-		{
-			$this->memcache = new NoMemcache;
-		}
 
-        $_mc = $this->memcache->get('evetool_reftypes');
+        $_mc = $CI->cache->get('evetool_reftypes');
         $this->reftypes = $_mc ? $_mc : RefTypes::getRefTypes($this->getRefTypes());
-		$this->memcache->set('evetool_reftypes', $this->reftypes, 0, 86400);
+		$CI->cache->set('evetool_reftypes', $this->reftypes);
 
-        $_mc = $this->memcache->get('evetool_stationlist');
+        $_mc = $CI->cache->get('evetool_stationlist');
 		$this->stationlist = $_mc ? $_mc : Stations::getConquerableStationList($this->getConquerableStationList());;
-		$this->memcache->set('evetool_stationlist', $this->stationlist, MEMCACHE_COMPRESSED, 86400);
+		$CI->cache->set('evetool_stationlist', $this->stationlist);
 
-		if ( ($this->skilltree = $this->memcache->get('evetool_skilltree')) === False )
+		if ( ($this->skilltree = $CI->cache->get('evetool_skilltree')) === False )
 		{
 			$skilltree = SkillTree::getSkillTree($this->getSkillTree());
 			
@@ -108,7 +81,7 @@ class EveApi Extends Api {
 				}
 			}
 		}
-		$this->memcache->set('evetool_skilltree', $this->skilltree, MEMCACHE_COMPRESSED, 86400);
+		$CI->cache->set('evetool_skilltree', $this->skilltree);
 	}
 
     /**

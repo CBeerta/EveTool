@@ -23,7 +23,7 @@
 <tr><th colspan="2">Custom Mineral Prices</th></tr>
 <?php foreach ($mineral_prices as $k => $v): ?>
 <tr>
-    <td><?php print getInvType($k)->typeName; ?></td>
+    <td><?php print get_inv_type($k)->typeName; ?></td>
     <td><?php print form_input("mineral_prices[{$k}]", $v);?></td>
 </tr>
 <?php endforeach; ?>

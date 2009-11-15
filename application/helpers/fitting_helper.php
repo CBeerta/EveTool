@@ -2,16 +2,19 @@
 /**
  * Pulls a Ship out of the 'contents' Table, and displays an ingame like Fitting window
  * 
- * @access public
- * @param int
- * @param int
  *
+ * @author Claus Beerat <claus@beerta.de>
 **/
 
 
 class Ship_Fitting
 {
     
+    /**
+     * Load a ship with its content
+     *
+     * @param int
+     **/
     public function items_from_db($locationItemID)
     {
         $CI =& get_instance();
@@ -42,68 +45,13 @@ class Ship_Fitting
         return($q->result());
     }
     
-    public function items_from_killmail($km_file)
-    {
-        $CI =& get_instance();
-        $CI->load->database();
-
-        try
-        {
-            $km = new Killmail_Parser($km_file);
-        }        
-        catch (Exception $e)
-        {
-            return (array());
-        }
-        $parsed = $km->get_parsed();
-        $names = array();
-        foreach (array_merge($parsed->items['destroyed_items'], $parsed->items['dropped_items']) as $item)
-        {
-            $names[] = $item->name;
-        }
-        $slots = get_slots($names);
-
-        $data = array();
-        $hi = $low = $med = $rig = 0;
-        foreach (array_merge($parsed->items['destroyed_items'], $parsed->items['dropped_items']) as $item)
-        {
-            $flag = 5;
-            if ($item->loc == 'fitted' && isset($slots[$item->name]))
-            {
-                for ($i = 1 ; $i <= $item->qty ; $i++)
-                {
-                    switch ($slots[$item->name]->slot)
-                    {
-                        case 'loPower':
-                            $flag = 11+$low++;
-                            break;
-                        case 'medPower':
-                            $flag = 19+$med++;
-                            break;
-                        case 'hiPower':
-                            $flag = 27+$hi++;
-                            break;
-                        case 'rigSlot':
-                            $flag = 92+$rig++;
-                            break;
-                        default:
-                            $flag = 5;
-                            break;
-                    }
-                    $data[] = (object) array (
-                            'quantity' => $item->qty,
-                            'typeName' => $item->name,
-                            'flag' => $flag,
-                            'categoryID' => $slots[$item->name]->categoryID,
-                            'typeID' => $slots[$item->name]->typeID,
-                            'icon' => $slots[$item->name]->icon,
-                        );
-                } // for
-            } // if
-        } // foreach
-        return ($data);
-    }
-    
+    /**
+     * Fill the fitting snippet with content
+     *
+     * @param int
+     * @param array
+     * @return string
+     **/ 
     public function get($typeName, $fitting_data)
     {
         $CI =& get_instance();

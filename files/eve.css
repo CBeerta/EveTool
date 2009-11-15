@@ -1,6 +1,6 @@
 body {
 	color:#333;
-	font-family: "Trebuchet MS", Verdana, Arial;
+	font-family: Bitsream Vera, "Trebuchet MS", Verdana, Arial;
 	overflow-y: scroll; /* always show the scrollbar, i HATE jumping around of the content */
 }
 
@@ -110,9 +110,9 @@ li {
  *
  **/
 div#hd {
-    /* background-color: #313032; */
-	background: #678810;
-	background-color: #678B1D;
+	/*background-color: #678B1D;*/
+	background-image: url('images/top.gif');
+	border-bottom: 2px solid black;
 	padding-left: 10px;
 	padding-right: 10px;
 	margin-left: -10px;
@@ -124,8 +124,7 @@ div#hd {
 }
 h1#hd {
     font-weight: bold;
-    font-family: "Trebuchet MS", Verdana, Arial;
-    font-size: 50px;
+    font-size: 400%;
     text-align: left;
 	letter-spacing: -0.1em;
 }
@@ -150,6 +149,7 @@ div#nav {
     padding: 0px 0px 0px 5px;
 	margin-right: -10px;
 }
+
 #nav {
     /*background-color: #f2f2f2;*/
     color: #333333;
@@ -176,6 +176,10 @@ div#nav {
 	margin: 20px 0px 0px 0px;
 	padding: 0px 0px 5px 0px;
 	/*border-bottom: 1px dotted #C0C0C0;*/
+}
+
+h2.menu_slider {
+	 cursor: pointer;
 }
 
 #search {

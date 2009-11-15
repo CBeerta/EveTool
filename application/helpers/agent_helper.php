@@ -22,6 +22,7 @@ class Agent_Info
                 ROUND(SolarSystems.security, 1) AS security,
                 IF(ROUND(SolarSystems.security, 1)<0.5,'red','black') AS security_color,
                 NPCCorp.factionID,
+				station.stationID,
                 (SELECT factionName FROM chrFactions WHERE factionID=NPCCorp.factionID) AS faction,
                 ROUND( (agtAgents.level - 1) * 2 + agtAgents.quality / 20, 2) AS required_standing
             FROM

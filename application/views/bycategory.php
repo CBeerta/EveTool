@@ -1,15 +1,3 @@
-<script language="javascript">
-function toggle_it(itemID){
-    // Toggle visibility between none and inline
-    if ((document.getElementById(itemID).style.display == 'none'))
-    {
-        document.getElementById(itemID).style.display = '';
-    } else {
-        document.getElementById(itemID).style.display = 'none';
-    }
-}
-</script>
-
 <table width="100%">
 <caption><?php echo $title;?></caption>
 <tr>
@@ -18,8 +6,14 @@ function toggle_it(itemID){
 </tr>
 <?php foreach($assets as $asset): ?>
 <tr >
-    <th onClick="toggle_it(<?php echo $asset['assetItemID']; ?>)">
+    <th>
+    <?php if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
+    <a id="fb_fitting" style="color: black;" href="<?php echo site_url("/fancybox/fitting_from_db/{$asset['typeName']}/{$asset['assetItemID']}"); ?>">
+        <img align="left" width="64" height="64" src="<?php echo get_icon_url($asset,64);?>">
+    </a>
+    <?php else: ?>
 		<img align="left" width="64" height="64" src="<?php echo get_icon_url($asset,64);?>">
+	<?php endif; ?>
 	</th>
     <th style="text-align: left;">
     <?php if (isset($asset['techLevel'])): ?>
@@ -34,7 +28,7 @@ function toggle_it(itemID){
         <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$asset['locationID']); ?>"><?php echo locationid_to_name($asset['locationID']);?></a>
     </th>
 </tr>
-<?php if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
+<?php /* if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
 <tbody style="display: none;" id="<?php echo $asset['assetItemID']; ?>">
 <tr>
     <td colspan="3">
@@ -42,6 +36,6 @@ function toggle_it(itemID){
     </td>
 </tr>
 </tbody>
-<?php endif; ?>
+<?php endif; */?>
 <?php endforeach; ?>
 </table>

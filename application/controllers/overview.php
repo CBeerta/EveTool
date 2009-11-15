@@ -61,24 +61,24 @@ class Overview extends MY_Controller
 
         if ($this->input->post('submit'))
         {
-            setUserConfig($this->Auth['user_id'], 'market_region', $this->input->post('regions'));
-            setUserConfig($this->Auth['user_id'], 'use_perfect', $this->input->post('use_perfect', False));
-            setUserConfig($this->Auth['user_id'], 'pull_corp', $this->input->post('pull_corp', False));
-            setUserConfig($this->Auth['user_id'], 'user_timezone', $data['timezone_list'][$this->input->post('user_timezone', False)]);
-            setUserConfig($this->Auth['user_id'], 'mineral_prices', serialize($this->input->post('mineral_prices')));
+            set_user_config($this->Auth['user_id'], 'market_region', $this->input->post('regions'));
+            set_user_config($this->Auth['user_id'], 'use_perfect', $this->input->post('use_perfect', False));
+            set_user_config($this->Auth['user_id'], 'pull_corp', $this->input->post('pull_corp', False));
+            set_user_config($this->Auth['user_id'], 'user_timezone', $data['timezone_list'][$this->input->post('user_timezone', False)]);
+            set_user_config($this->Auth['user_id'], 'mineral_prices', serialize($this->input->post('mineral_prices')));
         }
 
         $q = $this->db->query('SELECT regionID,regionName FROM mapRegions ORDER BY regionName');
-        $data['config_region'] = getUserConfig($this->Auth['user_id'], 'market_region');
+        $data['config_region'] = get_user_config($this->Auth['user_id'], 'market_region');
 
         foreach ($q->result() as $row)
         {
             $data['regions'][$row->regionID] = $row->regionName;
         }
         
-        $data['pull_corp'] = !getUserConfig($this->Auth['user_id'], 'pull_corp') ? False : True;
-        $data['use_perfect'] = !getUserConfig($this->Auth['user_id'], 'use_perfect') ? False : True;
-        $data['user_timezone'] = !getUserConfig($this->Auth['user_id'], 'user_timezone') ? 'GMT' : getUserConfig($this->Auth['user_id'], 'user_timezone');
+        $data['pull_corp'] = !get_user_config($this->Auth['user_id'], 'pull_corp') ? False : True;
+        $data['use_perfect'] = !get_user_config($this->Auth['user_id'], 'use_perfect') ? False : True;
+        $data['user_timezone'] = !get_user_config($this->Auth['user_id'], 'user_timezone') ? 'GMT' : get_user_config($this->Auth['user_id'], 'user_timezone');
         $data['selected_tz'] = array_search($data['user_timezone'], $data['timezone_list']);
         
         $default_prices = array(
@@ -91,7 +91,7 @@ class Overview extends MY_Controller
               40 => 8000,
               11399 => 32000  
             );
-        $data['mineral_prices'] = !getUserConfig($this->Auth['user_id'], 'mineral_prices') ? $default_prices : unserialize(getUserConfig($this->Auth['user_id'], 'mineral_prices'));
+        $data['mineral_prices'] = !get_user_config($this->Auth['user_id'], 'mineral_prices') ? $default_prices : unserialize(get_user_config($this->Auth['user_id'], 'mineral_prices'));
 
         $template['content'] = $this->load->view('config', $data, True);
         $this->load->view('maintemplate', $template);

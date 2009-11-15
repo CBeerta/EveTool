@@ -21,7 +21,9 @@ class Fancybox extends Controller
 		$this->load->library('eveapi', array('cachedir' => '/var/tmp'));
 
         $this->load->helper('eve');
+        $this->load->helper('random_functions');
         $this->load->helper('inventory');
+        $this->load->helper('fitting');
     }
 
 
@@ -66,10 +68,14 @@ class Fancybox extends Controller
         $this->load->view('snippets/location', array('loc' => $loc));
     }
     
+    public function fitting_from_db($typeName, $assetItemID)
+    {
+        echo Ship_Fitting::get($typeName, Ship_Fitting::items_from_db($assetItemID));
+    }
+    
     public function character($id)
     {
-        print "<h1>HOLY SHIT, CHARACTER BOX!</h1>";
-        print $id;    
+        $this->load->view('snippets/character', array());
     }
     
     public function item($id)
