@@ -18,7 +18,7 @@
 	    <b>Corporation</b>: <?php echo $agent->corpName; ?> / <?php echo $agent->division; ?> <br>
 	    <b>Faction</b>: <?php echo $agent->faction; ?> -<b> Region</b>: <?php echo $agent->region; ?> - <b>System</b>: <?php echo $agent->systemName; ?> (<font color="<?php echo $agent->security_color; ?>"><?php echo $agent->security;?></font>)<br>
 
-	    <b>Station</b>: <a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$agent->stationID); ?>"><?php echo $agent->station; ?></a><br>
+	    <b>Station</b>: <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$agent->stationID); ?>"><?php echo $agent->station; ?></a><br>
 	    <b>Required Standing</b>: <?php echo $agent->required_standing; ?> - <b>Type</b>: <?php print_r(preg_replace("|(\p{Lu})|", ' $1', $agent->agentType));?><br>
 	</td>
 </tr>

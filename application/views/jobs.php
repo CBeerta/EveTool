@@ -19,12 +19,12 @@ Days to show:
 <?php foreach ($data as $row): ?>
 <tr>
     <td>
-        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$row['installerID']); ?>">       
+        <a id="fb_character" href="<?php echo site_url('/fancybox/character/'.$row['installerID']); ?>">       
             <?php echo get_character_portrait($row['installerID'], 32); ?>
         </a>
     </td>
 	<td style="text-align: left;">
-        <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$row['typeID']); ?>">       
+        <a id="fb_item" href="<?php echo site_url('/fancybox/item/'.$row['typeID']); ?>">       
     	    <img src="<?php echo get_icon_url($row,32);?>" width="32" height="32">
         </a>
     </td>
@@ -34,7 +34,7 @@ Days to show:
     <td><?php echo $row['amount']; ?></td>
     <td><?php echo $row['ends']; ?></td>
     <td>
-		<a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$row['location']); ?>"><?php echo locationid_to_name($row['location']);?></a>
+		<a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$row['location']); ?>"><?php echo locationid_to_name($row['location']);?></a>
     </td>
 <tr>
 <?php endforeach; ?>

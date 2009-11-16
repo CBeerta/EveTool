@@ -21,6 +21,7 @@ class Fancybox extends Controller
 		$this->load->library('eveapi', array('cachedir' => '/var/tmp'));
 
         $this->load->helper('eve');
+        $this->load->helper('igb');
         $this->load->helper('random_functions');
         $this->load->helper('inventory');
         $this->load->helper('fitting');

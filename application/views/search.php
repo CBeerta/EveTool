@@ -9,12 +9,12 @@
 <?php foreach ($found as $row): ?>
 <tr>
     <td>
-        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$row['characterID']); ?>">
+        <a id="fb_character" href="<?php echo site_url('/fancybox/character/'.$row['characterID']); ?>">
             <?php echo get_character_portrait($row['characterID'], 32); ?>
         </a>
     </td>
     <td>
-        <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$row['typeID']); ?>">
+        <a id="fb_item" href="<?php echo site_url('/fancybox/item/'.$row['typeID']); ?>">
             <img width="32" height="32" src="<?php echo get_icon_url($row,32);?>">
         </a>
     </td>
@@ -24,14 +24,18 @@
 	
 	<?php if (isset($row['containedIn'])): ?>
 	<td>
-		<?php echo locationid_to_name($row['locationID']); ?>
+        <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$row['locationID']); ?>">
+    		<?php echo locationid_to_name($row['locationID']); ?>
+        </a>
 	</td>
 	<td>
-		<img width="32" height="32" src="<?php echo get_icon_url(get_inv_type($row['containedIn']), 32); ?>">
+        <a id="fb_item" href="<?php echo site_url('/fancybox/item/'.$row['containedIn']); ?>">
+    		<img width="32" height="32" src="<?php echo get_icon_url(get_inv_type($row['containedIn']), 32); ?>">
+		</a>
 	</td>
 	<?php else: ?>
 	<td colspan="2">
-        <a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$row['locationID']); ?>">
+        <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$row['locationID']); ?>">
     		<?php echo locationid_to_name($row['locationID']); ?>
         </a>
 	</td>

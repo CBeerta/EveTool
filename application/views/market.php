@@ -21,12 +21,12 @@ Days to show:
 <?php foreach ($$type as $row): ?>
 <tr>
     <td>
-        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$row->charID); ?>">       
+        <a id="fb_character" href="<?php echo site_url('/fancybox/character/'.$row->charID); ?>">       
             <img src="<?php echo site_url("files/cache/char/{$row->charID}/64/char.jpg"); ?>" width="32" height="32">
         </a>
     </td>
 	<td style="text-align: left;">
-        <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$row->typeID); ?>">       
+        <a id="fb_item" href="<?php echo site_url('/fancybox/item/'.$row->typeID); ?>">       
     	    <img src="<?php echo get_icon_url($row,32);?>">
 	    </a>
     </td>
@@ -37,7 +37,7 @@ Days to show:
 	<!-- <td><?php echo number_format($row->total*$row->price);?> ISK</td> -->
 	<td><?php echo $row->ends;?></td>
 	<td>
-        <a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$row->locationid); ?>"><?php echo $row->location;?></a>
+        <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$row->locationid); ?>"><?php echo $row->location;?></a>
     </td>
 </tr>
 <?php endforeach;?>

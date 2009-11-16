@@ -52,13 +52,12 @@ $(document).ready(function(){
 </script>
 <table width="100%">
     <tr>
-        <th colspan="5"><?php echo $product->typeName; ?></th>
-    </tr>
-    <tr>
-        <td colspan="5" style="text-align: left;">
-            <img src="<?php echo get_icon_url($product, 64); ?>" align="left">
-            <p style="padding-left: 140px;"><?php echo nl2br($product->description); ?></p>
-        </td>
+        <th colspan="5">
+            <a id="fb_item" href="<?php echo site_url('/fancybox/item/'.$product->typeID); ?>">
+                <img src="<?php echo get_icon_url($product, 64); ?>" align="left">
+            </a>
+            <?php echo $product->typeName; ?>
+        </th>
     </tr>
     <tr>
         <th colspan="5">

@@ -1,5 +1,13 @@
+/**
+ * Palette: http://de-de.colourlovers.com/palette/997951/Light_Tonight
+ *
+ */
+html {
+	background-color: #A0A688;
+}   
+ 
 body {
-	color:#333;
+	color: #333;
 	font-family: Bitsream Vera, "Trebuchet MS", Verdana, Arial;
 	overflow-y: scroll; /* always show the scrollbar, i HATE jumping around of the content */
 }
@@ -17,44 +25,40 @@ caption {
     margin-right: 3px;
     font-weight: bolder;
     text-align: right;
-    background-color: #222;
-    color: white;
+    background-color: #1F0711;
+    color: #ECF2D8;
 }
 
 tr {
-    background-color: #f6f6f6;
+
 }
-/*
-tr:hover {
-    background-color: #ccc;
-}
-*/
+
 th {
     text-align: right;
-    background-color: #434343;
+    background-color: #54593F;
     font-weight: bolder;
     padding: 5px;
     margin: 2px;
-    color: white;
+    color: #ECF2D8;
 }
 
 td.light {
-    background-color: #e6e6e6;
     font-weight: bold;
     color: black;
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
+    text-align: right;
 }
 
 td {
     padding: 2px;
-    /* text-align: right; */
 }
 
 td#left {
     text-align: left;
 }
+
 td.dataTableCell {
     vertical-align: center;
 }
@@ -76,7 +80,7 @@ h3 {
 }
 
 a, a:hover, a:visited, a:active {
-    color: #995555;
+    color: #FFF7DB;
     text-decoration: none;
 }
 
@@ -110,9 +114,8 @@ li {
  *
  **/
 div#hd {
-	/*background-color: #678B1D;*/
-	background-image: url('images/top.gif');
-	border-bottom: 2px solid black;
+	background-color: #1F0711;
+	border-bottom: 2px solid #cdcdcd;
 	padding-left: 10px;
 	padding-right: 10px;
 	margin-left: -10px;
@@ -128,13 +131,10 @@ h1#hd {
     text-align: left;
 	letter-spacing: -0.1em;
 }
-
 img#hd{
 	border: 1px solid #aaa;
 }
-
 #bd {
-    background: #fff;
 }
 
 /**
@@ -143,31 +143,28 @@ img#hd{
  *
  **/
 div#nav {
-    border-bottom: 1px dotted #c0c0c0;
-    /*border-right: 1px dotted #c0c0c0;*/
-    border-left: 1px dotted #c0c0c0;
+    background-color: #54593F;
+    border-bottom: 1px solid #cdcdcd;
+    border-left: 1px solid #cdcdcd;
     padding: 0px 0px 0px 5px;
 	margin-right: -10px;
 }
 
 #nav {
-    /*background-color: #f2f2f2;*/
-    color: #333333;
     font-weight: bold;
     line-height: 175%;
 	
 }
 
 #nav a {
-    color: #333;
-    /*border-bottom: 1px dotted #c0c0c0;*/
+    color: #ECF2D8;
     display: block;
     padding: 5px 0px 5px 0px;
 }
 
 #nav a:hover {
-    background: #eaeaea;
-    color: #be0c0c;
+    color: #fff;
+    border-right: 10px solid white;  
 }
 
 #nav h2 {
@@ -175,7 +172,6 @@ div#nav {
 	font-weight: bold;
 	margin: 20px 0px 0px 0px;
 	padding: 0px 0px 5px 0px;
-	/*border-bottom: 1px dotted #C0C0C0;*/
 }
 
 h2.menu_slider {
@@ -210,13 +206,12 @@ a#ft ,
 a:visited#ft,
 a:active#ft 
 {
-    color: #bbb;
+    color: #555;
     text-decoration: none;
 }
 div#ft {
     width: 100%;
-    /*background: #313032;*/
-    color: #aaa;
+    color: #333;
 	margin: 20px auto 0px ;
 	padding: 10px 0px 10px 0px;
 	line-height: 17px;
@@ -241,6 +236,13 @@ div#ft {
  * Snippets
  *
  **/
+a#fb_location,
+a#fb_character,
+a#fb_item,
+a#fb_fitting {
+	color: #ECF2D8;
+}
+
 #location_snippet {
 	text-align: left;
 }
@@ -248,4 +250,17 @@ div#location_snippet {
 	padding: 5px;
 	background-color: #efefef;
 }
+
+a#igb_link {
+	 cursor: pointer;
+	 color: #F94900;
+}
+
+#income {
+    color: #2D4D24;
+}
+
+#expense {
+    color: #AD0124;
+}    
 

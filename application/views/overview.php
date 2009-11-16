@@ -3,9 +3,9 @@
     <?php foreach ($chars as $k => $v): ?>
         <tr>
             <td class="light" rowspan="4" width="70" style="text-align: left;">
-				<a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$v['charid']); ?>">       
-					<img title="<?php echo $k; ?>" src="<?php echo site_url("/files/cache/char/{$v['charid']}/64/char.jpg"); ?>">
-				</a>
+		        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$v['charid']); ?>">       
+			        <img title="<?php echo $k; ?>" src="<?php echo site_url("/files/cache/char/{$v['charid']}/64/char.jpg"); ?>">
+		        </a>
             </td>
         </tr>
         <tr>
@@ -19,7 +19,7 @@
             </td>
         </tr>
         <tr>
-          <td class="light" class="dataTableCell">Finishes in</td>
+          <td class="light" class="dataTableCell">Finishes in:</td>
           <td><?php echo api_time_to_complete($v['training']['trainingEndTime']); ?></td>
         </tr>
         <?php else: ?>
@@ -31,13 +31,14 @@
         </tr>
         <?php endif;?>
     <? endforeach; ?>
-    <tr><td colspan="3">&nbsp;</td></tr>
-    <tr>
-        <td colspan="2" class="light">Total Isk:</td><td><?php echo number_format($total,2);?> ISK</td>
-    </tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
+            <td colspan="2" class="light">Total Isk:</td><td><?php echo number_format($total,2);?> ISK</td>
+        </tr>
     </table>
 </div>
 <div style="position: static;top: 0px;">
+    <?php #if (igb_trusted()): echo '<pre>'; print_r($_SERVER); print '</pre>'; endif; ?>
     <?php  foreach ($feed as $item): ?>
     <h4><?php echo $item->get_title();?></h4>
     <p><?php echo $item->get_description();?></p>

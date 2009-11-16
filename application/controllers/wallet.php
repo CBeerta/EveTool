@@ -40,6 +40,7 @@ class Wallet extends MY_Controller
                 break;
             }
         }
+        $this->phpgraphlib->setBackgroundColor("160,166,136");
         $this->phpgraphlib->addData($chartdata);
         $this->phpgraphlib->setBars(false);
         $this->phpgraphlib->setDataPoints(true);

@@ -128,7 +128,7 @@ function regionid_to_name($regionID)
     $CI =& get_instance();
     $CI->load->database();
 
-    $q = $CI->db->query('SELECT * FROM mapRegions WHERE regionID = ?;', $regionID);
+    $q = $CI->db->query('SELECT regionName,regionId FROM mapRegions WHERE regionID = ?;', $regionID);
     $row = $q->row();
     if (count($row)>0)
     {
@@ -152,8 +152,13 @@ function locationid_to_name($locationID)
     }
     
     $CI =& get_instance();
+
+    if (!empty($CI->eveapi->stationlist[$locationID]))
+    {
+        return ($CI->eveapi->stationlist[$locationID]['stationName']);
+    }
+
     $CI->load->database();
-    
     $q = $CI->db->query('
 		SELECT 
 			* 
@@ -162,24 +167,12 @@ function locationid_to_name($locationID)
 		WHERE 
 			itemID = ? LIMIT 1;', $locationID);
 			
-    $row = $q->result_array();
+    $row = $q->row();
     if (count($row)>0)
     {
-        $loc = $row[0];
-        $displayName = $loc['itemName'];
+        return($row->itemName);
     }
-    else
-    {
-		//FIXME: This is probably a POS somewhere?
-        return ('Unknown');
-	}
-
-    if (!empty($CI->eveapi->stationlist[$locationID]))
-    {
-        $displayName = $CI->eveapi->stationlist[$locationID]['stationName'];
-    }
-	
-    return($displayName);	
+    return ('Unknown');
 }
 
 
@@ -191,7 +184,8 @@ function get_character_portrait($name, $size = 64)
     }
     else
     {
-        $id = get_character_id($name);
+        return False;
+        //$id = get_character_id($name);
     }
     
     $CI =& get_instance();
@@ -210,35 +204,10 @@ function get_character_portrait($name, $size = 64)
     {
         $i = $CI->eveapi->corp_members[$id];
         $url .= " name=\"{$i->name}\"";
-        //$url .= " title=\"Name: {$i->name}\n\nTitle: {$i->title}\"";
         $url .= " title=\"{$i->name}\"";
     }
     $url .= ">";
     return ($url);
-}
-
-function get_character_id($name)
-{
-    $CI =& get_instance();
-    $CI->load->database();
-    
-    $q = $CI->db->query('SELECT characterID FROM kb_characters WHERE name=?', $name);
-    
-    if ($q->num_rows() <= 0)
-    {
-        return False;
-    }
-    $r = $q->row();
-    if ($r->characterID > 0)
-    {
-        return ($r->characterID);
-    }
-    $CI->load->library('eveapi', array('cachedir' => '/var/tmp'));
-    $data = CharacterID::getCharacterID($CI->eveapi->getCharacterID($name));
-    
-    $CI ->db->query('UPDATE kb_characters SET characterID = ? WHERE name = ?;', array($data[0]['characterID'], $name));
-    //$CI ->db->query("INSERT INTO kb_characters (name, characterID)  VALUES (?, ?) ON DUPLICATE KEY UPDATE characterID = ?;", array($name, $data[0]['characterID'], $data[0]['characterID']));
-    return ($data[0]['characterID']);
 }
 
 function get_icon_url($type, $size = 64, $background = 'black')
@@ -373,5 +342,6 @@ function is_public()
         return (False);
     }
 }
+
 
 ?>

@@ -44,6 +44,7 @@ class MY_Controller extends Controller
         
         $this->load->helper('cookie');
         $this->load->helper('eve');
+        $this->load->helper('igb');
         $this->load->helper('message');
         $this->load->helper('fitting');
         $this->load->helper('inventory');

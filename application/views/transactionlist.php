@@ -21,14 +21,14 @@
             <?php print $trans['typeName']; ?>
         </td>
         <?php if ($trans['transactionType'] == 'buy'): ?>
-        <td><font color="red"><?php print number_format($trans['price']); ?></font></td>
-        <td><font color="red"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
+        <td><font id="expense"><?php print number_format($trans['price'],2); ?></font></td>
+        <td><font id="expense"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
         <?php else: ?>
-        <td><font color="green"><?php print number_format($trans['price']); ?></font></td>
-        <td><font color="green"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
+        <td><font id="income"><?php print number_format($trans['price'],2); ?></font></td>
+        <td><font id="income"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
         <?php endif; ?>
         <td>
-    		<a id="fb_location" style="color: black;" href="<?php echo site_url('/fancybox/location/'.$trans['stationID']); ?>"><?php echo $trans['stationName'];?></a>
+    		<a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$trans['stationID']); ?>"><?php echo $trans['stationName'];?></a>
         </td>
     </tr>
     <?php endforeach;?>

@@ -3,7 +3,11 @@
 	<tr>
 		<th colspan="2">
 			<img align="right" src="<?php echo get_icon_url($item, 64);?>">
-			<h1><?php echo $item['typeName']; ?></h1>
+			<h1><?php echo $item['typeName']; ?>
+                <?php if (igb_trusted()): ?>
+                <?php echo igb_show_info($item['typeID']); ?>
+                <?php endif; ?>
+			</h1>
 		</th>
 	</tr>
 	<tr>

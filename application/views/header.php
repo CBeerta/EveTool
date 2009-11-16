@@ -17,7 +17,11 @@
     <script type="text/javascript" src="<?php echo site_url('/files/eve.js');?>"></script>
     <script type="text/javascript" src="<?php echo site_url('/files/sorttable.js');?>"></script>
 </head>
+<?php if (!igb_trusted()): ?>
+<body onload="CCPEVE.requestTrust('<?php echo site_url();?>')">
+<?php else: ?>
 <body>
+<?php endif; ?>
 <div id="doc3" class="yui-t4">
     <div id="hd">
         <div class="yui-g">
