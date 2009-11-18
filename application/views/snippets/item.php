@@ -25,13 +25,13 @@
 	<tr>
 		<td><b>Volume:</b></td>
 		<td>
-			<?php echo number_format($item['volume']); ?> m&sup3
+			<?php echo number_format($item['volume'], 2); ?> m&sup3
 		</td>
 	</tr>
 	<tr>
 		<td><b>Mass:</b></td>
 		<td>
-			<?php echo number_format($item['mass']); ?> m&sup3
+			<?php echo number_format($item['mass'], 2); ?> m&sup3
 		</td>
 	</tr>
 

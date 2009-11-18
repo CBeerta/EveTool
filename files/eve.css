@@ -23,7 +23,7 @@ caption {
     padding: 5px;
     margin-left: 3px;
     margin-right: 3px;
-    font-weight: bolder;
+    font-weight: bold;
     text-align: right;
     background-color: #1F0711;
     color: #ECF2D8;
@@ -46,7 +46,6 @@ td.light {
     font-weight: bold;
     color: black;
     padding-top: 5px;
-    padding-bottom: 5px;
     padding-left: 10px;
     text-align: right;
 }
@@ -230,6 +229,16 @@ div#ft {
   position: relative;
 }
 
+/**
+ *
+ * in place editing stuff
+ *
+ **/
+td.editable:hover
+{
+    background-color: #ffffd3;
+	border: 1px solid #999;
+}
 
 /**
  *

@@ -184,7 +184,7 @@
     </div>
     
     <div id="rig3" style="position:absolute; left:5px; top:5px; width:64px; height:64px; z-index:1;">
-        <img src="<?php echo site_url("/files/images/257.png"); ?>" height="64" width="64" border="0" title="Get EFT Fitting" onClick="eft_fitting_window();">
+        <a href="#" title="Export to EFT" onClick="eft_fitting_window();">Export to EFT</a>
     </div>
 
     

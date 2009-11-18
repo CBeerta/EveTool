@@ -1,11 +1,12 @@
 <?php
 class User extends MY_Controller {
 
-    function __construct()
+    public function __construct()
     {
         parent::Controller();
 
         $this->load->library('users');
+        $this->load->helper('igb');
 
         $data['chars'] = array();
         $data['tool'] = 'Login';
@@ -13,7 +14,7 @@ class User extends MY_Controller {
         $this->load->view('header', $data);
     }
 
-    function login()
+    public function login()
     {
         $rules['username'] = "required|trim";
         $rules['password'] = "required";
@@ -40,7 +41,7 @@ class User extends MY_Controller {
         }
     }
 
-    function register()
+    public function register()
     {
         $rules['username'] = "required|trim";
         $rules['email'] = "required|valid_email";
@@ -69,7 +70,7 @@ class User extends MY_Controller {
         }
     }
 
-    function recover()
+    public function recover()
     {
         $this->load->library('email');
         $this->load->helper('message_helper');
@@ -104,7 +105,7 @@ class User extends MY_Controller {
         }
     }
 
-    function logout()
+    public function logout()
     {
         $this->users->logout();
         redirect();

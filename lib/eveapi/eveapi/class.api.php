@@ -336,7 +336,7 @@ class Api
 
 				// open connection to the api
 				// Note some free PHP5 servers block fsockopen() - in that case, find a different hosting provider, please
-				$fp = fsockopen($this->apisite, 80, $errno, $errstr, 30);
+				$fp = @fsockopen($this->apisite, 80, $errno, $errstr, 30);
 
 				if (!$fp)
 				{
