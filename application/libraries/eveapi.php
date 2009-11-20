@@ -526,7 +526,4 @@ class AssetList
 }
 
 
-
-
-
 ?>

@@ -37,3 +37,4 @@
             </div>
         </div>
     </div>
+    <div id="ajax_loading_thingy" style="display: none;">Loading ...</div>

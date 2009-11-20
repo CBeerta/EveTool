@@ -3,8 +3,19 @@ $(document).ready(function(){
     $("span#editable").each(function(i)
     {
         setClickable(this, i);
-    })
+    });
+    
     $.getJSON("<?php echo site_url('materials/load/'.$groupID); ?>", loadResults);
+    
+    $().ajaxComplete(function(request, settings)
+    {
+      $("#ajax_loading_thingy").hide();
+    });
+    $().ajaxStart(function(request, settings)
+    {
+      $("#ajax_loading_thingy").show();
+    });
+
 });
 
 function setClickable(obj, i) 
@@ -36,11 +47,11 @@ function saveChanges(obj, revert, cancel, n)
 function loadResults(data) {
     $.each(data.data, function(i, item)
     {
-        //$(".quantity_" + i).text(numberFormat(item.quantity));
-        $(".quantity_" + i).text(item.quantity);
-        $(".volume_" + i).text(numberFormat(item.quantity * item.volume));
-        $(".sellprice_" + i).text(numberFormat(item.quantity * data.prices[i].sell.median));
-        $(".buyprice_" + i).text(numberFormat(item.quantity * data.prices[i].buy.median));
+        //$(".quantity_" + item).text(numberFormat(item.quantity));
+        $(".quantity_" + item.typeID).text(item.quantity);
+        $(".volume_" + item.typeID).text(numberFormat(item.quantity * item.volume));
+        $(".sellprice_" + item.typeID).text(numberFormat(item.quantity * data.prices[item.typeID].sell.median));
+        $(".buyprice_" + item.typeID).text(numberFormat(item.quantity * data.prices[item.typeID].buy.median));
     });
     $(".total_volume").text(numberFormat(data.sums.volume));
     $(".total_sellprice").text(numberFormat(data.sums.sellprice));
@@ -62,7 +73,7 @@ function loadResults(data) {
 </tr>
 <tr>
 	<th colspan="3">Name</th>
-    <th>Amount</th>
+    <th>Amount&sup1;</th>
     <th>Volume</th>
     <th colspan="2">Sell Price</th>
     <th colspan="2">Buy Price</th>
@@ -76,25 +87,25 @@ function loadResults(data) {
 	</td>
     <td style="text-align: left;"><?php echo $r['typeName'];?></td>
     <td class="editable">
-        <span class="quantity_<?php echo $r['typeID'];?>" id="editable">0</span>
+        <span class="quantity_<?php echo $r['typeID'];?>" id="editable"></span>
     </td>
     <td>
-        <span class="volume_<?php echo $r['typeID'];?>">0</span> m&sup3;
+        <span class="volume_<?php echo $r['typeID'];?>"></span> m&sup3;
     </td>
     <td width="5"><i><?php echo number_format($prices[$r['typeID']]['sell']['median'], 2); ?></i></td>
     <td style="text-align: right;">
-        <span class="sellprice_<?php echo $r['typeID'];?>">0</span> ISK
+        <span class="sellprice_<?php echo $r['typeID'];?>"></span> ISK
     </td>
     <td width="5"><i><?php echo number_format($prices[$r['typeID']]['buy']['median'], 2); ?></i></td>
     <td style="text-align: right;">
-        <span class="buyprice_<?php echo $r['typeID'];?>">0</span> ISK
+        <span class="buyprice_<?php echo $r['typeID'];?>"></span> ISK
     </td>
 <tr>
 <?php endforeach; ?>
 <th colspan="4">Sum:</td>
     <td><span class="total_volume" style="font-weight: bold;">0</span> m&sup3;</td>
-    <td colspan="2" style="text-align: right;"><span class="total_sellprice" style="font-weight: bold;">0</span> ISK</td>
-    <td colspan="2" style="text-align: right;"><span class="total_buyprice" style="font-weight: bold;">0</span> ISK</td>
+    <td colspan="2" style="text-align: right;"><span class="total_sellprice" style="font-weight: bold;"></span> ISK</td>
+    <td colspan="2" style="text-align: right;"><span class="total_buyprice" style="font-weight: bold;"></span> ISK</td>
 </tr>
 </table>
-<span style="font-size: 77%">Assets are not updated on this Page</span>
+<span style="font-size: 90%">&sup1;: You can update the quantities inline. <br/>Assets are not updated on this Page.</span>

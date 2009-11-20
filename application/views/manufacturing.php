@@ -1,10 +1,10 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $("#bpForm").ajaxComplete(function(request, settings){
-      $("#bpSpinner").hide();
+      $("#ajax_loading_thingy").hide();
     });
     $("#bpForm").ajaxStart(function(request, settings){
-      $("#bpSpinner").show();
+      $("#ajax_loading_thingy").show();
     });
     $.getJSON("<?php echo site_url('manufacturing/update/'.$blueprintID); ?>", loadResults);
     $("#bpForm").submit(formProcess);
@@ -62,7 +62,6 @@ $(document).ready(function(){
     <tr>
         <th colspan="5">
         <span>
-            <img style="padding-left: 20px;" id="bpSpinner" align="left" src="<?php echo site_url('/files/spinner-light.gif'); ?>">
             <form action="<?php echo site_url('manufacturing/update/'.$blueprintID); ?>" method="post" id="bpForm">
             ME: <input type="text" name="me" id="me" value="0" size="1" />
             Amount: <input type="text" name="amount" id="amount" value="1" size="1">

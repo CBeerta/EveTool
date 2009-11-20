@@ -239,6 +239,10 @@ td.editable:hover
     background-color: #ffffd3;
 	border: 1px solid #999;
 }
+td.editable
+{
+    
+}
 
 /**
  *
@@ -273,3 +277,22 @@ a#igb_link {
     color: #AD0124;
 }    
 
+
+/**
+ * Ajax Loading thingy
+ **/
+div#ajax_loading_thingy {
+	background-image: url('/files/27-1.gif');
+	background-repeat: no-repeat;
+    background-color: #ffffd3;
+    color: black;
+    border: 2px solid red;
+    position: absolute;
+    left: 200px;
+    top: 32px;
+    font-size: 200%;
+    padding: 14px;
+    padding-left: 80px;
+}
+ 
+ 
