@@ -37,7 +37,7 @@ class Materials extends MY_Controller
      * @param   int
      *
      * @todo this has gotten quite messy, and should be "reviewed"
-         */
+     */
     public function load($groupID)
     {
         $character = $this->character;
@@ -45,7 +45,6 @@ class Materials extends MY_Controller
         $regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
         $custom_prices = $this->input->post('custom_prices') ? True : False;
         $data['custom_prices'] = $custom_prices;
-
 
         // Step 1: Pull all the player owned assets from the db for $groupID
         $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array("invGroups.groupID" => $groupID));
@@ -102,8 +101,17 @@ class Materials extends MY_Controller
          **/
         if (is_numeric($this->input->post('content')))
         {
-            //$to_update = $ordered[$this->input->post('n')];
+            $flashdata = $this->session->flashdata('materials_inplace');
+            if ($flashdata)
+            {
+                foreach ($flashdata as $k => $v)
+                {
+                    $data['data'][$k]['quantity'] = $v;
+                }
+            }   
             $data['data'][$this->input->post('n')]['quantity'] = $this->input->post('content');
+            $flashdata[$this->input->post('n')] = $this->input->post('content');
+            $this->session->set_flashdata('materials_inplace', $flashdata);
         }
 
         // Step 4: Pull the prices for all of $groupID

@@ -64,7 +64,16 @@ function get_inv_type($type)
     }
     $CI =& get_instance();
     $CI->load->database();
+
+    $trace = debug_backtrace();
+    error_log(date('c')." get_inv_type({$type}) called by: {$trace[0]['file']} -> {$trace[1]['function']}");
+
     
+    if (($_mc = $CI->cache->get('invtype_'.$type)))
+    {
+        return ($_mc);
+    }
+
     if (is_numeric($type))
     {
         $type_select = 'typeID';
@@ -100,6 +109,7 @@ function get_inv_type($type)
     $row = $q->row();
     if (count($row) > 0)
     {
+        $CI->cache->set('invtype_'.$type, $row, 0, 604800);
         return ($row);
     }
     else

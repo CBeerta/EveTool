@@ -7,11 +7,11 @@ $(document).ready(function(){
     
     $.getJSON("<?php echo site_url('materials/load/'.$groupID); ?>", loadResults);
     
-    $().ajaxComplete(function(request, settings)
+    $('.editable').ajaxComplete(function(request, settings)
     {
       $("#ajax_loading_thingy").hide();
     });
-    $().ajaxStart(function(request, settings)
+    $('.editable').ajaxStart(function(request, settings)
     {
       $("#ajax_loading_thingy").show();
     });
@@ -108,4 +108,4 @@ function loadResults(data) {
     <td colspan="2" style="text-align: right;"><span class="total_buyprice" style="font-weight: bold;"></span> ISK</td>
 </tr>
 </table>
-<span style="font-size: 90%">&sup1;: You can update the quantities inline. <br/>Assets are not updated on this Page.</span>
+<span style="font-size: 90%">&sup1;: You can update the quantities inline. <br/>Assets on this Page are not updated through the Api.</span>
