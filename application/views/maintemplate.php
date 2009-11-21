@@ -16,9 +16,9 @@
             <li><a href="<?php echo site_url("/assets/index");?>">Assets</a>
             <ul class="submenu">
 				<form method="post" action="<?php echo site_url("/assets/search");?>" id="assetSearch">
-					<li><input type="text" name="search" id="search" id="search" value="Search.." size="10" onfocus="if(this.value == 'Search..') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search..';}"/>
+					<li><input type="text" name="search" id="search" id="search" value="Search.." size="14" onfocus="if(this.value == 'Search..') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search..';}"/>
 				</form>
-                <li><a href="<?php echo site_url("/materials/index/18");?>">Materials</a>
+                <li><a href="<?php echo site_url("/materials/index/group/18");?>">Materials</a>
                 <li><a href="<?php echo site_url("/assets/blueprints/");?>">Blueprints</a>
                 <li><a href="<?php echo site_url("/assets/ships/");?>">Ships</a>
             </ul>
@@ -58,7 +58,10 @@
         </div>
     </div>
 </div>
-<div id="ft"><a id="ft" href="mailto:claus@beerta.de">claus@beerta.de</a> &bull; Copyright &copy; 2008-2009 Claus Beerta &bull; <?php echo $this->benchmark->elapsed_time(); ?>s &bull; <?php echo date('r'); ?></div>
+<div id="ft">
+    <a id="ft" href="mailto:claus@beerta.de">claus@beerta.de</a> &bull; Copyright &copy; 2008-2009 Claus Beerta &bull; <?php echo $this->benchmark->elapsed_time(); ?>s &bull; <?php echo date('r'); ?><br />
+    Design by <a href="http://freecsstemplates.org/">http://freecsstemplates.org/</a>
+</div>
 <!--
     $Id$
 -->

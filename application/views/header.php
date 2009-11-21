@@ -30,7 +30,7 @@
                 <p>
                     <?php foreach (array_keys($chars) as $char): ?>
 					<a href="<?php echo "{$base_url}/{$char}"; ?>">
-                        <img id="hd" <?php if ($character == $char) { echo 'style="border: 2px solid white;"'; } ?> title="<?php echo $char; ?>" src="/files/cache/char/<?php echo $chars[$char]['charid'];?>/64/char.jpg">
+                        <img id="hd" <?php if ($character == $char) { echo 'style="border: 2px solid #a1a;"'; } ?> title="<?php echo $char; ?>" src="/files/cache/char/<?php echo $chars[$char]['charid'];?>/64/char.jpg">
                     </a>
                     <?php endforeach; ?>
                 </p>

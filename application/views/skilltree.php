@@ -161,3 +161,4 @@
     </div>
 </div>
 <?php endforeach; //skillTree ?>
+<div style="clear: both;">&nbsp;</div>

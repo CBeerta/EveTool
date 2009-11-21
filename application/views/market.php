@@ -7,8 +7,11 @@ Days to show:
 </div>
 -->
 <?php foreach(array('sell','buy') as $type): ?>
+<?php /* if (empty($$type)) { ?><h3>No open <?php echo ucfirst($type);?> Orders</h3> <?php continue; } */?>
 <table width="100%">
-<caption><?php echo ucfirst($type);?> Orders</caption>
+<caption>
+    <div><?php echo ucfirst($type);?> Orders</div>
+</caption>
 <tr>
     <th width="32">By</th>
 	<th colspan="2">Type</th>
@@ -49,5 +52,5 @@ Days to show:
     <td colspan="2">&nbsp;</td>
 </tr>
 </table>
-<br />
 <?php endforeach; ?>
+<div style="clear: both;">&nbsp;</div>

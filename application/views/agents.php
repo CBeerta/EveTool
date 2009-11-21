@@ -45,7 +45,7 @@
         </table>
         <?php echo form_close(); ?>
     </div>
-        
+       
     <div style="float: left;">
         <?php if ($agents): ?>
         <?php foreach ($agents as $row): ?>
@@ -57,3 +57,4 @@
         <?php endif; ?>
     </div>
 </div>
+<div style="clear: both;">&nbsp;</div>

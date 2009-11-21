@@ -40,14 +40,21 @@ class Wallet extends MY_Controller
                 break;
             }
         }
-        $this->phpgraphlib->setBackgroundColor("160,166,136");
+        $this->phpgraphlib->setBackgroundColor("76,76,76");
+        //$this->phpgraphlib->setGridColor("white");
+        $this->phpgraphlib->setGrid(false);
         $this->phpgraphlib->addData($chartdata);
         $this->phpgraphlib->setBars(false);
         $this->phpgraphlib->setDataPoints(true);
         $this->phpgraphlib->setDataValues(true);
         $this->phpgraphlib->setLine(true);
+        $this->phpgraphlib->setLineColor("black");
+        $this->phpgraphlib->setDataValueColor("200,200,200");
+        $this->phpgraphlib->setLegendColor("200,200,200");
+        $this->phpgraphlib->setTextColor("200,200,200");
         $this->phpgraphlib->setGradient("red", "maroon");
         $this->phpgraphlib->setTitle("30 Day Wallet History");
+        $this->phpgraphlib->setTitleColor("200,200,200");
 
         $this->phpgraphlib->createGraph();
         exit;

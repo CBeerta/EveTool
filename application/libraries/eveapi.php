@@ -467,8 +467,8 @@ class AssetList
          */
         if ($characterID)
         {
-            $CI->db->query('DELETE FROM assets WHERE characterID=?', $characterID);
-            $CI->db->query('DELETE FROM contents WHERE characterID=?', $characterID);
+            $CI->db->query('DELETE FROM assets WHERE characterID=? AND updated<NOW()-24*60*60;', $characterID);
+            $CI->db->query('DELETE FROM contents WHERE characterID=? AND updated<NOW()-24*60*60;', $characterID);
         }
 
         foreach ($xml->result->rowset->row as $row)
@@ -484,11 +484,11 @@ class AssetList
                 $insert = array_merge($asset, array($asset['quantity'],$asset['flag'],$asset['singleton']));
                 $CI->db->query('
                     INSERT INTO assets 
-                    (characterID,itemID,locationID,typeID,quantity,flag,singleton)
+                    (characterID,itemID,locationID,typeID,quantity,flag,singleton,updated)
                     VALUES
-                    (?,?,?,?,?,?,?)
+                    (?,?,?,?,?,?,?,NOW())
                     ON DUPLICATE KEY UPDATE
-                    quantity=?,flag=?,singleton=?', $insert);
+                    quantity=?,flag=?,singleton=?,updated=NOW()', $insert);
             }
             $asset['contents'] = array();
             if (count($row->rowset->row) > 0)
@@ -510,11 +510,11 @@ class AssetList
 
                         $CI->db->query('
                             INSERT INTO contents
-                            (characterID, locationItemID, itemID, typeID, quantity, flag, singleton)
+                            (characterID, locationItemID, itemID, typeID, quantity, flag, singleton,updated)
                             VALUES
-                            (?,?,?,?,?,?,?)
+                            (?,?,?,?,?,?,?,NOW())
                             ON DUPLICATE KEY UPDATE
-                            quantity=?,flag=?,singleton=?', $insert);
+                            quantity=?,flag=?,singleton=?,updated=NOW()', $insert);
                     }
                     $index++;
                 }

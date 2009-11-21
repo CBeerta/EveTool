@@ -1,12 +1,8 @@
-<div style="position: static; top: 0px; right: 0px; float: right; margin-right: 5px;">
-    <table style="min-width:60%;">
+<div style="position: static; top: 0px; right: 0px; float: right; margin-right: 5px; background: #444;">
+    <table>
     <?php foreach ($chars as $k => $v): ?>
         <tr>
-            <td class="light" rowspan="4" width="70" style="text-align: left;">
-		        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$v['charid']); ?>">       
-			        <img title="<?php echo $k; ?>" src="<?php echo site_url("/files/cache/char/{$v['charid']}/64/char.jpg"); ?>">
-		        </a>
-            </td>
+            <th colspan="2"><?php echo $k;?></th>
         </tr>
         <tr>
             <td class="light">Balance:</td><td><?php echo number_format($v['balance'],2); ?> ISK</td>
@@ -15,7 +11,8 @@
         <tr>
             <td class="light">Currently Training:</td>
             <td class="dataTableCell">
-                <img alt="<?php echo $v['training']['trainingToLevel']; ?>" src="/files/images/level<?php echo $v['training']['trainingToLevel']; ?>_act.gif" align="right"/><?php echo $v['training']['trainingTypeName']; ?>
+                <!-- <img alt="<?php echo $v['training']['trainingToLevel']; ?>" src="/files/images/level<?php echo $v['training']['trainingToLevel']; ?>_act.gif" align="right"/> -->
+                <?php echo "{$v['training']['trainingTypeName']} ".roman($v['training']['trainingToLevel']); ?>
             </td>
         </tr>
         <tr>
@@ -24,16 +21,16 @@
         </tr>
         <?php else: ?>
         <tr>
-            <td colspan="2">&nbsp;</td>
+            <td></td>
         </tr>
         <tr>
-            <td colspan="2">&nbsp;</td>
+            <td></td>
         </tr>
         <?php endif;?>
     <? endforeach; ?>
-        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr><td colspan="2">&nbsp;</td></tr>
         <tr>
-            <td colspan="2" class="light">Total Isk:</td><td><?php echo number_format($total,2);?> ISK</td>
+            <th class="light">Total Isk:</th><td><?php echo number_format($total,2);?> ISK</td>
         </tr>
     </table>
 </div>

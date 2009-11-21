@@ -8,8 +8,8 @@
     <?php foreach($daily as $k => $v):?>
     <tr>
         <td class="light" style="text-align: left;"><?php echo $total[$k]['prettydate']; ?></td>
-        <td style="text-align: right;" class="light"><font id="expense"><?php echo number_format($total[$k]['expense'], 2); ?></font></td>
-        <td style="text-align: right;" class="light"><font id="income"><?php echo number_format($total[$k]['income'], 2); ?></font></td>
+        <td style="text-align: right;"><font id="expense"><?php echo number_format($total[$k]['expense'], 2); ?></font></td>
+        <td style="text-align: right;"><font id="income"><?php echo number_format($total[$k]['income'], 2); ?></font></td>
     </tr>
         <?php foreach($v as $type): ?>
         <tr>

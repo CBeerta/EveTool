@@ -3,13 +3,13 @@
  *
  */
 html {
-	background-color: #A0A688;
+	background-color: #000;
 }   
  
 body {
-	color: #333;
-	font-family: Bitsream Vera, "Trebuchet MS", Verdana, Arial;
+	font-family: "Trebuchet MS", Georgia, "Times New Roman", Times, serif;
 	overflow-y: scroll; /* always show the scrollbar, i HATE jumping around of the content */
+	color: #fff;
 }
 
 table {
@@ -25,8 +25,8 @@ caption {
     margin-right: 3px;
     font-weight: bold;
     text-align: right;
-    background-color: #1F0711;
-    color: #ECF2D8;
+    background-color: #000;
+    color: #fff;
 }
 
 tr {
@@ -35,19 +35,20 @@ tr {
 
 th {
     text-align: right;
-    background-color: #54593F;
+    background-color: #222;
     font-weight: bolder;
     padding: 5px;
     margin: 2px;
-    color: #ECF2D8;
+    color: #fff;
 }
 
 td.light {
     font-weight: bold;
-    color: black;
+    color: #ddd;
     padding-top: 5px;
     padding-left: 10px;
     text-align: right;
+    background: #5c5c5c;
 }
 
 td {
@@ -78,9 +79,12 @@ h3 {
     font-size: 116%;
 }
 
-a, a:hover, a:visited, a:active {
-    color: #FFF7DB;
+a, a:visited, a:active {
+    color: #8BD80E;
     text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
 }
 
 a#fb_location {
@@ -88,19 +92,6 @@ a#fb_location {
 	background-repeat: no-repeat;
     padding-left: 20px;
     color: white;
-}
-
-div#buttan {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 5px;
-}
-
-a#buttan {
-    padding: 5px;
-    border: 2px solid #aaaaaa;
-    background-color: #fefefe;
-    font-weight: bold;
 }
 
 li {
@@ -113,27 +104,31 @@ li {
  *
  **/
 div#hd {
-	background-color: #1F0711;
+    background: url('/files/images/title-bg.gif') repeat-x;
+	background-color: white;
 	border-bottom: 2px solid #cdcdcd;
 	padding-left: 10px;
 	padding-right: 10px;
-	margin-left: -10px;
-	margin-right: -10px;
-    color: white;
-    font-size: 85%;
+    color: black;
     height: 75px;
     padding-top: 5px;
 }
 h1#hd {
-    font-weight: bold;
-    font-size: 400%;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size:40px;
     text-align: left;
 	letter-spacing: -0.1em;
+	color: #4C4C4C;
 }
 img#hd{
 	border: 1px solid #aaa;
 }
+
+/**
+ * Body
+ */
 #bd {
+
 }
 
 /**
@@ -142,21 +137,19 @@ img#hd{
  *
  **/
 div#nav {
-    background-color: #54593F;
-    border-bottom: 1px solid #cdcdcd;
-    border-left: 1px solid #cdcdcd;
-    padding: 0px 0px 0px 5px;
-	margin-right: -10px;
+    background: #83d30e url(/files/images/nav-bottom.gif) no-repeat left bottom;
+    padding: 0px 0px 20px 5px;
+	/*margin-right: -10px;*/
+	width: 187px;
 }
 
 #nav {
     font-weight: bold;
     line-height: 175%;
-	
 }
 
 #nav a {
-    color: #ECF2D8;
+    color: white;
     display: block;
     padding: 5px 0px 5px 0px;
 }
@@ -167,7 +160,7 @@ div#nav {
 }
 
 #nav h2 {
-	color: #BE0C0C;
+	color: #222;
 	font-weight: bold;
 	margin: 20px 0px 0px 0px;
 	padding: 0px 0px 5px 0px;
@@ -180,10 +173,12 @@ h2.menu_slider {
 #search {
 	border: 1px solid #999;
 	color: #999;
+	padding: 2px;
 }
 #search:focus {
 	border: 1px solid #999;
 	color: #000;
+	padding: 2px;
 }
 
 /**
@@ -191,9 +186,10 @@ h2.menu_slider {
  * Content
  *
  **/
-
 #content {
-    padding: 2px;
+    background-color: #4C4C4C;
+    padding: 4px;
+    padding-bottom: 60px;
 }
 
 /**
@@ -205,12 +201,12 @@ a#ft ,
 a:visited#ft,
 a:active#ft 
 {
-    color: #555;
+    color: #8BD80E;
     text-decoration: none;
 }
 div#ft {
     width: 100%;
-    color: #333;
+    color: #666;
 	margin: 20px auto 0px ;
 	padding: 10px 0px 10px 0px;
 	line-height: 17px;
@@ -234,14 +230,19 @@ div#ft {
  * in place editing stuff
  *
  **/
-td.editable:hover
+div#editable:hover
 {
+    padding: 4px;
     background-color: #ffffd3;
 	border: 1px solid #999;
+	cursor: text;
+	color: black;
 }
-td.editable
+
+div#editable
 {
-/*    background-color: #ECF2D8; */
+    padding: 4px;
+    min-width: 90%;
 }
 
 /**
@@ -253,15 +254,18 @@ a#fb_location,
 a#fb_character,
 a#fb_item,
 a#fb_fitting {
-	color: #ECF2D8;
+	color: #8BD80E;
 }
 
+#character_snippet,
+#fitting_snippet,
+#item_snippet,
 #location_snippet {
 	text-align: left;
+	color: black;
 }
 div#location_snippet {
 	padding: 5px;
-	background-color: #efefef;
 }
 
 a#igb_link {
@@ -270,7 +274,7 @@ a#igb_link {
 }
 
 #income {
-    color: #2D4D24;
+    color: #8DaD84;
 }
 
 #expense {
@@ -294,5 +298,4 @@ div#ajax_loading_thingy {
     padding: 14px;
     padding-left: 80px;
 }
- 
  

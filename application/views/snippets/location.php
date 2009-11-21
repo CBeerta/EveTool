@@ -1,6 +1,5 @@
 <?php //print_r($loc); ?>
 <table width="99%" id="location_snippet">
-
 		<th colspan="2">
 			<img align="right" src="<?php echo get_icon_url($loc, 64);?>">
 			<h1>

@@ -90,6 +90,8 @@ class Assets extends MY_Controller {
      * Search for assets
      *
      * This Functions searches all the assets on all Characters this login has
+     *
+     * @todo can we sql magic the 2 queries into one?
      */
     public function search()
     {
@@ -116,25 +118,35 @@ class Assets extends MY_Controller {
 		$assets = $this->db->query('	
 			SELECT 
 				assets.characterID,
-				itemID,
+				assets.itemID,
 				invTypes.typeID,
 				locationID,
 				typeName,
-				quantity,
-				volume,
-				categoryID,
+				assets.quantity,
+				invTypes.volume,
+				invGroups.categoryID,
 				icon
 			FROM 
 				assets, 
 				invTypes,
 				invGroups,
-				eveGraphics
+				eveGraphics,
+				invCategories
 			WHERE 
 				invTypes.graphicID=eveGraphics.graphicID AND
 				invTypes.groupID=invGroups.groupID AND
 				assets.typeID=invTypes.typeID AND
+				invGroups.categoryID=invCategories.categoryID AND
 				assets.characterID IN ('.implode(',', $char_ids).') AND
-				invTypes.typeName LIKE ?;',  "%{$query}%");
+				(
+				invTypes.typeName LIKE ? OR
+				invGroups.groupName LIKE ? OR
+				invCategories.categoryName = ?
+				)
+			ORDER BY 
+			    assets.characterID, 
+			    invGroups.categoryID, 
+			    invGroups.groupID;',  array("%{$query}%","%{$query}%", $query));
 		$contents = $this->db->query('
 			SELECT 
 				contents.characterID,
@@ -145,21 +157,31 @@ class Assets extends MY_Controller {
 				assets.locationID,
 				contents.quantity,
 				invTypes.volume,
-				categoryID,
+				invGroups.categoryID,
 				icon
 			FROM 
 				assets, 
 				contents, 
 				invTypes,
 				invGroups,
+				invCategories,
 				eveGraphics
 			WHERE 
 				invTypes.graphicID=eveGraphics.graphicID AND
 				invTypes.groupID=invGroups.groupID AND
 				assets.itemID=contents.locationItemID AND 
+				invGroups.categoryID=invCategories.categoryID AND
 				contents.typeID=invTypes.typeID AND 
 				contents.characterID IN ('.implode(',', $char_ids).') AND
-				invTypes.typeName LIKE ?;', "%{$query}%");
+				(
+				invTypes.typeName LIKE ? OR
+				invGroups.groupName LIKE ? OR
+				invCategories.categoryName = ?
+				)
+			ORDER BY 
+			    assets.characterID, 
+			    invGroups.categoryID, 
+			    invGroups.groupID;',  array("%{$query}%","%{$query}%", $query));
 
 		$data['found'] = array_merge($assets->result_array(), $contents->result_array());
 		

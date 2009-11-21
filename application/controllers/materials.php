@@ -12,20 +12,24 @@ class Materials extends MY_Controller
      * @param int
      * @returns array
      **/
-    private function _get_invgroup($groupID)
+    private function _get_invgroup($searchtype = 'group', $id)
     {
-        $q = $this->db->query('
+        $q = $this->db->query("
             SELECT 
                 * 
             FROM 
                 invTypes,
                 invGroups,
+                invCategories,
                 eveGraphics
             WHERE 
                 invTypes.graphicID=eveGraphics.graphicID AND
+                invTypes.typeName NOT LIKE 'Compressed %' AND
                 invTypes.marketGroupID IS NOT NULL AND
                 invTypes.groupID=invGroups.groupID AND 
-                invTypes.groupID = ?', $groupID);
+                invGroups.categoryID=invCategories.categoryID AND
+                invTypes.published=1 AND
+                invGroups.{$searchtype}ID = ?", $id);
         return ($q->result_array());
     }
     
@@ -38,7 +42,7 @@ class Materials extends MY_Controller
      *
      * @todo this has gotten quite messy, and should be "reviewed"
      */
-    public function load($groupID)
+    public function load($searchtype = 'group', $id)
     {
         $character = $this->character;
 
@@ -46,15 +50,15 @@ class Materials extends MY_Controller
         $custom_prices = $this->input->post('custom_prices') ? True : False;
         $data['custom_prices'] = $custom_prices;
 
-        // Step 1: Pull all the player owned assets from the db for $groupID
-        $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array("invGroups.groupID" => $groupID));
+        // Step 1: Pull all the player owned assets from the db for $id
+        $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array("invGroups.groupID" => $id));
 
         $materials = array();        
         foreach ($assets as $loc)
         {
             foreach ($loc as $asset)
             {
-                if ($asset['groupID'] == $groupID) 
+                if ($asset[$searchtype.'ID'] == $id) 
                 {
                     if (!isset($data['data'][$asset['typeID']]))
                     {
@@ -66,7 +70,7 @@ class Materials extends MY_Controller
                 {
                     foreach ($asset['contents'] as $content)
                     {
-                        if ($content['groupID'] == $groupID) 
+                        if ($content[$searchtype.'ID'] == $id) 
                         {
                             if (!isset($data['data'][$content['typeID']]))
                             {
@@ -79,8 +83,8 @@ class Materials extends MY_Controller
             }
         }
 
-        // Step 2: Pull all invTypes from $groupID and merge with the quantities from Step 1
-        $invtypes = $this->_get_invgroup($groupID);
+        // Step 2: Pull all invTypes from $id and merge with the quantities from Step 1
+        $invtypes = $this->_get_invgroup($searchtype, $id);
         $typeids = array();
         foreach ($invtypes as $v)
         {
@@ -138,29 +142,27 @@ class Materials extends MY_Controller
      *
      * @param   int
      */
-    public function index($groupID = 18)
+    public function index($searchtype = 'group', $id = 18)
     {
         $regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
         
-        //FIXME: Make it possible again to check for categoryID's
-        $sID = 'groupID'; // What ID to search for
-        
         if ($this->input->post('groupID'))
         {
-            $groupID = $this->input->post('groupID');
-            redirect(site_url("materials/index/".$groupID));
+            $searchtype = 'group';
+            $id = $this->input->post('groupID');
+            redirect(site_url("materials/index/{$searchtype}/{$id}"));
             exit;
         }
         $custom_prices = $this->input->post('custom_prices') ? True : False;
         $data['custom_prices'] = $custom_prices;
         
-        $data['groupID'] = $groupID;
+        $data[$searchtype.'ID'] = $id;
 
         $groupIDList = array();
         $q = $this->db->query('SELECT groupID,groupName FROM invGroups;');
         foreach ($q->result() as $row)
         {
-            if ($row->groupID == $groupID)
+            if ($row->groupID == $id)
             {
                 $data['caption'] = $row->groupName;
                 $data['caption'] .= ' - Prices from the "'.regionid_to_name($regionID).'" region';
@@ -172,9 +174,10 @@ class Materials extends MY_Controller
   
         }
         $data['groupIDList'] = $groupIDList;
+        $data['searchtype'] = $searchtype;
         $data['caption'] = 'Materials - Prices from the "'.regionid_to_name($regionID).'" region';
         
-        $data['types'] = $this->_get_invgroup($groupID);
+        $data['types'] = $this->_get_invgroup($searchtype, $id);
 
         foreach ($data['types'] as $r)
         {

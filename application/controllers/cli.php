@@ -22,6 +22,7 @@ class Cli extends Controller
 		$this->load->library('eveapi', array('cachedir' => '/var/tmp'));
 
         $this->load->helper('eve');
+        $this->load->helper('random_functions');
     }
     
     /**
