@@ -55,12 +55,16 @@ td {
     padding: 2px;
 }
 
-td#left {
+td.left {
     text-align: left;
+    vertical-align: center;
 }
 
 td.dataTableCell {
-    vertical-align: center;
+    text-align: right;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-weight: bold;
 }
 
 h1 {
@@ -75,8 +79,10 @@ h4 {
     line-height: 200%;
 }
 h3 {
-    background-color: #ccc;
+    background-color: #000;
+    color: #fff;
     font-size: 116%;
+    padding: 4px;
 }
 
 a, a:visited, a:active {
@@ -273,11 +279,11 @@ a#igb_link {
 	 color: #F94900;
 }
 
-#income {
+.income {
     color: #8DaD84;
 }
 
-#expense {
+.expense {
     color: #AD0124;
 }    
 

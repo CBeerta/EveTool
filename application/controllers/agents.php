@@ -183,7 +183,8 @@ class Agents extends MY_Controller
                 eveNames 
             WHERE
                 factionID = ? AND
-                corporationID = eveNames.itemID;
+                corporationID = eveNames.itemID
+            ORDER BY itemName;
             ", $id);
         $data['corps'] = $q->result();
         $data['faction'] = Agent_Info::is_faction($id);

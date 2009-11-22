@@ -21,11 +21,11 @@
             <?php print $trans['typeName']; ?>
         </td>
         <?php if ($trans['transactionType'] == 'buy'): ?>
-        <td><font id="expense"><?php print number_format($trans['price'],2); ?></font></td>
-        <td><font id="expense"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
+        <td><font class="expense"><?php print number_format($trans['price'],2); ?></font></td>
+        <td><font class="expense"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
         <?php else: ?>
-        <td><font id="income"><?php print number_format($trans['price'],2); ?></font></td>
-        <td><font id="income"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
+        <td><font class="income"><?php print number_format($trans['price'],2); ?></font></td>
+        <td><font class="income"><?php print number_format($trans['price']*$trans['quantity']); ?></font></td>
         <?php endif; ?>
         <td>
     		<a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$trans['stationID']); ?>"><?php echo $trans['stationName'];?></a>

@@ -5,77 +5,86 @@
     <td valign="top" width="258">
       <img style="border: 1px solid gray;" alt="<?php echo $character; ?>" src="/files/cache/char/<?php echo $charinfo['characterID'];?>/256/char.jpg" />
     </td>
-    <td valign="top" width="465">
-	<table class="dataTable" border="0" cellpadding="2" cellspacing="0" width="460" summary="Character Info">
+    <td valign="top">
+	<table class="dataTable" summary="Character Info">
       <tbody>
         <tr>
           <th colspan="2">Info</th>
           <th colspan="2">Attributes</th>
+          <th colspan="2">Skills At Level</th>
         </tr>
         <tr>
-          <td class="dataTableCell">Charactername</td>
-          <td class="dataTableCell"><?php echo $character; ?></td>
-          <td class="dataTableCell">Intelligence</td>
-          <td class="dataTableCell" align="center"><?php echo $attributes['intelligence']; ?></td>
+          <td class="dataTableCell">Charactername:</td>
+          <td class="left"><?php echo $character; ?></td>
+          <td class="dataTableCell">Intelligence:</td>
+          <td class="left"><?php echo $attributes['intelligence']; ?></td>
+          <td class="dataTableCell">1:</td><td><?php echo $skillsAtLevel[1]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[1], 1); ?>%)</td>
         </tr>
         <tr>
-          <td class="dataTableCell">Corporation</td>
-          <td class="dataTableCell"><?php echo $charinfo['corporationName']; ?></td>
-          <td class="dataTableCell">Perception</td>
-          <td class="dataTableCell" align="center"><?php echo $attributes['perception']; ?></td>
+          <td class="dataTableCell">Corporation:</td>
+          <td class="left"><?php echo $charinfo['corporationName']; ?></td>
+          <td class="dataTableCell">Perception:</td>
+          <td class="left"><?php echo $attributes['perception']; ?></td>
+          <td class="dataTableCell">2:</td><td><?php echo $skillsAtLevel[2]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[2], 1); ?>%)</td>
         </tr>
         <tr>
-          <td class="dataTableCell">Race / Blood line</td>
-          <td class="dataTableCell"><?php echo $charinfo['race'].' / '.$charinfo['bloodLine'];?></td>
-          <td class="dataTableCell">Memory</td>
-          <td class="dataTableCell" align="center"><?php echo $attributes['memory']?></td>
+          <td class="dataTableCell">Race / Blood line:</td>
+          <td class="left"><?php echo $charinfo['race'].' / '.$charinfo['bloodLine'];?></td>
+          <td class="dataTableCell">Memory:</td>
+          <td class="left"><?php echo $attributes['memory']?></td>
+          <td class="dataTableCell">2:</td><td><?php echo $skillsAtLevel[3]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[3], 1); ?>%)</td>
         </tr>
         <tr>
-          <td class="dataTableCell">Total Cash</td>
-          <td class="dataTableCell"><?php echo number_format($charinfo['balance']);?> ISK</td>
+          <td class="dataTableCell">Total Cash:</td>
+          <td class="left"><?php echo number_format($charinfo['balance']);?> ISK</td>
           <td class="dataTableCell">Charisma</td>
-          <td class="dataTableCell" align="center"><?php echo $attributes['charisma']?></td>
+          <td class="left"><?php echo $attributes['charisma']?></td>
+          <td class="dataTableCell">2:</td><td><?php echo $skillsAtLevel[4]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[4], 1); ?>%)</td>
         </tr>
         <tr>
-          <td class="dataTableCell">Total skill points</td>
-          <td class="dataTableCell"><?php echo number_format($skillPointsTotal);?></td>
-          <td class="dataTableCell">Willpower</td>
-          <td class="dataTableCell" align="center"><?php echo $attributes['willpower'];?></td>
+          <td class="dataTableCell">Skill Points:</td>
+          <td class="left"><?php echo number_format($skillPointsTotal);?></td>
+          <td class="dataTableCell">Willpower:</td>
+          <td class="left"><?php echo $attributes['willpower'];?></td>
+          <td class="dataTableCell">5:</td><td><?php echo $skillsAtLevel[5]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[5], 1); ?>%)</td>
         </tr>
         <tr>
-          <td colspan="4" class="dataTableCell">&nbsp;</td>
+          <td class="dataTableCell">Skills Total:</td>
+          <td colspan="5" class="left"><?php echo $skillsTotal; ?></td>
         </tr>
         <tr>
-          <td class="dataTableCell">Clone</td>
-          <td colspan="3"lass="dataTableCell"><?php echo $charinfo['cloneName'].'('.number_format($charinfo['cloneSkillPoints']).')';?></td>
+          <td colspan="6" class="dataTableCell">&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="dataTableCell">Clone:</td>
+          <?php if ($skillPointsTotal > $charinfo['cloneSkillPoints']): ?>
+          <td colspan="5" id="expense"><?php echo $charinfo['cloneName'].' ('.number_format($charinfo['cloneSkillPoints']).')';?></td>
+          <?php else: ?>
+          <td colspan="5" class="left"><?php echo $charinfo['cloneName'].' ('.number_format($charinfo['cloneSkillPoints']).')';?></td>
+          <?php endif; ?>
         </tr>
         <?php if (!empty($charinfo['corporationTitles'])): ?>
         <tr>
-          <td class="dataTableCell">Roles</td>
-          <td colspan="3" class="dataTableCell">
+          <td class="dataTableCell">Roles:</td>
+          <td colspan="5" class="left">
           <?php foreach ($charinfo['corporationTitles'] as $v): ?>
           <?php echo $v['titleName'].', '; ?>  
           <?php endforeach; ?>
           </td>
         </tr>
         <?php endif; ?>
-        <tr>
-          <td colspan="4" class="dataTableCell"></td>
-        </tr>
         <?php if (!empty($training['skillInTraining'])): ?>
         <tr>
-          <td colspan="2" class="dataTableCell">Currently training</td>
-          <td style="font-weight: bold;" class="dataTableCell"><?php echo $training['trainingTypeName']; ?></td>
-          <td style="text-align: center;" class="dataTableCell"><img alt="<?php echo $training['trainingToLevel']; ?>" src="/files/images/level<?php echo $training['trainingToLevel']; ?>_act.gif" /></td>
+          <td class="dataTableCell">Currently training:</td>
+          <td class="left" colspan="5"><?php echo $training['trainingTypeName']; ?>
+            <?php echo roman($training['trainingToLevel']); ?>
+          </td>
         </tr>
         <tr>
-          <td colspan="2" class="dataTableCell">Finishes in</td>
-          <td colspan="2"><?php echo api_time_to_complete($training['trainingEndTime']); ?></td>
+          <td class="dataTableCell">Finishes in:</td>
+          <td colspan="5" class="left"><?php echo api_time_to_complete($training['trainingEndTime']); ?></td>
         </tr>
         <?php endif; ?>
-        <tr>
-          <td colspan="4" class="dataTableCell"></td>
-        </tr>
       </tbody>
       </table>
     </td>
@@ -99,7 +108,7 @@
 					  <span>Ending: </span>
                       <?php echo api_time_print($entry['endTime']); ?> - 
 					  <span>Time left: </span>
-                      <?php echo api_time_print($entry['endTime']); ?>
+                      <?php echo api_time_to_complete($entry['endTime']); ?>
                     </div>
                   </div>
                 </div>

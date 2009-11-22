@@ -7,7 +7,7 @@ class EveCentral
 
     /* region 10000002 == Jita */
     /* region 10000030 == Heimatar */
-    private function retrieveXml($typeIdList, $region = 10000002, $timeout = 1)
+    private function retrieve_xml($typeIdList, $region = 10000002, $timeout = 1)
     {
         $uri  = 'http://eve-central.com/api/marketstat?';
         $uri .= 'regionlimit='.$region;
@@ -57,7 +57,7 @@ class EveCentral
         return(@simplexml_load_file($destFile));
     }
 
-    public function getPrices($typeIDList, $region = 10000002, $user_prices = False )
+    public function get_prices($typeIDList, $region = 10000002, $user_prices = False )
     {
         $prices = array();
 
@@ -80,7 +80,7 @@ class EveCentral
         
         foreach (array_chunk($typeIdList, 20) as $splitted)
         {
-            $xml = $this->retrieveXml($splitted, $region);
+            $xml = $this->retrieve_xml($splitted, $region);
             if ($xml !== False)
             {
                 foreach ($xml->marketstat[0]->type as $type)
@@ -117,12 +117,6 @@ class EveCentral
         }
         return($prices);
     }
-
-    public function getMineralPrices($region = 10000002)
-    {
-        return ($this->getPrices($this->mineralTypes, $region));
-    }
 }
-
 
 ?>

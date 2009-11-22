@@ -33,7 +33,8 @@ class Character extends MY_Controller
 		$data['queue'] = $queue;
 		      
         $skillTree = array();
-        $data['skillPointsTotal'] = 0;
+        $data['skillsTotal'] = $data['skillPointsTotal'] = 0;
+        $data['skillsAtLevel'] = array_fill(0, 6, 0);
         foreach ($charsheet['skills'] as $skill)
         {
             $data['skillPointsTotal'] += $skill['skillpoints'];
@@ -53,6 +54,8 @@ class Character extends MY_Controller
                 'level' => $skill['level']);
             $skillTree[$s['groupID']]['groupSP'] += $skill['skillpoints'];
             $skillTree[$s['groupID']]['skillCount'] ++;
+            $data['skillsTotal'] ++;
+            $data['skillsAtLevel'][$skill['level']] ++;
         }
         $data['skillTree'] = $skillTree;
         
@@ -70,7 +73,11 @@ class Character extends MY_Controller
             $sll = isset($skillTree[267]['skills'][$se[0]]['level']) ? $skillTree[267]['skills'][$se[0]]['level'] : 0; // Learnings
             $shl = isset($skillTree[267]['skills'][$se[1]]['level']) ? $skillTree[267]['skills'][$se[1]]['level'] : 0; // Advanced Learnings
             $enhancer = isset($charsheet['enhancers'][$attribute.'Bonus']['augmentatorValue']) ? $charsheet['enhancers'][$attribute.'Bonus']['augmentatorValue'] : 0;
-            $data['attributes'][$attribute] = floor(($charsheet['attributes'][$attribute] + $enhancer + $sll + $shl) * $learning);
+            $data['attributes'][$attribute] = number_format(($charsheet['attributes'][$attribute] + $enhancer + $sll + $shl) * $learning, 2);
+            if ($enhancer > 0)
+            {
+                $data['attributes'][$attribute] .= " (+{$enhancer})";
+            }
         }
         $data['charinfo'] = $charsheet;
 
@@ -85,7 +92,7 @@ class Character extends MY_Controller
             $training['trainingTypeID'] = -1;
         }
         $data['training'] = $training;
-
+        
         $template['content'] = $this->load->view('skilltree', $data, True);
         $this->load->view('maintemplate', $template);
     }

@@ -17,9 +17,9 @@ $(document).ready(function(){
             $(".req" + i).text(numberFormat(item));
             $(".have" + i).text(numberFormat(data.have[i]))
             if ( item > data.have[i]) {
-                $(".have" + i).css({color:"red"});
+                $(".have" + i).attr("class", "expense");
             } else {
-                $(".have" + i).css({color: $("td").css("color")});
+                $(".have" + i).attr("class", "income");
             }
             $(".value"+i).text(numberFormat(data.value[i])+ ' ISK');
         });
@@ -31,9 +31,9 @@ $(document).ready(function(){
             $(".totalHave" + i).text(numberFormat(data.have[i]))
             
             if ( item > data.have[i]) {
-                $(".totalHave" + i).css({color:"red"});
+                $(".totalHave" + i).attr("class", "expense");
             } else {
-                $(".totalHave" + i).css({color: $("td").css("color")});
+                $(".totalHave" + i).attr("class", "income");
             }
 	       $(".totalValue"+i).text(numberFormat(data.totalMineralValue[i]) + ' ISK');
 

@@ -8,14 +8,14 @@
     <?php foreach($daily as $k => $v):?>
     <tr>
         <td class="light" style="text-align: left;"><?php echo $total[$k]['prettydate']; ?></td>
-        <td style="text-align: right;"><font id="expense"><?php echo number_format($total[$k]['expense'], 2); ?></font></td>
-        <td style="text-align: right;"><font id="income"><?php echo number_format($total[$k]['income'], 2); ?></font></td>
+        <td style="text-align: right;"><font class="expense"><?php echo number_format($total[$k]['expense'], 2); ?></font></td>
+        <td style="text-align: right;"><font class="income"><?php echo number_format($total[$k]['income'], 2); ?></font></td>
     </tr>
         <?php foreach($v as $type): ?>
         <tr>
             <td style="text-align: right;"><?php echo $type['refTypeName']; ?></td>
-            <td style="text-align: right;"><font id="expense"><?php echo number_format($type['expense'], 2); ?></font></td>
-            <td style="text-align: right;"><font id="income"><?php echo number_format($type['income'], 2); ?></font></td>
+            <td style="text-align: right;"><font class="expense"><?php echo number_format($type['expense'], 2); ?></font></td>
+            <td style="text-align: right;"><font class="income"><?php echo number_format($type['income'], 2); ?></font></td>
         </tr>
         <?php endforeach;?>
 	<tr>

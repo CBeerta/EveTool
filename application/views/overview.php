@@ -10,23 +10,22 @@
         <?php if (!empty($v['training']['skillInTraining'])): ?>
         <tr>
             <td class="light">Currently Training:</td>
-            <td class="dataTableCell">
+            <td class="left">
                 <!-- <img alt="<?php echo $v['training']['trainingToLevel']; ?>" src="/files/images/level<?php echo $v['training']['trainingToLevel']; ?>_act.gif" align="right"/> -->
                 <?php echo "{$v['training']['trainingTypeName']} ".roman($v['training']['trainingToLevel']); ?>
             </td>
         </tr>
         <tr>
-          <td class="light" class="dataTableCell">Finishes in:</td>
+          <td class="light">Finishes in:</td>
           <td><?php echo api_time_to_complete($v['training']['trainingEndTime']); ?></td>
         </tr>
-        <?php else: ?>
-        <tr>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-        </tr>
         <?php endif;?>
+        <?php if (isset($v['queue'])): ?>
+        <tr>
+          <td class="light">Queue:</td>
+          <td><?php echo api_time_to_complete($v['queue']); ?></td>
+        </tr>
+        <?php endif; ?>
     <? endforeach; ?>
         <tr><td colspan="2">&nbsp;</td></tr>
         <tr>

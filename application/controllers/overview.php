@@ -34,6 +34,12 @@ class Overview extends MY_Controller
             $data['total'] += $balance[0]['balance'];
 
             $training = CharacterSheet::getSkillInTraining($this->eveapi->getSkillInTraining());
+    		$queue = SkillQueue::getSkillQueue($this->eveapi->getSkillQueue());
+    		if (!empty($queue))
+    		{
+        		$data['chars'][$k]['queue'] = $queue[count($queue)-1]['endTime'];
+    		}
+    		    
             if ($training['skillInTraining'] != 0)
             {
                 $training['trainingTypeName'] = $this->eveapi->skilltree[$training['trainingTypeID']]['typeName'];

@@ -291,6 +291,8 @@ class Api
 			$this->addMsg("Error","retrieveXml: Non-array value of params param, reverting to default value");
 			$params = null;
 		}
+		
+		$this->addMsg("Debug", "Retrieving {$path} with timeout {$timeout}");
 
 		if (!empty($path))
 		{

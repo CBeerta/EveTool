@@ -28,7 +28,7 @@ function setClickable(obj, i)
         $(obj).after(textarea + button).remove();
         $('.saveButton').click(function(){saveChanges(this, revert, false, i);});
         $('.cancelButton').click(function(){saveChanges(this, revert, true, i);});
-        $('input#input').focus(function(){this.select();});
+        //$('input#input').focus(function(){this.select();});
     })
 }
 

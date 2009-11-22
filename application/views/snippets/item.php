@@ -1,5 +1,4 @@
 <table width="99%" id="location_snippet">
-
 	<tr>
 		<th colspan="2">
 			<img align="right" src="<?php echo get_icon_url($item, 64);?>">
@@ -34,7 +33,6 @@
 			<?php echo number_format($item['mass'], 2); ?> m&sup3
 		</td>
 	</tr>
-
 </table>
 <!--
 <pre>

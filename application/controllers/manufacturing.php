@@ -122,7 +122,7 @@ class Manufacturing extends MY_Controller
 		}
 		$regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
 		
-    	$prices = $this->evecentral->getPrices($typeIds, $regionID);
+    	$prices = $this->evecentral->get_prices($typeIds, $regionID);
 
 		foreach ($components as $row)
         {

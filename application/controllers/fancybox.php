@@ -34,14 +34,8 @@ class Fancybox extends Controller
 		$query = "
 			SELECT
 				*
-			/*
-				sol.regionID,
-				sol.solarSystemName,
-				sol.security,
-				sol.solarSystemID,
-				reg.regionName
-			*/
 			FROM
+			    mapConstellations AS con,
 				mapSolarSystems AS sol,
 				mapRegions AS reg";
 		
@@ -60,6 +54,7 @@ class Fancybox extends Controller
 			WHERE
 				sta.stationID={$id} AND
 				sta.solarSystemID=sol.solarSystemID AND
+				con.constellationID=sol.constellationID AND
 				reg.regionID=sol.regionID";
 		}
 		

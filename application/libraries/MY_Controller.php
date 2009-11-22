@@ -106,8 +106,8 @@ class MY_Controller extends Controller
                     }
                 }
             }
+            $this->cache->set('evetool_accounts_'.$this->Auth['user_id'], $this->chars);
         }
-        $this->cache->set('evetool_accounts_'.$this->Auth['user_id'], $this->chars);
         
         $data['tool'] = $this->uri->segment(1, 'Overview');
         $data['chars'] = empty($this->chars) ? array() : $this->chars;

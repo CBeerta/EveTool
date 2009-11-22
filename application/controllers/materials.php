@@ -120,7 +120,7 @@ class Materials extends MY_Controller
 
         // Step 4: Pull the prices for all of $groupID
         $data['sums']['volume'] = $data['sums']['sellprice'] = $data['sums']['buyprice'] = 0;
-        $data['prices'] = $this->evecentral->getPrices($typeids, $regionID, $custom_prices);
+        $data['prices'] = $this->evecentral->get_prices($typeids, $regionID, $custom_prices);
 
         // Step 5: And finally add all the quantites up to totals
         foreach ($data['data'] as $v)
@@ -183,7 +183,7 @@ class Materials extends MY_Controller
         {
             $typeIDList[$r['typeID']] = $r['typeName'];
         }
-        $data['prices'] = $this->evecentral->getPrices(array_keys($typeIDList), $regionID, $custom_prices);
+        $data['prices'] = $this->evecentral->get_prices(array_keys($typeIDList), $regionID, $custom_prices);
 
         $template['content'] = $this->load->view('materials', $data, True);
         $this->load->view('maintemplate', $template);

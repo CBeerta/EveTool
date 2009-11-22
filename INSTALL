@@ -1,11 +1,27 @@
-Quick Installation Guide:
+Requirements:
+=============
+    - PHP 5.2.x (Untested with 5.3.x) with Curl, SimpleXML
+    - MySQL 5.x
 
-- Download the SQL Dumps and Source Code: http://idisk.beerta.net/public/projects/evetool-latest.tar.gz
-- Dump the SQL Dumps into your MySQL database.
-- Drop the Contents into your webservers
-- Modify 'application/config/database.php' and 'application/config/evetool.php' to suit your needs
-- Make sure the Cache directory is writeable by the server
-- Download the Images Dump from CCP and unzip into 'files/itemdb' (cd files ; wget http://ccp.vo.llnwd.net/o2/data/QuantumRise_1.0.0_imgs_dx9.zip ; unzip QuantumRise_1.0.0_imgs_dx9.zip ; mv dx9 itemdb ; rm *.zip)
-- Point your 404 Document to the /index.php
+Installation Guide:
+===================
 
-That should do it
+    - Download the SQL Dumps and Source Code: http://idisk.beerta.net/public/projects/evetool-latest.tar.gz
+    - Dump the SQL Dumps into your MySQL database.
+    - Drop the Contents into your Webserver (Caution: It has only been tested running in the Root Directory. So VirtualHost it, or give it a different Port)
+    - Modify 'application/config/database.php' and 'application/config/evetool.php' to suit your needs
+    - Make sure the Cache directory is writeable by the Server
+    - Download the Images Dump from CCP and unzip into 'files/itemdb' (cd files ; wget http://ccp.vo.llnwd.net/o2/data/QuantumRise_1.0.0_imgs_dx9.zip ; unzip QuantumRise_1.0.0_imgs_dx9.zip ; mv dx9 itemdb ; rm *.zip)
+    - Point your 404 Document to the /index.php
+
+Extra Info:
+===========
+
+To gain some Performance there's 2 things one can do:
+
+    1. Install Memcached and activate the PHP memcached extension.
+    2. Setup a Cronjob once a minute to keep the EveApi XML Cache "warm":
+           # php -q cli.php cron_update
+
+
+
