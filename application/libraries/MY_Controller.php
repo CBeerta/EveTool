@@ -34,6 +34,17 @@ class MY_Controller extends Controller
      * Bool that describes if the current selected character has corpapi roles
      */
     public $has_corpapi_access = False;
+
+
+
+    /**
+     * To sort the character array by name
+     */
+    private static function insensitive_uksort($a,$b) 
+    {
+        return (strtolower($a)>strtolower($b));
+    } 
+
 	
     public function __construct ()
     {
@@ -108,6 +119,7 @@ class MY_Controller extends Controller
             }
             $this->cache->set('evetool_accounts_'.$this->Auth['user_id'], $this->chars);
         }
+        uksort($this->chars, array("MY_Controller", "insensitive_uksort"));
         
         $data['tool'] = $this->uri->segment(1, 'Overview');
         $data['chars'] = empty($this->chars) ? array() : $this->chars;
@@ -143,7 +155,6 @@ class MY_Controller extends Controller
             $this->has_corpapi_access = EveApi::has_corpapi_access();
 			$data['has_corpapi_access'] = $this->has_corpapi_access;
         }
-		
         $user_timezone = !get_user_config($this->Auth['user_id'], 'user_timezone') ? 'GMT' : get_user_config($this->Auth['user_id'], 'user_timezone');
         date_default_timezone_set($user_timezone);
 

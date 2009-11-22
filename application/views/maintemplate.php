@@ -8,6 +8,7 @@
         <h2 class="information menu_slider">Information</h2>
         <ul id="information">
             <li><a href="<?php echo site_url("/character/skilltree/");?>">Skilltree</a>
+            <li><a href="<?php echo site_url("/character/ships/");?>">Ship Capabilities</a>
             <li><a href="<?php echo site_url("/transactions/index/");?>">Transaction List</a>
             <li><a href="<?php echo site_url("/wallet/journal/");?>">Wallet Journal</a>
             <ul class="submenu">

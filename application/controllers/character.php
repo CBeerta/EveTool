@@ -96,5 +96,72 @@ class Character extends MY_Controller
         $template['content'] = $this->load->view('skilltree', $data, True);
         $this->load->view('maintemplate', $template);
     }
+    
+    
+    public function ships()
+    {
+        $data['character'] = $this->character;
+        $char = CharacterSheet::getCharacterSheet($this->eveapi->getcharactersheet());
+        $has = array();
+        foreach ($char['skills'] as $skill)
+        {
+            $has[$skill['typeID']] = $skill['level'];
+        }
+
+        $canfly = array();
+
+        $q = $this->db->query("
+            SELECT
+                t.*,
+                g.*,
+                r.*,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 182) AS skill1req,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 183) AS skill2req,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 184) AS skill3req,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 277) AS skill1level,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 278) AS skill2level,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 279) AS skill3level
+            FROM    
+                invTypes AS t,
+                invGroups AS g,
+                chrRaces AS r
+            WHERE
+                g.groupID=t.groupID AND
+                r.raceID=t.raceID AND
+                g.categoryID=6 AND
+                t.published=1
+            ORDER BY
+                groupName, raceName, typeName ASC
+            ");
+
+        foreach ($q->result_array() as $ship)
+        {
+            $canflythis = False;
+            foreach (array(1,2,3) as $l)
+            {
+                if (!is_numeric($ship["skill{$l}req"]))
+                {
+                    continue;
+                }
+                if (isset($has[$ship["skill{$l}req"]]) && $has[$ship["skill{$l}req"]] >= $ship["skill{$l}level"])
+                {
+                    $canflythis = True;
+                }
+                else
+                {
+                    $canflythis = False;
+                    break;
+                }
+            }
+            
+            if ($canflythis === True)
+            {
+                $canfly[$ship['groupName']][$ship['raceName']][] = $ship;
+            }
+        }            
+        $data['canfly'] = $canfly;
+        $template['content'] = $this->load->view('ships', $data, True);
+        $this->load->view('maintemplate', $template);
+    }
 
 }
