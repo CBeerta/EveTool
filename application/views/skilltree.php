@@ -32,14 +32,14 @@
           <td class="left"><?php echo $charinfo['race'].' / '.$charinfo['bloodLine'];?></td>
           <td class="dataTableCell">Memory:</td>
           <td class="left"><?php echo $attributes['memory']?></td>
-          <td class="dataTableCell">2:</td><td><?php echo $skillsAtLevel[3]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[3], 1); ?>%)</td>
+          <td class="dataTableCell">3:</td><td><?php echo $skillsAtLevel[3]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[3], 1); ?>%)</td>
         </tr>
         <tr>
           <td class="dataTableCell">Total Cash:</td>
           <td class="left"><?php echo number_format($charinfo['balance']);?> ISK</td>
           <td class="dataTableCell">Charisma</td>
           <td class="left"><?php echo $attributes['charisma']?></td>
-          <td class="dataTableCell">2:</td><td><?php echo $skillsAtLevel[4]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[4], 1); ?>%)</td>
+          <td class="dataTableCell">4:</td><td><?php echo $skillsAtLevel[4]; ?> (<?php echo number_format(100.0 / $skillsTotal * $skillsAtLevel[4], 1); ?>%)</td>
         </tr>
         <tr>
           <td class="dataTableCell">Skill Points:</td>

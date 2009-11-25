@@ -12,7 +12,7 @@
 	<tr>
 		<td><b>Description:</b></td>
 		<td>
-			<?php echo $item['description'];?>
+			<?php echo nl2br($item['description']);?>
 		</td>
 	</tr>
 	<tr>

@@ -25,7 +25,7 @@
 <div id="doc3" class="yui-t4">
     <div id="hd">
         <div class="yui-g">
-            <div class="yui-u first"><h1 id="hd" title="This Thingy needs a better Name!">Eve Tool</h1></div>
+            <div class="yui-u first"><h1 id="hd" title="This Thingy needs a better Name!"><img src="<?php echo site_url("/files/images/logo.png");?>"></h1></div>
             <div class="yui-u" align="right">
                 <p>
                     <?php foreach (array_keys($chars) as $char): ?>

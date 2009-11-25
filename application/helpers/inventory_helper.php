@@ -107,9 +107,9 @@ function get_inv_type($type)
             invCategories.categoryID=invGroups.categoryID;"
         , $type);
     $row = $q->row();
-    if (count($row) > 0)
+    if (count($row) == 1)
     {
-        $CI->cache->set('invtype_'.$type, $row, 0, 604800);
+        $CI->cache->set('invtype_'.$row->typeID, $row, 0, 604800);
         return ($row);
     }
     else

@@ -59,10 +59,14 @@ class EveCentral
 
     public function get_prices($typeIDList, $region = 10000002, $user_prices = False )
     {
+        $CI =& get_instance();
+
         $prices = array();
 
         $typeIdList = array_unique(array_merge($typeIDList, $this->mineralTypes)); // Always fetch mineral prices
 		sort($typeIdList);
+		
+		$from_cache = True; // Assume we have the prices all in Cache
 		
         foreach ($typeIDList as $typeID)
         {
@@ -76,21 +80,40 @@ class EveCentral
                 $prices[$typeID]['sell'][$kind] = 0;
                 $prices[$typeID]['all'][$kind] = 0;
             }
+            
+            if (!($_mc = $CI->cache->get("prices_{$typeID}")))
+            {
+                $from_cache = False;
+            }
+            else
+            {
+                $prices[$typeID] = $_mc;
+            }
         }
         
-        foreach (array_chunk($typeIdList, 20) as $splitted)
+        if ($from_cache == False)
         {
-            $xml = $this->retrieve_xml($splitted, $region);
-            if ($xml !== False)
+            // "Cache Miss" happened
+            foreach (array_chunk($typeIdList, 20) as $splitted)
             {
-                foreach ($xml->marketstat[0]->type as $type)
+                $xml = $this->retrieve_xml($splitted, $region);
+                if ($xml !== False)
                 {
-                    foreach (array('buy','sell','all') as $kind)
+                    foreach ($xml->marketstat[0]->type as $type)
                     {
-                        foreach ($type->$kind->children() as $key => $value)
+                        foreach (array('buy','sell','all') as $kind)
                         {
-                            $prices[(int) $type->attributes()->id][$kind][(string) $key] = (string) $value;
+                            foreach ($type->$kind->children() as $key => $value)
+                            {
+                                $prices[(int) $type->attributes()->id][$kind][(string) $key] = (string) $value;
+                            }
                         }
+                    }
+                    
+                    foreach ($splitted as $typeID)
+                    {
+                        // Store the retrieved prices in cache
+                        $CI->cache->set("prices_{$typeID}", $prices[$typeID]);
                     }
                 }
             }
@@ -99,7 +122,6 @@ class EveCentral
         if ( $user_prices !== False )
         {
             // Apply user mineral Prices over the fetched ones
-            $CI =& get_instance();
             $mineral_prices = get_user_config($CI->Auth['user_id'], 'mineral_prices');
             if ( $mineral_prices !== False )
             {
