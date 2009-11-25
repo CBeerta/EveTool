@@ -1,7 +1,7 @@
 <table width="99%" id="location_snippet">
 	<tr>
 		<th colspan="2">
-			<img align="right" src="<?php echo get_icon_url($item, 64);?>">
+			<?php echo icon_url($item, 64, array('align' => 'right'));?>
 			<h1><?php echo $item['typeName']; ?>
                 <?php if (igb_trusted()): ?>
                 <?php echo igb_show_info($item['typeID']); ?>
@@ -34,8 +34,3 @@
 		</td>
 	</tr>
 </table>
-<!--
-<pre>
-	<?php print_r($item); ?>
-</pre>
--->

@@ -210,6 +210,31 @@ function get_character_portrait($name, $size = 64)
     return ($url);
 }
 
+function icon_url($type, $size = 64, $options = array())
+{
+    if (is_array($type))
+    {
+        $type = (object) $type;    
+    }
+    
+    if (isset($type->techlevel) && $type->techlevel == 2)
+    {
+        $style = "style=\"background-image: url(".get_icon_url($type, $size).");\"";
+        $url = site_url("/files/images/t2_{$size}.png");
+    }
+    else
+    {
+        $style = '';
+        $url = get_icon_url($type, $size);
+    }
+    
+    foreach ($options as $k => $v)
+    {
+        $opts = "{$k}=\"{$v}\" ";
+    }
+    return ("<img {$style} class=\"invtype\" width=\"{$size}\" height=\"{$size}\" title=\"{$type->typeName}\" {$opts} src=\"{$url}\" />");
+}
+
 function get_icon_url($type, $size = 64, $background = 'black')
 {
     if (empty($type))

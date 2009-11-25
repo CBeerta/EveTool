@@ -15,7 +15,7 @@
             <?php foreach($canfly[$groupName][$raceName] as $ship): ?>
             <td width="70" style="text-align: center; vertical-align: top;">
                 <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$ship['typeID']); ?>">
-                    <img src="<?php echo get_icon_url($ship, 64); ?>" title="<?php echo $ship['typeName'];?>"><br />
+                    <?php echo icon_url($ship, 64); ?>
                 </a>
                 <?php echo $ship['typeName']; ?>
             </td>

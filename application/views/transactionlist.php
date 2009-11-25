@@ -14,7 +14,7 @@
         <td><?php print number_format($trans['quantity']); ?></td>
         <td>
             <a id="fb_item" style="color: black;" href="<?php echo site_url('/fancybox/item/'.$trans['typeID']); ?>">
-                <img src="<?php echo get_icon_url(get_inv_type($trans['typeID']),32);?>" width="32" height="32">
+                <?php echo icon_url(get_inv_type($trans['typeID']),32);?>
             </a>
         </td>
         <td>

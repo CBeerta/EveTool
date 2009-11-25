@@ -401,7 +401,8 @@ class AssetList
                 invGroups.categoryID,
                 invGroups.groupName,
                 eveGraphics.icon,
-                (SELECT COUNT(itemID) FROM contents WHERE contents.locationItemId=assetItemID) AS contentAmount
+                (SELECT COUNT(itemID) FROM contents WHERE contents.locationItemId=assetItemID) AS contentAmount,
+                (SELECT IF(COUNT(valueInt)>0, valueInt, 1) FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel
             FROM 
                 invTypes,
                 assets,
@@ -432,7 +433,8 @@ class AssetList
                         invGroups.groupName,
                         eveGraphics.icon,
                         quantity,
-                        flag
+                        flag,
+                        (SELECT IF(COUNT(valueInt)>0, valueInt, 1) FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel
                     FROM
                         invTypes,
                         contents,

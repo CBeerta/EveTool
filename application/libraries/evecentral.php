@@ -81,7 +81,7 @@ class EveCentral
                 $prices[$typeID]['all'][$kind] = 0;
             }
             
-            if (!($_mc = $CI->cache->get("prices_{$typeID}")))
+            if (!($_mc = $CI->cache->get("prices_{$region}_{$typeID}")))
             {
                 $from_cache = False;
             }
@@ -113,7 +113,7 @@ class EveCentral
                     foreach ($splitted as $typeID)
                     {
                         // Store the retrieved prices in cache
-                        $CI->cache->set("prices_{$typeID}", $prices[$typeID]);
+                        $CI->cache->set("prices_{$region}_{$typeID}", $prices[$typeID], 0, 28800);
                     }
                 }
             }

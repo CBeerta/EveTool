@@ -67,13 +67,10 @@ function get_inv_type($type)
 
     $trace = debug_backtrace();
     error_log(date('c')." get_inv_type({$type}) called by: {$trace[0]['file']} -> {$trace[1]['function']}");
-
-    
     if (($_mc = $CI->cache->get('invtype_'.$type)))
     {
         return ($_mc);
     }
-
     if (is_numeric($type))
     {
         $type_select = 'typeID';
@@ -84,7 +81,6 @@ function get_inv_type($type)
     }
     $q = $CI->db->query("
         SELECT 
-            /* (SELECT valueInt FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel */
             invTypes.typeName,
             invTypes.typeID,
             invGroups.groupName,
@@ -94,7 +90,8 @@ function get_inv_type($type)
             invTypes.mass,
             invCategories.categoryName,
             invGroups.categoryID,
-            eveGraphics.icon
+            eveGraphics.icon,
+            (SELECT IF(COUNT(valueInt)>0, valueInt, 1) FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel
         FROM 
             invTypes,
             invGroups,

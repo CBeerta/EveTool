@@ -9,11 +9,11 @@
     <th>
     <?php if ( $asset['categoryID'] == 6 && isset($asset['assetItemID']) ): //Ship?>
     <a id="fb_fitting" href="<?php echo site_url("/fancybox/fitting_from_db/{$asset['typeName']}/{$asset['assetItemID']}"); ?>">
-        <img align="left" width="64" height="64" src="<?php echo get_icon_url($asset,64);?>">
+        <?php echo icon_url($asset, 64, array('align' => 'left'));?>
     </a>
     <?php else: ?>
     <a id="fb_item" href="<?php echo site_url("/fancybox/item/{$asset['typeID']}"); ?>">
-		<img align="left" width="64" height="64" src="<?php echo get_icon_url($asset,64);?>">
+		<?php echo icon_url($asset,64);?>
     </a>
 	<?php endif; ?>
 	</th>
