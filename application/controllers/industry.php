@@ -9,10 +9,14 @@ class Industry extends MY_Controller
      *
      * @param   string
      */
-    public function jobs($maxDays = 7)
+    public function jobs($offset = 0, $per_page = 15)
     {
-        $character = $this->character;
-        $data['character'] = $character;
+        $data['character'] = $this->character;
+        if ($offset === $this->character || $per_page === $this->character)
+        {
+            // @todo we should really get a proper solution for this
+            redirect(site_url("/industry/jobs"));
+        }
 
         $char_jobs = MY_IndustryJobs::getIndustryJobs($this->eveapi->getIndustryJobs());
         if ($this->has_corpapi_access && getUserConfig($this->Auth['user_id'], 'pull_corp'))
@@ -23,8 +27,6 @@ class Industry extends MY_Controller
         $index = 0;
         $data['data'] = array();
         
-        $maxDays = is_numeric($maxDays) ? $maxDays : 7;
-
         $jobs = empty($char_jobs) ? array() : $char_jobs;
         if (!empty($corp_jobs))
         {
@@ -33,10 +35,6 @@ class Industry extends MY_Controller
         foreach ($jobs as $job)
         {
             $endtime = strtotime($job['endProductionTime'].' +0000');
-            if ($endtime < gmmktime() - ($maxDays*24*60*60) )
-            {
-                continue;
-            }
             $data['data'][$index] = (array) get_inv_type($job['outputTypeID']);
             $data['data'][$index] += array(
                     'status' => MY_IndustryJobs::statusIDToString($job['completedStatus']),
@@ -55,8 +53,10 @@ class Industry extends MY_Controller
             $index++;
         }
         ksort($data['data']);
-        $data['maxDays'] = $maxDays;
-
+        
+        $data['data'] = array_slice($data['data'], $offset, $per_page, True);
+        $this->pagination->initialize(array('base_url' => site_url("/industry/jobs"), 'total_rows' => $index, 'per_page' => $per_page, 'num_links' => 5));
+        
         $template['content'] = $this->load->view('jobs', $data, True);
         $this->load->view('maintemplate', $template);
     }

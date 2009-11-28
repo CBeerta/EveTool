@@ -1,3 +1,4 @@
+<!--
 <div id="buttan">
 Days to show: 
 <?php echo anchor("industry/jobs/7", "7");?>, 
@@ -5,8 +6,9 @@ Days to show:
 <?php echo anchor("industry/jobs/30", "30");?>,
 <?php echo anchor("industry/jobs/999999", "all");?>
 </div>
+-->
 <table width="100%">
-<caption>Jobs for the last <?php echo $maxDays; ?> days</caption>
+<caption>Industry Jobs<!-- for the last <?php echo $max_days; ?> days--></caption>
 <tr>
 	<th width="32">By</th>
     <th colspan="2">Item</th>
@@ -38,4 +40,9 @@ Days to show:
     </td>
 <tr>
 <?php endforeach; ?>
+<tr>
+    <td colspan="8" style="text-align: center;">
+        <?php echo $this->pagination->create_links(); ?>
+    </td>
+</tr>
 </table>
