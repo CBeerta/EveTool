@@ -26,6 +26,7 @@
             <li><a href="<?php echo site_url("/industry/jobs/");?>">Industry Jobs</a>
             <li><a href="<?php echo site_url("/market/orders/");?>">Market Orders</a>
             <li><a href="<?php echo site_url("/market/fitting_helper/");?>">Price Checks</a>
+            <!-- <li><a href="<?php echo site_url("/market/margintrader/");?>">Margin Trader</a> -->
             <li><a href="<?php echo site_url("/charstandings/agents/");?>">Agents</a>
         </ul>
 		<?php if ($has_corpapi_access): ?>

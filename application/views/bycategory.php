@@ -13,7 +13,7 @@
     </a>
     <?php else: ?>
     <a id="fb_item" href="<?php echo site_url("/fancybox/item/{$asset['typeID']}"); ?>">
-		<?php echo icon_url($asset,64);?>
+		<?php echo icon_url($asset,64, array('align' => 'left'));?>
     </a>
 	<?php endif; ?>
 	</th>

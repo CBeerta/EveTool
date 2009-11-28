@@ -72,6 +72,13 @@ class Market extends MY_Controller
         $this->load->view('maintemplate', $template);
     }
 
+    /**
+     * fitting_helper
+     *
+     * Lets you PC EFT Fittings
+     *
+     * @param   string
+     */
     public function fitting_helper($location = False)
     {
         $character = $this->character;
@@ -127,6 +134,5 @@ class Market extends MY_Controller
         $template['content'] = $this->load->view('fitting_helper', $data, True);
         $this->load->view('maintemplate', $template);
     }
-    
 }
 ?>

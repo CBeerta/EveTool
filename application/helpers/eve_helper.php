@@ -227,7 +227,7 @@ function icon_url($type, $size = 64, $options = array())
         $style = '';
         $url = get_icon_url($type, $size);
     }
-    
+    $opts = '';
     foreach ($options as $k => $v)
     {
         $opts = "{$k}=\"{$v}\" ";

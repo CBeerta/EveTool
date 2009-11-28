@@ -16,21 +16,82 @@ class Materials extends MY_Controller
     {
         $q = $this->db->query("
             SELECT 
-                * 
+                t.*,
+                g.*,
+                c.*,
+                gfx.*
             FROM 
-                invTypes,
-                invGroups,
-                invCategories,
-                eveGraphics
+            (
+                invTypes AS t,
+                invGroups AS g,
+                invCategories AS c,
+                eveGraphics AS gfx
+            )
             WHERE 
-                invTypes.graphicID=eveGraphics.graphicID AND
-                invTypes.typeName NOT LIKE 'Compressed %' AND
-                invTypes.marketGroupID IS NOT NULL AND
-                invTypes.groupID=invGroups.groupID AND 
-                invGroups.categoryID=invCategories.categoryID AND
-                invTypes.published=1 AND
-                invGroups.{$searchtype}ID = ?", $id);
+                t.graphicID=gfx.graphicID AND
+                t.typeName NOT LIKE 'Compressed %' AND
+                t.marketGroupID IS NOT NULL AND
+                t.groupID=g.groupID AND 
+                g.categoryID=c.categoryID AND
+                t.published=1 AND /*
+                (SELECT IF(COUNT(valueInt)>0, valueInt, 99) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID=633) >= 5 AND
+                (SELECT IF(COUNT(valueInt)>0, valueInt, -1) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID=422) <= 1 AND */
+                g.{$searchtype}ID = ?", $id);
         return ($q->result_array());
+    }
+    
+    /** 
+     * Special case: Valueable loot
+     * 
+     * Selets Modules with minimum metalevel of 4 and only tech 1
+     * 
+     * @returns array
+     **/
+    private function _get_loot()
+    {
+        $q = $this->db->query("
+            SELECT
+                t.*,
+                t.*,
+                g.*,
+                c.*,
+                eveGraphics.icon,
+                metaLevel.valueInt AS metalevel,
+                techLevel.valueInt AS techlevel,
+                TRIM(effect.effectName) AS slot
+            FROM
+            (
+                invTypes AS t,
+                invGroups AS g,
+                invCategories AS c,
+                eveGraphics
+            )
+            INNER JOIN dgmTypeAttributes AS metaLevel ON t.typeID = metaLevel.typeID AND metaLevel.attributeID = 633
+            INNER JOIN dgmTypeAttributes AS techLevel ON t.typeID = techLevel.typeID AND techLevel.attributeID = 422
+            INNER JOIN dgmTypeEffects AS typeEffect ON t.typeID = typeEffect.typeID
+            INNER JOIN dgmEffects AS effect ON typeEffect.effectID = effect.effectID
+            WHERE 
+                t.graphicID=eveGraphics.graphicID AND
+                t.marketGroupID IS NOT NULL AND
+                t.groupID=g.groupID AND 
+                g.categoryID=c.categoryID AND
+                c.categoryID=7 AND
+                t.published=1 AND
+                metaLevel.valueInt >= ? AND
+                techLevel.valueInt = ? AND
+                effect.effectID IN (".implode(',', $slot).")
+            ORDER BY
+                effect.effectID, g.categoryID, g.groupID, t.typeName
+                ", array($meta_level, $tech_level, ));
+
+        $typeidlist = array();
+        foreach ($data['items'] as $item)
+        {
+            $typeidlist[] = $item->typeID;
+        }
+        $regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
+
+        $data['prices'] = $this->evecentral->get_prices($typeidlist, $regionID);
     }
     
     /**
@@ -175,10 +236,11 @@ class Materials extends MY_Controller
         }
         $data['groupIDList'] = $groupIDList;
         $data['searchtype'] = $searchtype;
-        $data['caption'] = 'Materials - Prices from the "'.regionid_to_name($regionID).'" region';
         
         $data['types'] = $this->_get_invgroup($searchtype, $id);
-
+        
+        debug_popup($data);
+        
         foreach ($data['types'] as $r)
         {
             $typeIDList[$r['typeID']] = $r['typeName'];

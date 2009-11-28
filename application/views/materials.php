@@ -95,19 +95,19 @@ function loadResults(data) {
         <span class="volume_<?php echo $r['typeID'];?>"></span> m&sup3;
     </td>
     <td width="5"><i><?php echo number_format($prices[$r['typeID']]['sell']['median'], 2); ?></i></td>
-    <td style="text-align: right;">
-        <span class="sellprice_<?php echo $r['typeID'];?>"></span> ISK
+    <td>
+        <span class="sellprice_<?php echo $r['typeID'];?>">0</span> ISK
     </td>
     <td width="5"><i><?php echo number_format($prices[$r['typeID']]['buy']['median'], 2); ?></i></td>
-    <td style="text-align: right;">
-        <span class="buyprice_<?php echo $r['typeID'];?>"></span> ISK
+    <td>
+        <span class="buyprice_<?php echo $r['typeID'];?>">0</span> ISK
     </td>
 <tr>
 <?php endforeach; ?>
 <th colspan="4">Sum:</td>
     <td><span class="total_volume" style="font-weight: bold;">0</span> m&sup3;</td>
-    <td colspan="2" style="text-align: right;"><span class="total_sellprice" style="font-weight: bold;"></span> ISK</td>
-    <td colspan="2" style="text-align: right;"><span class="total_buyprice" style="font-weight: bold;"></span> ISK</td>
+    <td colspan="2"><span class="total_sellprice" style="font-weight: bold;"></span> ISK</td>
+    <td colspan="2"><span class="total_buyprice" style="font-weight: bold;"></span> ISK</td>
 </tr>
 </table>
 <span style="font-size: 90%">&sup1;: You can update the quantities inline. <br/>Assets on this Page are not updated through the Api.</span>
