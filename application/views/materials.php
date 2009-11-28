@@ -5,7 +5,7 @@ $(document).ready(function(){
         setClickable(this, i);
     });
     
-    $.getJSON("<?php echo site_url("materials/load/{$searchtype}/{$groupID}"); ?>", loadResults);
+    $.getJSON("<?php echo site_url("materials/load/{$id}"); ?>", loadResults);
     
     $("div#editable").ajaxComplete(function(request, settings)
     {
@@ -28,7 +28,6 @@ function setClickable(obj, i)
         $(obj).after(textarea + button).remove();
         $('.saveButton').click(function(){saveChanges(this, revert, false, i);});
         $('.cancelButton').click(function(){saveChanges(this, revert, true, i);});
-        //$('input#input').focus(function(){this.select();});
     })
 }
 
@@ -37,7 +36,7 @@ function saveChanges(obj, revert, cancel, n)
     if(!cancel) 
     {
         var t = $(obj).parent().siblings(0).val();
-        $.post("<?php echo site_url("materials/load/{$searchtype}/{$groupID}"); ?>", {content: t, n: n}, loadResults, "json");
+        $.post("<?php echo site_url("materials/load/{$id}"); ?>", {content: t, n: n}, loadResults, "json");
     }
     if(t=='') t='(click to add text)';
     
@@ -62,13 +61,13 @@ function loadResults(data) {
 <caption><?php echo $caption; ?></caption>
 <tr>
     <th colspan="9">
-        <?php echo form_open("materials/index/{$searchtype}"); ?>
+        <?php echo form_open("materials/index"); ?>
         <!--
         <?php if ( $groupID == 18 ): ?>
         Custom Mineral Prices: <?php echo form_checkbox('custom_prices', 'accept', $custom_prices); ?>&nbsp;|&nbsp;
         <?php endif; ?>
         -->
-        <?php echo form_dropdown('groupID', $groupIDList, $groupID); ?>
+        <?php echo form_dropdown('id', $group_list, $id); ?>
         <?php echo form_submit('submit', 'Select'); ?>
         <?php echo form_close(); ?>
     </th>

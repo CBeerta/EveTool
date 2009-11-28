@@ -4,94 +4,98 @@
 class Materials extends MY_Controller
 {
 
-    public $groupList = array(18, 754, /* 886,*/ 334, 873, 913, 427, 428, 429, 465, 423);
+    public $group_list = array(
+           18 => 'Minerals', 
+          334 => 'Construction Components', 
+        /* 886,*/ 
+          423 => 'Ice Product', 
+          427 => 'Moon Materials', 
+          428 => 'Intermediate Materials', 
+        /* 429 => 'Composite',  */
+          465 => 'Ice', 
+          754 => 'Salvaged Materials', 
+          873 => 'Capital Construction Components', 
+          913 => 'Advanced Capital Construction Components',
+           -1 => '',
+        14107 => 'Low Slot Meta 4 Modules', /* encoded:  1 + meta + slot + 0 + category id */
+        14307 => 'Med Slot Meta 4 Modules',
+        14207 => 'High Slot Meta 4 Modules',
+        );
     
     /**
-     * Loads the invTypes for $groupID
+     * Loads the invTypes for $id
      *
      * @param int
      * @returns array
      **/
-    private function _get_invgroup($searchtype = 'group', $id)
+    private function _get_invgroup($id)
     {
-        $q = $this->db->query("
-            SELECT 
-                t.*,
-                g.*,
-                c.*,
-                gfx.*
-            FROM 
-            (
-                invTypes AS t,
-                invGroups AS g,
-                invCategories AS c,
-                eveGraphics AS gfx
-            )
-            WHERE 
-                t.graphicID=gfx.graphicID AND
-                t.typeName NOT LIKE 'Compressed %' AND
-                t.marketGroupID IS NOT NULL AND
-                t.groupID=g.groupID AND 
-                g.categoryID=c.categoryID AND
-                t.published=1 AND /*
-                (SELECT IF(COUNT(valueInt)>0, valueInt, 99) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID=633) >= 5 AND
-                (SELECT IF(COUNT(valueInt)>0, valueInt, -1) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID=422) <= 1 AND */
-                g.{$searchtype}ID = ?", $id);
-        return ($q->result_array());
-    }
-    
-    /** 
-     * Special case: Valueable loot
-     * 
-     * Selets Modules with minimum metalevel of 4 and only tech 1
-     * 
-     * @returns array
-     **/
-    private function _get_loot()
-    {
-        $q = $this->db->query("
-            SELECT
-                t.*,
-                t.*,
-                g.*,
-                c.*,
-                eveGraphics.icon,
-                metaLevel.valueInt AS metalevel,
-                techLevel.valueInt AS techlevel,
-                TRIM(effect.effectName) AS slot
-            FROM
-            (
-                invTypes AS t,
-                invGroups AS g,
-                invCategories AS c,
-                eveGraphics
-            )
-            INNER JOIN dgmTypeAttributes AS metaLevel ON t.typeID = metaLevel.typeID AND metaLevel.attributeID = 633
-            INNER JOIN dgmTypeAttributes AS techLevel ON t.typeID = techLevel.typeID AND techLevel.attributeID = 422
-            INNER JOIN dgmTypeEffects AS typeEffect ON t.typeID = typeEffect.typeID
-            INNER JOIN dgmEffects AS effect ON typeEffect.effectID = effect.effectID
-            WHERE 
-                t.graphicID=eveGraphics.graphicID AND
-                t.marketGroupID IS NOT NULL AND
-                t.groupID=g.groupID AND 
-                g.categoryID=c.categoryID AND
-                c.categoryID=7 AND
-                t.published=1 AND
-                metaLevel.valueInt >= ? AND
-                techLevel.valueInt = ? AND
-                effect.effectID IN (".implode(',', $slot).")
-            ORDER BY
-                effect.effectID, g.categoryID, g.groupID, t.typeName
-                ", array($meta_level, $tech_level, ));
-
-        $typeidlist = array();
-        foreach ($data['items'] as $item)
+        if ($id < 10000)
         {
-            $typeidlist[] = $item->typeID;
+            $q = $this->db->query("
+                SELECT 
+                    t.*,
+                    g.*,
+                    c.*,
+                    gfx.*
+                FROM 
+                (
+                    invTypes AS t,
+                    invGroups AS g,
+                    invCategories AS c,
+                    eveGraphics AS gfx
+                )
+                WHERE 
+                    t.graphicID=gfx.graphicID AND
+                    t.typeName NOT LIKE 'Compressed %' AND
+                    t.marketGroupID IS NOT NULL AND
+                    t.groupID=g.groupID AND 
+                    g.categoryID=c.categoryID AND
+                    t.published=1 AND
+                    g.groupID = ?
+                LIMIT 50", $id);
         }
-        $regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
-
-        $data['prices'] = $this->evecentral->get_prices($typeidlist, $regionID);
+        else if ($id < 20000)
+        {
+            $meta = substr($id, 1, 1);
+            $slotid = 10 + substr($id, 2, 1);
+            $id = substr($id, -1, 1);
+            $q = $this->db->query("
+                SELECT
+                    t.*,
+                    t.*,
+                    g.*,
+                    c.*,
+                    eveGraphics.icon,
+                    metaLevel.valueInt AS metalevel,
+                    techLevel.valueInt AS techlevel,
+                    TRIM(effect.effectName) AS slot
+                FROM
+                (
+                    invTypes AS t,
+                    invGroups AS g,
+                    invCategories AS c,
+                    eveGraphics
+                )
+                INNER JOIN dgmTypeAttributes AS metaLevel ON t.typeID = metaLevel.typeID AND metaLevel.attributeID = 633
+                INNER JOIN dgmTypeAttributes AS techLevel ON t.typeID = techLevel.typeID AND techLevel.attributeID = 422
+                INNER JOIN dgmTypeEffects AS typeEffect ON t.typeID = typeEffect.typeID
+                INNER JOIN dgmEffects AS effect ON typeEffect.effectID = effect.effectID
+                WHERE 
+                    t.graphicID=eveGraphics.graphicID AND
+                    t.marketGroupID IS NOT NULL AND
+                    t.groupID=g.groupID AND 
+                    g.categoryID=c.categoryID AND
+                    c.categoryID=? AND
+                    t.published=1 AND
+                    metaLevel.valueInt >= ? AND
+                    techLevel.valueInt = 1 AND
+                    effect.effectID IN (?)
+                ORDER BY
+                    effect.effectName, g.categoryID, g.groupID, t.typeName
+                /*LIMIT 50*/;", array($id, $meta, $slotid));
+        }
+        return ($q->result_array());
     }
     
     /**
@@ -103,49 +107,43 @@ class Materials extends MY_Controller
      *
      * @todo this has gotten quite messy, and should be "reviewed"
      */
-    public function load($searchtype = 'group', $id)
+    public function load($id)
     {
         $character = $this->character;
 
-        $regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
+        $region_id = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
         $custom_prices = $this->input->post('custom_prices') ? True : False;
         $data['custom_prices'] = $custom_prices;
 
         // Step 1: Pull all the player owned assets from the db for $id
-        $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid'], array("invGroups.groupID" => $id));
+        $assets = AssetList::getAssetsFromDB($this->chars[$character]['charid']);
 
         $materials = array();        
         foreach ($assets as $loc)
         {
             foreach ($loc as $asset)
             {
-                if ($asset[$searchtype.'ID'] == $id) 
+                if (!isset($data['data'][$asset['typeID']]))
                 {
-                    if (!isset($data['data'][$asset['typeID']]))
-                    {
-                        $materials[$asset['typeID']] = array_merge($asset ,array('quantity' => 0));
-                    }
-                    $materials[$asset['typeID']]['quantity'] += $asset['quantity'];
+                    $materials[$asset['typeID']] = array_merge($asset ,array('quantity' => 0));
                 }
+                $materials[$asset['typeID']]['quantity'] += $asset['quantity'];
                 if (isset($asset['contents']))
                 {
                     foreach ($asset['contents'] as $content)
                     {
-                        if ($content[$searchtype.'ID'] == $id) 
-                        {
                             if (!isset($data['data'][$content['typeID']]))
                             {
                                 $materials[$content['typeID']] = array_merge($content ,array('quantity' => 0));
                             }
                             $materials[$content['typeID']]['quantity'] += $content['quantity'];
-                        }
                     }
                 }
             }
         }
 
         // Step 2: Pull all invTypes from $id and merge with the quantities from Step 1
-        $invtypes = $this->_get_invgroup($searchtype, $id);
+        $invtypes = $this->_get_invgroup($id);
         $typeids = array();
         foreach ($invtypes as $v)
         {
@@ -181,7 +179,7 @@ class Materials extends MY_Controller
 
         // Step 4: Pull the prices for all of $groupID
         $data['sums']['volume'] = $data['sums']['sellprice'] = $data['sums']['buyprice'] = 0;
-        $data['prices'] = $this->evecentral->get_prices($typeids, $regionID, $custom_prices);
+        $data['prices'] = $this->evecentral->get_prices($typeids, $region_id, $custom_prices);
 
         // Step 5: And finally add all the quantites up to totals
         foreach ($data['data'] as $v)
@@ -203,49 +201,35 @@ class Materials extends MY_Controller
      *
      * @param   int
      */
-    public function index($searchtype = 'group', $id = 18)
+    public function index($id = 18)
     {
-        $regionID = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
+        $region_id = !get_user_config($this->Auth['user_id'], 'market_region') ? 10000067 : get_user_config($this->Auth['user_id'], 'market_region');
         
-        if ($this->input->post('groupID'))
+        if ($this->input->post('id'))
         {
-            $searchtype = 'group';
-            $id = $this->input->post('groupID');
-            redirect(site_url("materials/index/{$searchtype}/{$id}"));
+            $id = $this->input->post('id');
+            if ($id <= 0)
+            {
+                $id = 18; // Idiot klicked on the seperator
+            }
+            redirect(site_url("materials/index/{$id}"));
             exit;
         }
+
         $custom_prices = $this->input->post('custom_prices') ? True : False;
         $data['custom_prices'] = $custom_prices;
+        $data['id'] = $id;
         
-        $data[$searchtype.'ID'] = $id;
-
-        $groupIDList = array();
-        $q = $this->db->query('SELECT groupID,groupName FROM invGroups;');
-        foreach ($q->result() as $row)
-        {
-            if ($row->groupID == $id)
-            {
-                $data['caption'] = $row->groupName;
-                $data['caption'] .= ' - Prices from the "'.regionid_to_name($regionID).'" region';
-            }
-            if (in_array($row->groupID, $this->groupList))
-            {
-                $groupIDList[$row->groupID] = $row->groupName;
-            }
-  
-        }
-        $data['groupIDList'] = $groupIDList;
-        $data['searchtype'] = $searchtype;
+        $data['group_list'] = $this->group_list;
         
-        $data['types'] = $this->_get_invgroup($searchtype, $id);
-        
-        debug_popup($data);
+        $data['caption'] = $this->group_list[$id].' - Prices from the "'.regionid_to_name($region_id).'" region';
+        $data['types'] = $this->_get_invgroup($id);
         
         foreach ($data['types'] as $r)
         {
-            $typeIDList[$r['typeID']] = $r['typeName'];
+            $typeid_list[$r['typeID']] = $r['typeName'];
         }
-        $data['prices'] = $this->evecentral->get_prices(array_keys($typeIDList), $regionID, $custom_prices);
+        $data['prices'] = $this->evecentral->get_prices(array_keys($typeid_list), $region_id, $custom_prices);
 
         $template['content'] = $this->load->view('materials', $data, True);
         $this->load->view('maintemplate', $template);

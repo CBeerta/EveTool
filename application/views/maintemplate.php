@@ -19,7 +19,7 @@
 				<form method="post" action="<?php echo site_url("/assets/search");?>" id="assetSearch">
 					<li><input type="text" name="search" id="search" id="search" value="Search.." size="14" onfocus="if(this.value == 'Search..') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search..';}"/>
 				</form>
-                <li><a href="<?php echo site_url("/materials/index/group/18");?>">Materials</a>
+                <li><a href="<?php echo site_url("/materials/index");?>">Materials</a>
                 <li><a href="<?php echo site_url("/assets/blueprints/");?>">Blueprints</a>
                 <li><a href="<?php echo site_url("/assets/ships/");?>">Ships</a>
             </ul>
