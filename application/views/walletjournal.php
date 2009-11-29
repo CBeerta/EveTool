@@ -1,16 +1,17 @@
 <table width="100%">
-    <caption>Wallet Journal</caption>
-    <tr>
-        <td colspan="5" style="text-align:center;">
-			<img src="<?php echo site_url("wallet/chart");?>">
-		</td>
-    </tr>
+    <caption>
+        <a id="fb_image" href="<?php echo site_url("wallet/chart/{$character}.jpg");?>">
+            <img title="Chart" src="<?php echo site_url("/files/images/chart_curve_go.png");?>" style="background-color: white; padding: 1px; margin-right:10px;">
+        </a>
+        Wallet Journal
+    </caption>
     <tr>
         <th>Date</th>
         <th>Type</th>
         <th>Amount</th>
         <th>Balance</th>
         <th>Source/Target</th>
+        <th>Location</th>
     </tr>
     <?php foreach($wallet as $trans):?>
     <tr>
@@ -25,6 +26,19 @@
         <td><?php print number_format($trans['balance']); ?></td>
         <td><?php print $trans['ownerName2']; ?></td>
         <?php endif;?>
+        <?php if ($trans['argID1'] != 0): ?>
+        <td>
+	        <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$trans['argID1']); ?>"><?php echo $trans['argName1'];?></a>
+        </td>
+        <?php else: ?>
+        <td></td>
+        <?php endif; ?>
+        
     </tr>
     <?php endforeach;?>
+    <tr>
+        <td colspan="6" style="text-align: center;">
+            <?php echo $this->pagination->create_links(); ?>
+        </td>
+    </tr>
 </table>

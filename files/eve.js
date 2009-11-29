@@ -48,6 +48,7 @@ $(document).ready(function() {
     $("a#fb_character").fancybox({ 'hideOnContentClick': false });
     $("a#fb_item").fancybox({ 'hideOnContentClick': false });
     $("a#fb_fitting").fancybox({ 'hideOnContentClick': false, 'frameWidth': 850, 'frameHeight': 550});
+    $("a#fb_image").fancybox({ 'hideOnContentClick': false, 'frameWidth': 810, 'frameHeight': 360});
 	
 	
 	// Navigation Effects

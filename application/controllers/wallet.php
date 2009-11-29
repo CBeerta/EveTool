@@ -40,7 +40,7 @@ class Wallet extends MY_Controller
                 break;
             }
         }
-        $this->phpgraphlib->setBackgroundColor("76,76,76");
+        //$this->phpgraphlib->setBackgroundColor("76,76,76");
         //$this->phpgraphlib->setGridColor("white");
         $this->phpgraphlib->setGrid(false);
         $this->phpgraphlib->addData($chartdata);
@@ -48,13 +48,13 @@ class Wallet extends MY_Controller
         $this->phpgraphlib->setDataPoints(true);
         $this->phpgraphlib->setDataValues(true);
         $this->phpgraphlib->setLine(true);
-        $this->phpgraphlib->setLineColor("black");
-        $this->phpgraphlib->setDataValueColor("200,200,200");
-        $this->phpgraphlib->setLegendColor("200,200,200");
-        $this->phpgraphlib->setTextColor("200,200,200");
+        //$this->phpgraphlib->setLineColor("black");
+        //$this->phpgraphlib->setDataValueColor("200,200,200");
+        //$this->phpgraphlib->setLegendColor("200,200,200");
+        //$this->phpgraphlib->setTextColor("200,200,200");
         $this->phpgraphlib->setGradient("red", "maroon");
         $this->phpgraphlib->setTitle("30 Day Wallet History");
-        $this->phpgraphlib->setTitleColor("200,200,200");
+        //$this->phpgraphlib->setTitleColor("200,200,200");
 
         $this->phpgraphlib->createGraph();
         exit;
@@ -66,16 +66,25 @@ class Wallet extends MY_Controller
      * Display a Journal with the latest Wallet Transactions
      *
      */
-    public function journal()
+    public function journal($offset = 0, $per_page = 20)
     {
-        $character = $this->character;
-        $data['character'] = $character;
+        $data['character'] = $this->character;
+        if ($offset === $this->character || $per_page === $this->character)
+        {
+            // @todo we should really get a proper solution for this
+            redirect(site_url("/wallet/journal"));
+        }
 
         $walletxml = $this->eveapi->getWalletJournal();
         $data['wallet'] = WalletJournal::getWalletJournal($walletxml);
+        
+        $total = count($data['wallet']);
+        $data['wallet'] = array_slice($data['wallet'], $offset, $per_page, True);
+        $this->pagination->initialize(array('base_url' => site_url("/wallet/journal"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5));
+        
         $data['reftypes'] = $this->eveapi->reftypes;
 				
-        $template['title'] = "Wallet Journal for {$character}";
+        $template['title'] = "Wallet Journal for {$this->character}";
         $template['content'] = $this->load->view('walletjournal', $data, True);
         $this->load->view('maintemplate', $template);
     }
@@ -88,15 +97,14 @@ class Wallet extends MY_Controller
      */
     public function dailyjournal()
     {
-        $character = $this->character;
+	    $data['character'] = $this->character;
 
         $walletxml = $this->eveapi->getWalletJournal();
         $wallet = WalletJournal::getWalletJournal($walletxml);
 
 		$data = $this->eveapi->get_daily_walletjournal($wallet);
-	    $data['character'] = $character;
 	
-        $template['title'] = "Wallet Journal for {$character}";
+        $template['title'] = "Wallet Journal for {$this->character}";
         $template['content'] = $this->load->view('walletdailyjournal', $data, True);
         $this->load->view('maintemplate', $template);
     }

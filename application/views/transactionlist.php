@@ -32,4 +32,9 @@
         </td>
     </tr>
     <?php endforeach;?>
+    <tr>
+        <td colspan="7" style="text-align: center;">
+            <?php echo $this->pagination->create_links(); ?>
+        </td>
+    </tr>
 </table>
