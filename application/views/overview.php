@@ -35,10 +35,10 @@
 </div>
 <div style="position: static;top: 0px;">
     <?php #if (igb_trusted()): echo '<pre>'; print_r($_SERVER); print '</pre>'; endif; ?>
-    <?php  foreach ($feed as $item): ?>
+    <?php /* foreach ($feed as $item): ?>
     <h4><?php echo $item->get_title();?></h4>
     <p><?php echo $item->get_description();?></p>
     <br />
-    <?php endforeach; ?>
+    <?php endforeach; */?>
 </div>
 

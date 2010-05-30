@@ -3,7 +3,7 @@
 
 /* we don't need to be limited by...normal limitations */
 set_time_limit(0);
-ini_set('memory_limit', '256M');
+#ini_set('memory_limit', '256M');
 
 /* make sure this isn't being called by a web browser */
 if (isset($_SERVER['REMOTE_ADDR'])) die('Permission denied.');

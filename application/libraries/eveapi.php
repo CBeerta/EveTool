@@ -447,10 +447,13 @@ class AssetList
                         contents.locationItemID=? AND
                         invTypes.typeID=contents.typeID
                     ORDER BY flag DESC,invTypes.typeID', $row['assetItemID']);
+                $content_volume = 0;
                 foreach ($c->result_array() as $content)
                 {
                     $row['contents'][] = $content;
+                    $content_volume += $content['quantity'] * $content['volume'];
                 }
+                $row['contentsTotalVolume'] = $content_volume;
             }
             $assets[$row['locationID']][] = $row;
         }
