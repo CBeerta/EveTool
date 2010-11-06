@@ -59,6 +59,7 @@ class Eveapi
 					'corporationID' => (int) $character->corporationID,
 					);
 			}
+			return (array_keys($this->characters));
 		}			
 	}
 }
