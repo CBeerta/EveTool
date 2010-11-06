@@ -5,11 +5,6 @@ class Home extends Controller
 	public $page_title = 'Home';
 	public $submenu = array('EveMail');
 	
-	public function __construct()
-	{
-		parent::__construct();
-		
-	}
 	public function _remap($method)
 	{
 		$data['page_title'] = $this->page_title;

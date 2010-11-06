@@ -7,7 +7,7 @@ class Characters extends Controller
 
 	public function __construct()
 	{
-		parent::__construct();
+		parent::Controller();
 		
 		$this->submenu = $this->eveapi->load_characters();
 	}
