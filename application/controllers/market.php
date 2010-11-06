@@ -50,9 +50,8 @@ class Market extends Controller
 	            $row->remaining = $order['volRemaining'];
 	            $row->total = $order['volEntered'];
 	            $row->charID = $order['charID'];
-	            //$row->ends = api_time_to_complete($issued);
+	            $row->ends = api_time_to_complete($issued);
 	            //$row->location = locationid_to_name($order['stationID']);
-	            $row->ends = $issued;
 	            $row->location = $order['stationID'];
 	            $row->locationid = $order['stationID'];
 	            

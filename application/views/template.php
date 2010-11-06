@@ -36,9 +36,9 @@ Released   : 20100729
 	</div>
 	<!-- end #header -->
 	<div id="page">
-		<div id="content">
+		<!--div id="content"-->
 			<?php echo $content;?>
-		</div>
+		<!--/div-->
 		<!-- end #content -->
 		<div id="sidebar">
 			<?php echo isset($sidebar) ? $sidebar : '';	?>

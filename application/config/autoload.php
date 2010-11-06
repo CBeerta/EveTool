@@ -39,7 +39,7 @@
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array("eveapi", "session");
+$autoload['libraries'] = array("eveapi", "session", "pagination");
 
 
 /*
@@ -51,7 +51,7 @@ $autoload['libraries'] = array("eveapi", "session");
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url');
+$autoload['helper'] = array('url', 'eve');
 
 
 /*

@@ -29,8 +29,14 @@ h2 {
 	font-size: 2.8em;
 }
 
-h3 {
+h3{
 	font-size: 1.6em;
+}
+
+caption{
+	font-size: 1.6em;
+	padding: 5px;
+	background-color: #f1f1f1;
 }
 
 p, ul, ol {

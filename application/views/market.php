@@ -21,7 +21,7 @@
     </td>
 	<td style="text-align: left;">
         <a id="fb_item" href="<?php echo site_url('/fancybox/item/'.$row->typeID); ?>">       
-    	    <img src="<?php //echo get_icon_url($row,32);?>">
+    	    <img src="<?php echo get_icon_url($row,32);?>">
 	    </a>
     </td>
     <td style="text-align: left;"><?php echo $row->typeName;?></td>
