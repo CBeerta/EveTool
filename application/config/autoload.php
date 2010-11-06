@@ -39,7 +39,7 @@
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array("eveapi", "session", "pagination");
+$autoload['libraries'] = array('eveapi', 'session', 'pagination', 'database', 'cache');
 
 
 /*
@@ -51,7 +51,7 @@ $autoload['libraries'] = array("eveapi", "session", "pagination");
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'eve');
+$autoload['helper'] = array('url', 'eve', 'random_functions', 'inventory', 'igb');
 
 
 /*
@@ -79,7 +79,7 @@ $autoload['plugin'] = array();
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('evetool');
 
 
 /*

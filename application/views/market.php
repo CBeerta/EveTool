@@ -7,7 +7,7 @@
     <th width="32">By</th>
 	<th colspan="2">Type</th>
     <th>Price</th>
-    <th colspan="2" title="Current Market Price">Market Price</th>
+    <!--th colspan="2" title="Current Market Price">Market Price</th-->
     <th colspan="2">Remaining</th>
     <th>Ends</th>
     <th>Station</th>
@@ -26,12 +26,12 @@
     </td>
     <td style="text-align: left;"><?php echo $row->typeName;?></td>
 	<td><?php echo number_format($row->price, 2);?> ISK</td>
-	<td>
+	<!--td>
 	    <?php //echo number_format($prices[$row->typeID][$type]['median'], 2);?> ISK
     </td>
     <td>
 	    <?php //echo number_format(($prices[$row->typeID][$type]['median'] - $row->price) / $row->price * 100, 1); ?> %
-    </td>
+    </td-->
     <td width="5"><?php echo $row->remaining.'/'.$row->total; ?></td>
 	<td><?php echo number_format($row->remaining*$row->price);?> ISK</td>
 	<td><?php echo $row->ends;?></td>
@@ -41,7 +41,7 @@
 </tr>
 <?php endforeach;?>
 <tr>
-    <th colspan="6">Sum:</td>
+    <th colspan="4">Sum:</td>
     <td><?php echo $remaining[$type].'/'.$total[$type]; ?></td>
     <td><?php echo number_format($remainingPrice[$type]); ?> ISK</td>
     <td colspan="2">&nbsp;</td>

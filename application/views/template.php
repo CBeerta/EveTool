@@ -17,6 +17,12 @@ Released   : 20100729
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>evetool - <?php echo $page_title; ?></title>
 <link href="/files/eve.css" rel="stylesheet" type="text/css" media="screen" />
+<script type="text/javascript" src="<?php echo site_url('/files/jquery.js');?>"></script>
+<script type="text/javascript" src="<?php echo site_url('/files/fancybox/jquery.fancybox-1.2.5.pack.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo site_url('/files/fancybox/jquery.fancybox-1.2.5.css');?>">
+<script type="text/javascript" src="<?php echo site_url('/files/eve.js');?>"></script>
+<script type="text/javascript" src="<?php echo site_url('/files/sorttable.js');?>"></script>
+
 </head>
 <body>
 <div id="wrapper">
@@ -27,7 +33,7 @@ Released   : 20100729
 			</div>
 			<div id="menu">
 				<ul>
-					<?php foreach (array('Home', 'Characters', 'Market', 'Industry', 'Wallet') as $v):?>
+					<?php foreach (array('Home', 'Characters', 'Market', 'Industry', 'Assets') as $v):?>
 					<li <?php if ($page_title == $v): ?>class="current_page_item"><?php endif;?><a href="<?php echo site_url(strtolower($v));?>"><?php echo $v;?><Home></a></li>
 					<?php endforeach;?>
 				</ul>
@@ -48,8 +54,8 @@ Released   : 20100729
 				<li>
 					<h2>Submenu</h2>
 					<ul>
-						<?php foreach ($submenu as $v):?>
-						<li><a href="<?php echo site_url(strtolower("{$page_title}/{$v}"));?>"><?php echo $v;?></a></li>
+						<?php foreach ($submenu as $k => $v):?>
+						<li><a href="<?php echo site_url(strtolower("{$page_title}/{$k}"));?>"><?php echo $v;?></a></li>
 						<?php endforeach;?>
 					</ul>
 				</li>	

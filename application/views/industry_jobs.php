@@ -7,6 +7,7 @@ Days to show:
 <?php echo anchor("industry/jobs/999999", "all");?>
 </div>
 -->
+<div id="content">
 <table width="100%">
 <caption>Industry Jobs<!-- for the last <?php echo $max_days; ?> days--></caption>
 <tr>
@@ -46,3 +47,4 @@ Days to show:
     </td>
 </tr>
 </table>
+</div>

@@ -69,7 +69,9 @@ class Files extends Controller
                 */
                 //$cachefile = $this->config->item('image_cache_path').$destfile;
                 $cachefile = APPPATH."../files/cache/".$destfile;
-                $uri = "http://img.eve.is/serv.asp?s={$size}&c={$charid}";
+                //$uri = "http://img.eve.is/serv.asp?s={$size}&c={$charid}";
+                //http://image.eveonline.com/Character/887313171_64.jpg
+                $uri = "http://image.eveonline.com/Character/{$charid}_{$size}.jpg";
                 break;
 
             case 'itemdb/';

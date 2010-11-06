@@ -3,9 +3,9 @@
 class Industry extends Controller
 {
 	public $page_title = 'Industry';
-	public $submenu = array();
+	public $submenu = array('jobs' => 'Industry Jobs');
 
-    static function statusIDToString($status)
+    static function statusid_to_string($status)
     {
             $mapping = array(
                             0 => 'Failed',
@@ -17,7 +17,7 @@ class Industry extends Controller
             return ($mapping[$status]);
     }
     
-    static function activityIDToString($activityID)
+    static function activityid_to_string($activityID)
     {
             /*
             $mapping = array(
@@ -43,8 +43,8 @@ class Industry extends Controller
                             8 => 'Inv');
             return ($mapping[$activityID]);
     }
-	
-	public function index($offset = 0, $per_page = 15)
+
+    public function index($offset = 0, $per_page = 15)
 	{
 		$data['page_title'] = $this->page_title;
 		$data['submenu'] = $this->submenu;
@@ -64,15 +64,16 @@ class Industry extends Controller
 				$job = (object) $_job->attributes();
 				
 	            $endtime = strtotime($job['endProductionTime'].' +0000');
-	            //$data['data'][$index] = (array) get_inv_type($job['outputTypeID']);
-	            $data['data'][$index] = array('typeID' => $job['outputTypeID']);
-	            $data['data'][$index]['typeName'] = 'buttsex';
+	            //$data['data'][$index] = array('typeID' => $job['outputTypeID']);
+	            //$data['data'][$index]['typeName'] = 'buttsex';
+	            $data['data'][$index] = (array) get_inv_type((int)$job['outputTypeID']);
 	            $data['data'][$index] += array(
-	                    'status' => $this::statusIDToString((int)$job['completedStatus']),
-	                    'activity' => $this::activityIDToString((int)$job['activityID']),
+	                    'status' => $this::statusid_to_string((int)$job['completedStatus']),
+	                    'activity' => $this::activityid_to_string((int)$job['activityID']),
 	                    'amount' => (int) $job['runs'],
 	                    'outputLocationID' => (int) $job['outputLocationID'],
 	                    'ends' => api_time_to_complete((string)$job['endProductionTime']),
+	                    'endtime' => $endtime,
 	                    'installerID' => (int) $job['installerID'],
 	                    'location' => (int) $job['outputLocationID']);
 	
@@ -85,7 +86,7 @@ class Industry extends Controller
 			}
 		}
 		
-        ksort($data['data']);
+        masort($data['data'], array('endtime'));
         
         $data['data'] = array_slice($data['data'], $offset, $per_page, True);
         $this->pagination->initialize(array('base_url' => site_url("/industry/index"), 'total_rows' => $index, 'per_page' => $per_page, 'num_links' => 5));

@@ -272,7 +272,7 @@ function get_icon_url($type, $size = 64, $background = 'black')
     }
     else if (isset($row->icon) && !empty($row->icon))
     {
-        return ("/files/itemdb/icons/icons_items_png/{$size}_{$size}/icon{$row->icon}.png");
+        return ("/files/itemdb/icons/{$size}_{$size}/icon{$row->icon}.png");
     }
 	else if (!empty($row->stationTypeID))
 	{

@@ -3,7 +3,7 @@
 class Home extends Controller
 {
 	public $page_title = 'Home';
-	public $submenu = array('EveMail');
+	public $submenu = array('evemail' => 'EveMail');
 	
 	public function _remap($method)
 	{

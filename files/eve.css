@@ -33,11 +33,6 @@ h3{
 	font-size: 1.6em;
 }
 
-caption{
-	font-size: 1.6em;
-	padding: 5px;
-	background-color: #f1f1f1;
-}
 
 p, ul, ol {
 	margin-top: 0;
@@ -52,6 +47,28 @@ a {
 	color: #EB1D1D;
 }
 
+caption{
+	font-size: 1.6em;
+	padding: 5px;
+	background: #666;
+	color: white;
+
+}
+
+th {
+	padding: 2px;
+	font-size: 1.2em;
+	background-color: #f1f1f1;
+}
+td {
+	padding: 2px;
+	background-color: #fafafa;
+	/*border: 1px solid #eee;*/
+}
+
+img {
+	border: 0px;
+}
 a:hover {
 	text-decoration: none;
 }
@@ -361,3 +378,39 @@ a:hover {
 #footer a {
 	color: #6B4A45;
 }
+
+/**
+ *
+ * Snippets
+ *
+ **/
+a#fb_location {
+	background-image: url('/files/images/map.png');
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	color: white;
+}
+
+a#fb_location,
+a#fb_character,
+a#fb_item,
+a#fb_fitting {
+        color: #8BD80E;
+}
+
+#character_snippet,
+#fitting_snippet,
+#item_snippet,
+#location_snippet {
+        text-align: left;
+        color: black;
+}
+div#location_snippet {
+        padding: 5px;
+}
+
+a#igb_link {
+         cursor: pointer;
+         color: #F94900;
+}
+

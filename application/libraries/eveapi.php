@@ -59,7 +59,8 @@ class Eveapi
 					'corporationID' => (int) $character->corporationID,
 					);
 			}
-		}			
+		}
+		ksort($this->characters);			
 		return (array_keys($this->characters));
 	}
 }

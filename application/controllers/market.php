@@ -40,12 +40,12 @@ class Market extends Controller
 	                continue;
 	            }
 				
-	            $issued = strtotime($order['issued']);
-	            $issued += $order['duration'] * 24 * 60 * 60;
+	            $issued = strtotime((string)$order['issued']);
+	            $issued += (int) $order['duration'] * 24 * 60 * 60;
 	            
-	            //$row = get_inv_type($order['typeID']);
-	            $row = (object)array('typeID' => $order['typeID']);
-	            $row->typeName = 'buttsex';
+	            $row = get_inv_type((int)$order['typeID']);
+	            //$row = (object)array('typeID' => $order['typeID']);
+	            //$row->typeName = 'buttsex';
 	            $row->price = (float) $order['price'];
 	            $row->remaining = $order['volRemaining'];
 	            $row->total = $order['volEntered'];
