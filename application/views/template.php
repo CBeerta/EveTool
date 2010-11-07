@@ -29,7 +29,7 @@ Released   : 20100729
 	<div id="header-wrapper">
 		<div id="header">
 			<div id="logo">
-				<h1><a href="#"><span>eve</span>tool</a></h1>
+				<h1><a href="#"><span>eve</span>tool&sup2;</a></h1>
 			</div>
 			<div id="menu">
 				<ul>

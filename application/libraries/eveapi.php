@@ -34,7 +34,7 @@ class Eveapi
 			foreach ($row->attributes() as $name => $value)
 			{
 				$output[$index][(string) $name] = (string) $value;
-				if (in_array((string) $name, array('date', 'transactionDateTime'))) 
+				if (in_array((string) $name, array('date', 'transactionDateTime', 'sentDate'))) 
 				{
 					$output[$index]['unix'.$name] = strtotime((string) $value);
 				}

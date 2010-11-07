@@ -71,7 +71,7 @@ class Assets extends Controller
 	
 	public function index()
 	{
-		return ('blahfasel');
+		return ('<h2>Here be the the Assets</h2>');
 	}
 
 	public function journal()

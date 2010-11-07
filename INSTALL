@@ -8,7 +8,8 @@ Installation Guide:
 
     - Download and install the Eve Tyrannis Database and configure application/config/database.php accordingly
     - Drop the Contents into your Webserver, set the base_url in application/config/config.php
-    - Modify 'application/config/evetool.php' to suit your needs (This will hopefully be obsoleted)
+    - Modify 'application/config/evetool.php' to suit your needs (This will hopefully be obsoleted asap)
+    - Create 'application/config/characters.ini' (example characters.example.ini)
     - Make sure the Cache directory is writeable by the Server
     - Download the Images Dump from CCP and unzip into 'files/itemdb' (cd files/itemdb ; wget http://content.eveonline.com/data/Tyrannis_1.0.4-imgs.7z ; 7z x  Tyrannis_1.0.4-imgs.7z ; rm *.7z)
     - Make sure your webserver uses the .htaccess (both the 404-handler and rewrite rules)
