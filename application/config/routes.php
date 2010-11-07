@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
 | -------------------------------------------------------------------------
 | URI ROUTING
@@ -9,7 +9,7 @@
 | and its corresponding controller class/method. The segments in a
 | URL normally follow this pattern:
 |
-| 	www.your-site.com/class/method/id/
+| 	example.com/class/method/id/
 |
 | In some instances, however, you may want to remap this relationship
 | so that a different class/function is called than the one
@@ -17,7 +17,7 @@
 |
 | Please see the user guide for complete details:
 |
-|	http://www.codeigniter.com/user_guide/general/routing.html
+|	http://codeigniter.com/user_guide/general/routing.html
 |
 | -------------------------------------------------------------------------
 | RESERVED ROUTES
@@ -43,4 +43,6 @@
 $route['default_controller'] = "overview";
 $route['scaffolding_trigger'] = "";
 
-?>
+
+/* End of file routes.php */
+/* Location: ./system/application/config/routes.php */

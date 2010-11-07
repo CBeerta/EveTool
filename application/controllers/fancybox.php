@@ -9,25 +9,6 @@
 
 class Fancybox extends Controller
 {
-
-    /**
-     * Constructor to load the libraries we need 
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->config->load('evetool');
-		$this->load->library('eveapi', array('cachedir' => '/var/tmp'));
-
-        $this->load->helper('eve');
-        $this->load->helper('igb');
-        $this->load->helper('random_functions');
-        $this->load->helper('inventory');
-        $this->load->helper('fitting');
-    }
-
-
     public function location($id)
     {
 		$playerStation = array();
@@ -81,3 +62,4 @@ class Fancybox extends Controller
 
 }
 
+?>

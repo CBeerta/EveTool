@@ -1,6 +1,8 @@
+<div id="content">
 <table width="100%">
     <caption>Transactions</caption>
     <tr>
+    	<th>By</th>
         <th>Date</th>
         <th>Units</th>
         <th colspan="2">Name</th>
@@ -10,6 +12,11 @@
     </tr>
     <?php foreach($translist as $trans):?>
     <tr>
+	    <td>
+	        <a id="fb_character" href="<?php echo site_url('/fancybox/character/'.$trans['char']->characterID); ?>">       
+	            <img src="<?php echo site_url("files/cache/char/{$trans['char']->characterID}/64/char.jpg"); ?>" width="32" height="32" title="<?php echo $trans['char']->name; ?>">
+	        </a>
+	    </td>
         <td><?php print api_time_print($trans['transactionDateTime'], 'Y.m.d H:i'); ?></td>
         <td><?php print number_format($trans['quantity']); ?></td>
         <td>
@@ -38,3 +45,4 @@
         </td>
     </tr>
 </table>
+</div>

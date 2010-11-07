@@ -6,8 +6,6 @@ class Files extends Controller
     function __construct()
     {
         parent::Controller();
-        $this->config->load('evetool');
-        $this->load->helper('eve');
     }
 
     public function _mkdirs($dir, $recursive = true) 
@@ -69,23 +67,29 @@ class Files extends Controller
                     }
                 }
                 */
-                $cachefile = $this->config->item('image_cache_path').$destfile;
-                $uri = "http://img.eve.is/serv.asp?s={$size}&c={$charid}";
+                //$cachefile = $this->config->item('image_cache_path').$destfile;
+                $cachefile = APPPATH."../files/cache/".$destfile;
+                //$uri = "http://img.eve.is/serv.asp?s={$size}&c={$charid}";
+                //http://image.eveonline.com/Character/887313171_64.jpg
+                $uri = "http://image.eveonline.com/Character/{$charid}_{$size}.jpg";
                 break;
 
             case 'itemdb/';
                 $destfile = $matches[1];
-                $cachefile = $this->config->item('image_cache_path').$destfile;
+                //$cachefile = $this->config->item('image_cache_path').$destfile;
+                $cachefile = APPPATH."../files/cache/".$destfile;
                 $uri = 'http://www.eve-online.com/bitmaps/icons/'.$destfile;
                 break;
 
             default:
                 return False;
         }
+        
+        print_r($cachefile);
         $this->_mkdirs(dirname($cachefile));
         $this->_download($uri, $cachefile);
 
-        redirect($desturl.'?random='.uniqid());
+        //redirect($desturl.'?random='.uniqid());
     }
 }
 

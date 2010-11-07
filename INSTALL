@@ -1,18 +1,17 @@
 Requirements:
 =============
-    - PHP 5.2.x (Untested with 5.3.x) with Curl, SimpleXML
+    - PHP 5.3.x  with Curl, SimpleXML
     - MySQL 5.x
 
 Installation Guide:
 ===================
 
-    - Download the SQL Dumps and Source Code: http://idisk.beerta.net/public/projects/evetool-latest.tar.gz
-    - Dump the SQL Dumps into your MySQL database.
-    - Drop the Contents into your Webserver (Caution: It has only been tested running in the Root Directory. So VirtualHost it, or give it a different Port)
-    - Modify 'application/config/database.php' and 'application/config/evetool.php' to suit your needs
+    - Download and install the Eve Tyrannis Database and configure application/config/database.php accordingly
+    - Drop the Contents into your Webserver, set the base_url in application/config/config.php
+    - Modify 'application/config/evetool.php' to suit your needs (This will hopefully be obsoleted)
     - Make sure the Cache directory is writeable by the Server
-    - Download the Images Dump from CCP and unzip into 'files/itemdb' (cd files ; wget http://ccp.vo.llnwd.net/o2/data/QuantumRise_1.0.0_imgs_dx9.zip ; unzip QuantumRise_1.0.0_imgs_dx9.zip ; mv dx9 itemdb ; rm *.zip)
-    - Point your 404 Document to the /index.php
+    - Download the Images Dump from CCP and unzip into 'files/itemdb' (cd files/itemdb ; wget http://content.eveonline.com/data/Tyrannis_1.0.4-imgs.7z ; 7z x  Tyrannis_1.0.4-imgs.7z ; rm *.7z)
+    - Make sure your webserver uses the .htaccess (both the 404-handler and rewrite rules)
 
 Extra Info:
 ===========

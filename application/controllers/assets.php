@@ -1,193 +1,117 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
- * Asset Pages
- *
- * Various Functions to access Characters Assets 
- *
- * @author Claus Beerta <claus@beerta.de>
- */
+class Assets extends Controller
+{
+	public $page_title = 'Assets';
+	public $submenu = array('transactions' => 'Transaction List', 'journal' => 'Daily Journal');
 
-class Assets extends MY_Controller {
-
-    /**
-     * Asset Display
-     *
-     * Display a Table with all the characters assets, ordered by Location
-     */
-    public function index()
-    {
-        $data = array();
-        $data['character'] = $this->character;
-
-        $data['cachedUntil'] = AssetList::getAssetList($this->eveapi->getAssetList(), $this->chars[$this->character]['charid']);
-        $data['assets'] = AssetList::getAssetsFromDB($this->chars[$this->character]['charid']);
-        $template['content'] = $this->load->view('assets', $data, True);
-        $this->load->view('maintemplate', $template);
-    }
-    
-    /**
-     * Filter Assets by categoryID
-     *
-     */
-    private function _byCategory($charid, $categoryID = 9, $filter = array(29,31, 237) )
-    {
-        $assets = AssetList::getAssetsFromDB($charid, array('invGroups.categoryID'  => $categoryID));
-
-        $data = array();
-        foreach ($assets as $loc)
-        {  
-            foreach ($loc as $asset)
+	private function _get_daily_walletjournal($wallet)
+	{
+		$data = array();
+        $daily = array();
+        
+        $reftypes = $this->eveapi->get_reftypes();
+        
+        foreach ($wallet as $entry)
+        {
+            $day = api_time_print($entry['date'], 'Y-m-d');
+            if (!isset($daily[$day]))
             {
-                if ( $asset['categoryID'] == $categoryID && !in_array($asset['groupID'], $filter) )
-                {
-                    $data[] = array_merge($asset, Production::getBlueprintInfo($asset['typeID']));
-                }
-                if (isset($asset['contents']))
-                {
-                    foreach ($asset['contents'] as $content)
-                    {
-                        if ( $content['categoryID'] == $categoryID && !in_array($content['groupID'], $filter) )
-                        {
-                            $data[] = array_merge($content, Production::getBlueprintInfo($content['typeID']), array('locationID' => $asset['locationID']));
-                        }
-                    }
-                }
+                $total[$day]['prettydate'] = api_time_print($entry['date'], 'l, j F Y');
+                $total[$day]['expense'] = 0;
+                $total[$day]['income'] = 0;
             }
+            if (!isset($daily[$day][$entry['refTypeID']]))
+            {
+            	
+                $daily[$day][$entry['refTypeID']] = array(
+                    'refTypeName' => $reftypes[$entry['refTypeID']],
+                    );
+            }
+            if (!isset($daily[$day][$entry['refTypeID']]['expense']))
+            {
+                $daily[$day][$entry['refTypeID']]['expense'] = 0;
+                $daily[$day][$entry['refTypeID']]['income'] = 0;
+			}
+
+            if ($entry['amount'] < 0)
+            {
+                $daily[$day][$entry['refTypeID']]['expense'] += $entry['amount'];
+                $total[$day]['expense'] += $entry['amount'];
+            }
+            else
+            {
+                $daily[$day][$entry['refTypeID']]['income'] += $entry['amount'];
+                $total[$day]['income'] += $entry['amount'];
+            }
+			
+			if (!isset($balance[$day]))
+			{
+				/* Wallet journal is chronoligcally ordered, so we just want the topmost daily entry as that is the "last for that day" */
+				$balance[$day] = $entry['balance'];
+			}
         }
-        return ($data);
-    }
-    
-    /**
-     * Displays a Table of Blueprints owned by the selected character
-     */
-    public function blueprints()
-    {
-        $character = $this->character;
-        $data['character'] = $character;
-        $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 9);
-        $data['title']= 'Played Owned Blueprints';
-        
-        $template['content'] = $this->load->view('bycategory', $data, True);
-        $this->load->view('maintemplate', $template);
-    }
 
-    /**
-     * Displays a Table of Ships owned by the selected character
-     */
-    public function ships()
-    {
-        $character = $this->character;
-        $data['character'] = $character;
-        $data['assets'] = $this->_byCategory($this->chars[$character]['charid'], 6);
-        $data['title']= 'Played Owned Ships';
-        
-        $template['content'] = $this->load->view('bycategory', $data, True);
-        $this->load->view('maintemplate', $template);
-    }
-
-    /**
-     * Search for assets
-     *
-     * This Functions searches all the assets on all Characters this login has
-     *
-     * @todo can we sql magic the 2 queries into one?
-     */
-    public function search()
-    {
-        $data = array();
-        $character = $this->character;
-        $data['character'] = $this->character;
+        $data['daily'] = $daily;
+        $data['total'] = $total;
+		$data['balance'] = $balance;
 		
-		if (!is_string($this->input->post('search')))
+		return ($data);
+	}
+
+	
+	public function _remap($method)
+	{
+		$data['page_title'] = $this->page_title;
+		$data['submenu'] = $this->submenu;
+		
+		$data['content'] = $this->$method();
+		$this->load->view('template', $data);
+	}
+	
+	public function index()
+	{
+		return ('blahfasel');
+	}
+
+	public function journal()
+	{
+		$api = $this->eveapi->api;
+		$characters = $this->eveapi->load_characters();
+		
+		$walletjournal = array();
+		
+		foreach ($this->eveapi->characters as $char)
 		{
-			redirect('/character/skilltree');
-			exit;
+			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+			$walletjournal = array_merge($walletjournal, eveapi::from_xml($api->char->WalletJournal(), 'entries'));
 		}
-		else
+		masort($walletjournal, array('unixdate'));
+		return ($this->load->view('walletdailyjournal', $this->_get_daily_walletjournal($walletjournal), True));
+	}
+	
+	public function transactions($offset = 0, $per_page = 20)
+	{
+		$api = $this->eveapi->api;
+		$characters = $this->eveapi->load_characters();
+		
+		$transactionlist = array();
+		
+		foreach ($this->eveapi->characters as $char)
 		{
-			$query = $this->input->post('search');
+			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+			$transactionlist = array_merge($transactionlist, eveapi::from_xml($api->char->WalletTransactions(), 'transactions', array('char' => $char)));
 		}
 		
-		$char_ids = array(-1);
-		foreach ($this->chars as $char)
-		{
-			$char_ids[] = $char['charid'];
-		}
-		
-		$assets = $this->db->query('	
-			SELECT 
-				assets.characterID,
-				assets.itemID,
-				invTypes.typeID,
-				locationID,
-				typeName,
-				assets.quantity,
-				invTypes.volume,
-				invGroups.categoryID,
-				icon
-			FROM 
-				assets, 
-				invTypes,
-				invGroups,
-				eveGraphics,
-				invCategories
-			WHERE 
-				invTypes.graphicID=eveGraphics.graphicID AND
-				invTypes.groupID=invGroups.groupID AND
-				assets.typeID=invTypes.typeID AND
-				invGroups.categoryID=invCategories.categoryID AND
-				assets.characterID IN ('.implode(',', $char_ids).') AND
-				(
-				invTypes.typeName LIKE ? OR
-				invGroups.groupName LIKE ? OR
-				invCategories.categoryName = ?
-				)
-			ORDER BY 
-			    assets.characterID, 
-			    invGroups.categoryID, 
-			    invGroups.groupID;',  array("%{$query}%","%{$query}%", $query));
-		$contents = $this->db->query('
-			SELECT 
-				contents.characterID,
-				contents.itemID,
-				invTypes.typeID,
-				assets.typeID AS containedIn, 
-				typeName, 
-				assets.locationID,
-				contents.quantity,
-				invTypes.volume,
-				invGroups.categoryID,
-				icon
-			FROM 
-				assets, 
-				contents, 
-				invTypes,
-				invGroups,
-				invCategories,
-				eveGraphics
-			WHERE 
-				invTypes.graphicID=eveGraphics.graphicID AND
-				invTypes.groupID=invGroups.groupID AND
-				assets.itemID=contents.locationItemID AND 
-				invGroups.categoryID=invCategories.categoryID AND
-				contents.typeID=invTypes.typeID AND 
-				contents.characterID IN ('.implode(',', $char_ids).') AND
-				(
-				invTypes.typeName LIKE ? OR
-				invGroups.groupName LIKE ? OR
-				invCategories.categoryName = ?
-				)
-			ORDER BY 
-			    assets.characterID, 
-			    invGroups.categoryID, 
-			    invGroups.groupID;',  array("%{$query}%","%{$query}%", $query));
+		masort($transactionlist, array('unixtransactionDateTime'));
+		$total = count($transactionlist);
+		$data['translist'] = array_slice($transactionlist, $offset, $per_page, True);
+		$this->pagination->initialize(array('base_url' => site_url("/assets/transactions"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5));
 
-		$data['found'] = array_merge($assets->result_array(), $contents->result_array());
-		
-        $template['content'] = $this->load->view('search', $data, True);
-        $this->load->view('maintemplate', $template);
-    }
+		return ($this->load->view('transactionlist', $data, True));
+	}
 
 }
+
+
 ?>

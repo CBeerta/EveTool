@@ -1,65 +1,106 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Industry extends MY_Controller
+class Industry extends Controller
 {
-    /**
-     * industryjobs
-     *
-     * Display a table with Industry Jobs, active and historic
-     *
-     * @param   string
-     */
-    public function jobs($offset = 0, $per_page = 15)
-    {
-        $data['character'] = $this->character;
-        if ($offset === $this->character || $per_page === $this->character)
-        {
-            // @todo we should really get a proper solution for this
-            redirect(site_url("/industry/jobs"));
-        }
+	public $page_title = 'Industry';
+	public $submenu = array('jobs' => 'Industry Jobs');
 
-        $char_jobs = MY_IndustryJobs::getIndustryJobs($this->eveapi->getIndustryJobs());
-        if ($this->has_corpapi_access && getUserConfig($this->Auth['user_id'], 'pull_corp'))
-        {
-            $corp_jobs = MY_IndustryJobs::getIndustryJobs($this->eveapi->getIndustryJobs(True));
-            $data['corpmates'] = $this->eveapi->corp_members;
-        }
+    static function statusid_to_string($status)
+    {
+            $mapping = array(
+                            0 => 'Failed',
+                            1 => 'Delivered',
+                            2 => 'Aborted',
+                            3 => 'GM Aborted',
+                            4 => 'Inflight Unarchored',
+                            5 => 'Destroyed');
+            return ($mapping[$status]);
+    }
+    
+    static function activityid_to_string($activityID)
+    {
+            /*
+            $mapping = array(
+                            0 => 'None',
+                            1 => 'Manufacturing',
+                            2 => 'Research Technology',
+                            3 => 'Research Time Production',
+                            4 => 'Research Material Production',
+                            5 => 'Copying',
+                            6 => 'Dublicating',
+                            7 => 'Reverse Engineering',
+                            8 => 'Inventing');
+             */
+            $mapping = array(
+                            0 => 'None',
+                            1 => 'Prod',
+                            2 => 'Tech',
+                            3 => 'PE',
+                            4 => 'ME',
+                            5 => 'Copy',
+                            6 => 'Dub',
+                            7 => 'Rev',
+                            8 => 'Inv');
+            return ($mapping[$activityID]);
+    }
+
+    public function index($offset = 0, $per_page = 15)
+	{
+		$data['page_title'] = $this->page_title;
+		$data['submenu'] = $this->submenu;
+		
         $index = 0;
         $data['data'] = array();
-        
-        $jobs = empty($char_jobs) ? array() : $char_jobs;
-        if (!empty($corp_jobs))
-        {
-            $jobs = array_merge($char_jobs, $corp_jobs);
-        }
-        foreach ($jobs as $job)
-        {
-            $endtime = strtotime($job['endProductionTime'].' +0000');
-            $data['data'][$index] = (array) get_inv_type($job['outputTypeID']);
-            $data['data'][$index] += array(
-                    'status' => MY_IndustryJobs::statusIDToString($job['completedStatus']),
-                    'activity' => MY_IndustryJobs::activityIDToString($job['activityID']),
-                    'amount' => $job['runs'],
-                    'outputLocationID' => $job['outputLocationID'],
-                    'ends' => api_time_to_complete($job['endProductionTime']),
-                    'installerID' => $job['installerID'],
-                    'location' => $job['outputLocationID']);
+		$api = $this->eveapi->api;
+		$characters = $this->eveapi->load_characters();
 
-            if ($job['activityID'] == 1 && $job['completedStatus'] == 0)
-            {
-                // Special Case, Means Job is still running
-                $data['data'][$index]['status'] = '<div style="color: green;">Running</div>';
-            }
-            $index++;
-        }
-        ksort($data['data']);
+		foreach ($this->eveapi->characters as $char)
+		{
+			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+			$jobs = $api->char->IndustryJobs();
+			
+			foreach ($jobs->result->jobs as $_job)
+			{
+				$job = (object) $_job->attributes();
+				
+	            $endtime = strtotime($job['endProductionTime'].' +0000');
+	            
+	            $data['data'][$index] = array(
+	            		'outputTypeID' => (int) $job['outputTypeID'],
+	                    'status' => $this::statusid_to_string((int) $job['completedStatus']),
+	                    'activity' => $this::activityid_to_string((int) $job['activityID']),
+	                    'amount' => (int) $job['runs'],
+	                    'outputLocationID' => (int) $job['outputLocationID'],
+	                    'ends' => api_time_to_complete((string) $job['endProductionTime']),
+	                    'endtime' => $endtime,
+	                    'installerID' => (int) $job['installerID'],
+	                    'location' => (int) $job['outputLocationID']);
+	
+	            if ($job['activityID'] == 1 && $job['completedStatus'] == 0)
+	            {
+	                // Special Case, Means Job is still running
+	                $data['data'][$index]['status'] = '<div style="color: green;">Running</div>';
+	            }
+	            $index++;				
+			}
+		}
+		
+        masort($data['data'], array('endtime'));
         
         $data['data'] = array_slice($data['data'], $offset, $per_page, True);
-        $this->pagination->initialize(array('base_url' => site_url("/industry/jobs"), 'total_rows' => $index, 'per_page' => $per_page, 'num_links' => 5));
+        $this->pagination->initialize(array('base_url' => site_url("/industry/index"), 'total_rows' => $index, 'per_page' => $per_page, 'num_links' => 5));
         
-        $template['content'] = $this->load->view('jobs', $data, True);
-        $this->load->view('maintemplate', $template);
-    }
+        foreach ($data['data'] as $k => $v)
+        {
+        	/* Add the invType stuff after we truncate the info for pagination, to reduce database queries */
+        	$data['data'][$k] += (array) get_inv_type($v['outputTypeID']);
+        }
+		
+		$data['content'] = $this->load->view('industry_jobs', $data, true);
+		$this->load->view('template', $data);
+	}
+	
 }
+
 
 ?>

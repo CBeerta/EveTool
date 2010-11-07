@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
 | -------------------------------------------------------------------
 | AUTO-LOADER
@@ -39,7 +39,7 @@
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('database','session','parser','validation','users');
+$autoload['libraries'] = array('eveapi', 'session', 'pagination', 'database', 'cache');
 
 
 /*
@@ -51,7 +51,7 @@ $autoload['libraries'] = array('database','session','parser','validation','users
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('form','url');
+$autoload['helper'] = array('url', 'eve', 'random_functions', 'inventory', 'igb');
 
 
 /*
@@ -63,7 +63,7 @@ $autoload['helper'] = array('form','url');
 |	$autoload['plugin'] = array('captcha', 'js_calendar');
 */
 
-$autoload['plugin'] = array('captcha');
+$autoload['plugin'] = array();
 
 
 /*
@@ -79,7 +79,7 @@ $autoload['plugin'] = array('captcha');
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('evetool');
 
 
 /*
@@ -111,15 +111,6 @@ $autoload['language'] = array();
 $autoload['model'] = array();
 
 
-/*
-| -------------------------------------------------------------------
-|  Auto-load Core Libraries
-| -------------------------------------------------------------------
-|
-| DEPRECATED:  Use $autoload['libraries'] above instead.
-|
-*/
-// $autoload['core'] = array();
 
-
-?>
+/* End of file autoload.php */
+/* Location: ./system/application/config/autoload.php */

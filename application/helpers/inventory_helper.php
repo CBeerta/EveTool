@@ -89,18 +89,16 @@ function get_inv_type($type)
             invTypes.volume,
             invTypes.mass,
             invCategories.categoryName,
-            invGroups.categoryID,
-            eveGraphics.icon,
-            (SELECT IF(COUNT(valueInt)>0, valueInt, 1) FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel
+		    (SELECT iconFile FROM eveIcons WHERE iconID=invTypes.iconID ) AS iconFile,
+		    invGroups.categoryID/*,
+			(SELECT IF(COUNT(valueInt)>0, valueInt, 1) FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel*/
         FROM 
             invTypes,
             invGroups,
-            eveGraphics,
-            invCategories 
+            invCategories
         WHERE 
             invTypes.{$type_select} = ? AND 
             invTypes.groupID=invGroups.groupID AND 
-            invTypes.graphicID=eveGraphics.graphicID AND
             invCategories.categoryID=invGroups.categoryID;"
         , $type);
     $row = $q->row();

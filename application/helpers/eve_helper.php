@@ -152,12 +152,19 @@ function locationid_to_name($locationID)
     }
     
     $CI =& get_instance();
-
-    if (!empty($CI->eveapi->stationlist[$locationID]))
+    
+    $api = $CI->eveapi->api;
+    $_stationlist = $api->eve->ConquerableStationList();
+    
+	$stationlist = array();    
+    foreach ($_stationlist->result->outposts as $station)
     {
-        return ($CI->eveapi->stationlist[$locationID]['stationName']);
+    	if ((int) $station->stationID == $locationID)
+	    {
+	    	return ((string) $station->stationName);
+	    }
     }
-
+    
     $CI->load->database();
     $q = $CI->db->query('
 		SELECT 
@@ -270,9 +277,9 @@ function get_icon_url($type, $size = 64, $background = 'black')
         //blueprint
         return ("/files/itemdb/blueprints/blueprints/64_64/{$row->typeID}.png");
     }
-    else if (isset($row->icon) && !empty($row->icon))
+    else if (isset($row->iconFile) && !empty($row->iconFile))
     {
-        return ("/files/itemdb/icons/icons_items_png/{$size}_{$size}/icon{$row->icon}.png");
+        return ("/files/itemdb/icons/{$size}_{$size}/icon{$row->iconFile}.png");
     }
 	else if (!empty($row->stationTypeID))
 	{
@@ -281,7 +288,7 @@ function get_icon_url($type, $size = 64, $background = 'black')
 	}
     else
     {
-        return ("/files/itemdb/icons/icons_items_png/{$size}_{$size}/icon07_15.png");
+        return ("/files/itemdb/icons/{$size}_{$size}/icon07_15.png");
     }
 }
 

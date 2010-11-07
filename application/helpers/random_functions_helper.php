@@ -13,7 +13,7 @@ function masort(&$data, $sortby)
         $sortby = join(',',$sortby);	
     }	
     uasort($data,create_function('$a,$b','		
-        $skeys = split(\',\',\''.$sortby.'\');		
+        $skeys = explode(\',\',\''.$sortby.'\');		
         foreach($skeys as $key)		
         {			
             if (is_numeric($a[$key]) && is_numeric($b[$key]))			
