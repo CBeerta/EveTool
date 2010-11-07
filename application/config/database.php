@@ -37,11 +37,11 @@
 $active_group = "default";
 $active_record = TRUE;
 
-$db['default']['hostname'] = "aello.local";
-$db['default']['username'] = $_SERVER['DBUSER'];
-$db['default']['password'] = $_SERVER['DBPASS'];
-$db['default']['database'] = "eve";
-$db['default']['dbdriver'] = "mysql";
+$db['default']['hostname'] = "";
+$db['default']['username'] = "";
+$db['default']['password'] = "";
+$db['default']['database'] = APPPATH.'../files/tyr104-sqlite3-v1.db';
+$db['default']['dbdriver'] = "sqlite3";
 $db['default']['dbprefix'] = "";
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;

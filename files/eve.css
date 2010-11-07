@@ -66,6 +66,16 @@ td {
 	/*border: 1px solid #eee;*/
 }
 
+td.light {
+    font-weight: bold;
+    color: #555;
+    padding-top: 5px;
+    padding-left: 10px;
+    text-align: right;
+    background: #bcbcbc;
+}
+
+
 img {
 	border: 0px;
 }
@@ -82,7 +92,7 @@ a:hover {
 
 #header {
 	overflow: hidden;
-	width: 1000px;
+	width: 90%;
 	height: 50px;
 	margin: 0px auto 20px auto;
 	background: url(images/img01.jpg) no-repeat right top;
@@ -216,7 +226,7 @@ a:hover {
 /* Page */
 
 #page {
-	width: 1000px;
+	width: 90%;
 	margin: 0 auto;
 	padding: 40px 0px 0px 0px;
 	border-top: 1px solid #BBBBBB;
@@ -228,7 +238,7 @@ a:hover {
 
 #content {
 	float: left;
-	width: 660px;
+	width: 80%;
 	padding: 0px 0px 0px 0px;
 	background: #FFFFFF;
 }
@@ -267,7 +277,7 @@ a:hover {
 
 #sidebar {
 	float: right;
-	width: 300px;
+	width: 20%;
 	margin: 0px;
 	padding: 0px 0px 0px 0px;
 }
@@ -290,7 +300,7 @@ a:hover {
 
 #sidebar li li {
 	line-height: 35px;
-	border-bottom: 1px solid #BBBBBB;
+	/*border-bottom: 1px solid #BBBBBB;*/
 	border-left: none;
 	text-align: left;
 }
@@ -333,35 +343,14 @@ a:hover {
 	text-decoration: underline;
 }
 
-/* Calendar */
-
-#calendar {
-}
-
-#calendar_wrap {
-	padding: 20px;
-}
-
-#calendar table {
-	width: 100%;
-}
-
-#calendar tbody td {
-	text-align: center;
-}
-
-#calendar #next {
-	text-align: right;
-}
-
 /* Footer */
 
 #footer {
-	width: 1000px;
+	width: 90%;
 	height: 50px;
 	margin: 0 auto;
 	padding: 0px 0 15px 0;
-	border-top: 1px solid #BBBBBB;
+	/*border-top: 1px solid #BBBBBB;*/
 	font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -413,4 +402,12 @@ a#igb_link {
          cursor: pointer;
          color: #F94900;
 }
+
+.income {
+    color: #8DaD84;
+}
+
+.expense {
+    color: #AD0124;
+}    
 

@@ -64,15 +64,14 @@ class Industry extends Controller
 				$job = (object) $_job->attributes();
 				
 	            $endtime = strtotime($job['endProductionTime'].' +0000');
-	            //$data['data'][$index] = array('typeID' => $job['outputTypeID']);
-	            //$data['data'][$index]['typeName'] = 'buttsex';
-	            $data['data'][$index] = (array) get_inv_type((int)$job['outputTypeID']);
-	            $data['data'][$index] += array(
-	                    'status' => $this::statusid_to_string((int)$job['completedStatus']),
-	                    'activity' => $this::activityid_to_string((int)$job['activityID']),
+	            
+	            $data['data'][$index] = array(
+	            		'outputTypeID' => (int) $job['outputTypeID'],
+	                    'status' => $this::statusid_to_string((int) $job['completedStatus']),
+	                    'activity' => $this::activityid_to_string((int) $job['activityID']),
 	                    'amount' => (int) $job['runs'],
 	                    'outputLocationID' => (int) $job['outputLocationID'],
-	                    'ends' => api_time_to_complete((string)$job['endProductionTime']),
+	                    'ends' => api_time_to_complete((string) $job['endProductionTime']),
 	                    'endtime' => $endtime,
 	                    'installerID' => (int) $job['installerID'],
 	                    'location' => (int) $job['outputLocationID']);
@@ -90,6 +89,12 @@ class Industry extends Controller
         
         $data['data'] = array_slice($data['data'], $offset, $per_page, True);
         $this->pagination->initialize(array('base_url' => site_url("/industry/index"), 'total_rows' => $index, 'per_page' => $per_page, 'num_links' => 5));
+        
+        foreach ($data['data'] as $k => $v)
+        {
+        	/* Add the invType stuff after we truncate the info for pagination, to reduce database queries */
+        	$data['data'][$k] += (array) get_inv_type($v['outputTypeID']);
+        }
 		
 		$data['content'] = $this->load->view('industry_jobs', $data, true);
 		$this->load->view('template', $data);

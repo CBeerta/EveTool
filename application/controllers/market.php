@@ -40,23 +40,24 @@ class Market extends Controller
 	                continue;
 	            }
 				
-	            $issued = strtotime((string)$order['issued']);
+	            $issued = strtotime((string) $order['issued']);
 	            $issued += (int) $order['duration'] * 24 * 60 * 60;
 	            
-	            $row = get_inv_type((int)$order['typeID']);
-	            //$row = (object)array('typeID' => $order['typeID']);
-	            //$row->typeName = 'buttsex';
-	            $row->price = (float) $order['price'];
-	            $row->remaining = $order['volRemaining'];
-	            $row->total = $order['volEntered'];
-	            $row->charID = $order['charID'];
-	            $row->ends = api_time_to_complete($issued);
-	            //$row->location = locationid_to_name($order['stationID']);
-	            $row->location = $order['stationID'];
-	            $row->locationid = $order['stationID'];
+	            $row = (array) get_inv_type((int)$order['typeID']);
+	            
+	            $row += array(
+	            	'price' => (float) $order['price'],
+	            	'remaining' => $order['volRemaining'],
+	            	'total' => $order['volEntered'],
+	            	'charID' => $order['charID'],
+	            	'ends' => api_time_to_complete($issued),
+	            	'location' => locationid_to_name($order['stationID']),
+	            	'locationid' => $order['stationID'],
+	            	'issued' => $issued,
+	            	);
 	            
 	            $type = ($order['bid'] == 1) ? 'buy' : 'sell';
-	            $typeidlist[] = $row->typeID;
+	            $typeidlist[] = $row['typeID'];
 	
 	            $data[$type][] = $row;
 	            if ( $issued > gmmktime() )
@@ -67,11 +68,12 @@ class Market extends Controller
 	                $data['totalPrice'][$type] += $order['volEntered']*$order['price'];
 	            }
 			}
+			masort($data['buy'], array('issued'));
+			masort($data['sell'], array('issued'));
 		}
 		return ($this->load->view('market', $data, true));
 	}
-	
-	
+
 }
 
 
