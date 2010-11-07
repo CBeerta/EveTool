@@ -98,6 +98,24 @@ class Eveapi
 	
 		return ($reftypes);
 	}
+	
+	public function get_skilltree()
+	{
+		print_r($this->api->eve->SkillTree());
+		die();
+		$_skilltree = eveapi::from_xml($this->api->eve->SkillTree(), 'skills');
+		print_r($_skilltree);
+		
+		die();
+		$skilltree = array();
+		
+		foreach ($_skilltree as $skill)
+		{
+			//$skilltree[$skill['refTypeID']] = (string) $reftype['refTypeName'];
+		}
+	
+		return ($skilltree);
+	}
 }
 
 
