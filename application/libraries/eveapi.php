@@ -101,20 +101,68 @@ class Eveapi
 	
 	public function get_skilltree()
 	{
-		print_r($this->api->eve->SkillTree());
-		die();
-		$_skilltree = eveapi::from_xml($this->api->eve->SkillTree(), 'skills');
-		print_r($_skilltree);
-		
-		die();
+        $CI =& get_instance();
+
+		$_skilltree = $this->api->eve->SkillTree();
 		$skilltree = array();
-		
-		foreach ($_skilltree as $skill)
+
+		if ( ($this->skilltree = $CI->cache->get('evetool_skilltree')) === False )
 		{
-			//$skilltree[$skill['refTypeID']] = (string) $reftype['refTypeName'];
-		}
+		    foreach ($_skilltree->result->skillGroups as $group)
+		    {
+		        foreach ($group->skills as $skill)
+		        {
+		            $skilltree[(string) $skill->typeID]['groupName'] = (string) $group->groupName;
+				    foreach (array('typeName', 'description', 'groupID', 'rank') as $field)
+				    {
+					    $skilltree[(string) $skill->typeID][$field] = (string) $skill->$field;
+				    }
+		        }
+		    }
+        }
+		$CI->cache->set('evetool_skilltree', $this->skilltree);
 	
 		return ($skilltree);
+	}
+	
+	public static function charsheet_extra_info($charsheet)
+	{
+        $data['skillsTotal'] = $data['skillPointsTotal'] = 0;
+        $data['skillsAtLevel'] = array_fill(0, 6, 0);
+        
+		$skillTree = array();        
+		
+        //print '<pre>';
+		foreach ($charsheet->result->skills as $_skill)
+		{
+			$skill = $_skill->attributes();
+			//print_r($skill);
+            $data['skillPointsTotal'] += (int) $skill['skillpoints'];
+			/*            
+            $s = $this->eveapi->skilltree[$skill['typeID']];
+            if (!isset($skillTree[$s['groupID']]))
+            {
+                $skillTree[$s['groupID']] = array('groupSP' => 0, 'skillCount' => 0);
+            }
+
+            $skillTree[$s['groupID']]['skills'][$skill['typeID']] = array(
+                'typeID' => $skill['typeID'],
+                'skillpoints' => $skill['skillpoints'],
+                'rank' => $s['rank'],
+                'typeName' => $s['typeName'],
+                'description' => $s['description'],
+                'level' => $skill['level']);
+            $skillTree[$s['groupID']]['groupSP'] += $skill['skillpoints'];
+            $skillTree[$s['groupID']]['skillCount'] ++;
+            */
+            $data['skillsTotal'] ++;
+          	$data['skillsAtLevel'][(int) $skill['level']] ++;
+		}
+		
+		//print_r($data);
+        
+        //die();
+		return ($data);
 	}
 }
 

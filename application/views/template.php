@@ -34,7 +34,7 @@ Released   : 20100729
 			<div id="menu">
 				<ul>
 					<?php foreach (array('Overview', 'Characters', 'Market', 'Industry', 'Assets') as $v):?>
-					<li <?php if ($page_title == $v): ?>class="current_page_item"><?php endif;?><a href="<?php echo site_url(strtolower($v));?>"><?php echo $v;?><Home></a></li>
+					<li<?php if ($page_title == $v): ?> class="current_page_item"<?php endif;?>><a href="<?php echo site_url(strtolower($v));?>"><?php echo $v;?></a></li>
 					<?php endforeach;?>
 				</ul>
 			</div>

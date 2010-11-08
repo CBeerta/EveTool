@@ -15,7 +15,7 @@ class Characters extends Controller
 	public function _remap($method)
 	{
 		$data['page_title'] = $this->page_title;
-		$data['submenu'] = $this->submenu;
+		//$data['submenu'] = $this->submenu;
 		
 		$data['content'] = $this->$method();
 		$this->load->view('template', $data);
@@ -27,7 +27,9 @@ class Characters extends Controller
 		$characters = $this->eveapi->load_characters();
 		
 		$charinfo = array();
-		//$this->eveapi->get_skilltree();
+		$skilltree = $this->eveapi->get_skilltree();
+		
+		$global['totalisk'] = $global['totalsp'] = 0;
 		
 		foreach ($this->eveapi->characters as $char)
 		{
@@ -37,22 +39,20 @@ class Characters extends Controller
 			{
 				$charinfo[$char->name] = (array) $char;
 			}
-			
+
 			$_training = $api->char->SkillInTraining();
-			
-			//print_r($_training->result);
 			if ((string) $_training->result->skillInTraining > 0)
 			{
 				foreach (array('trainingTypeID', 'trainingToLevel', 'trainingStartTime', 'trainingEndTime' ) as $n)
 				{
 					$charinfo[$char->name][$n] = (string) $_training->result->$n;
 				}
+				$charinfo[$char->name]['trainingTypeName'] = $skilltree[(string) $_training->result->trainingTypeID];
 			}
-			
+
 			$_charsheet = $api->char->CharacterSheet();
-			
-			//print_r($_charsheet->result);
-			foreach (array('balance', 'corp', 'DoB', 'corporationName', 'allianceName', 'gender', '' ) as $n)
+			$charinfo[$char->name]['extra_info'] = eveapi::charsheet_extra_info($_charsheet);
+			foreach (array('balance', 'corp', 'DoB', 'corporationName', 'allianceName', 'gender' ) as $n)
 			{
 				$charinfo[$char->name][$n] = (string) $_charsheet->result->$n;
 			}
@@ -60,28 +60,21 @@ class Characters extends Controller
 			if ($charinfo[$char->name]['gender'] == 'Male')
 			{
 				$charinfo[$char->name]['sex'] = 'He';
+				$charinfo[$char->name]['sex2'] = 'His';
 			}
 			else
 			{
 				$charinfo[$char->name]['sex'] = 'She';
+				$charinfo[$char->name]['sex2'] = 'Her';
 			}
+			
+			$global['totalisk'] += $charinfo[$char->name]['balance'];
+			$global['totalsp'] += $charinfo[$char->name]['extra_info']['skillPointsTotal'];
 		}		
 		ksort($charinfo);
-		
-		return ($this->load->view('charoverview', array('data' => $charinfo), True));
+		return ($this->load->view('charoverview', array('data' => $charinfo, 'global' => $global), True));
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
 
 ?>

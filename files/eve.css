@@ -60,6 +60,7 @@ th {
 	font-size: 1.2em;
 	background-color: #f1f1f1;
 }
+
 td {
 	padding: 2px;
 	background-color: #fafafa;
@@ -79,6 +80,7 @@ td.light {
 img {
 	border: 0px;
 }
+
 a:hover {
 	text-decoration: none;
 }
@@ -112,7 +114,7 @@ a:hover {
 }
 
 #logo h1 {
-	letter-spacing: -1px;
+	letter-spacing: -3px;
 	text-transform: lowercase;
 	font-size: 2.8em;
 	color: #0C0C0C;
