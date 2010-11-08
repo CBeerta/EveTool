@@ -48,6 +48,11 @@ class Characters extends Controller
 					$charinfo[$char->name][$n] = (string) $_training->result->$n;
 				}
 				$charinfo[$char->name]['trainingTypeName'] = $skilltree[(string) $_training->result->trainingTypeID];
+				$charinfo[$char->name]['isTraning'] = 1;
+			}
+			else
+			{
+				$charinfo[$char->name]['isTraning'] = -1;
 			}
 
 			$_charsheet = $api->char->CharacterSheet();
@@ -71,7 +76,7 @@ class Characters extends Controller
 			$global['totalisk'] += $charinfo[$char->name]['balance'];
 			$global['totalsp'] += $charinfo[$char->name]['extra_info']['skillPointsTotal'];
 		}		
-		ksort($charinfo);
+		masort($charinfo, array('isTraning', 'balance'));
 		return ($this->load->view('charoverview', array('data' => $charinfo, 'global' => $global), True));
 	}
 
