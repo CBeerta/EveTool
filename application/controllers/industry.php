@@ -47,7 +47,7 @@ class Industry extends Controller
     public function index($offset = 0, $per_page = 15)
 	{
 		$data['page_title'] = $this->page_title;
-		$data['submenu'] = $this->submenu;
+		//$data['submenu'] = $this->submenu;
 		
         $index = 0;
         $data['data'] = array();
@@ -67,8 +67,8 @@ class Industry extends Controller
 	            
 	            $data['data'][$index] = array(
 	            		'outputTypeID' => (int) $job['outputTypeID'],
-	                    'status' => $this::statusid_to_string((int) $job['completedStatus']),
-	                    'activity' => $this::activityid_to_string((int) $job['activityID']),
+	                    'status' => Industry::statusid_to_string((int) $job['completedStatus']),
+	                    'activity' => Industry::activityid_to_string((int) $job['activityID']),
 	                    'amount' => (int) $job['runs'],
 	                    'outputLocationID' => (int) $job['outputLocationID'],
 	                    'ends' => api_time_to_complete((string) $job['endProductionTime']),

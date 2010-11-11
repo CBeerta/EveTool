@@ -3,7 +3,7 @@
 class Assets extends Controller
 {
 	public $page_title = 'Assets';
-	public $submenu = array('transactions' => 'Transaction List', 'journal' => 'Daily Journal');
+	public $submenu = array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal'));
 
 	private function _get_daily_walletjournal($wallet)
 	{
@@ -71,7 +71,7 @@ class Assets extends Controller
 	
 	public function index()
 	{
-		return ('<h2>Here be the the Assets</h2>');
+		return;
 	}
 
 	public function journal()

@@ -3,7 +3,7 @@
 class Overview extends Controller
 {
 	public $page_title = 'Overview';
-	public $submenu = array('evemail' => 'EveMail');
+	public $submenu = array('Sections' => array('evemail' => 'EveMail'));
 	
 	public function _remap($method)
 	{

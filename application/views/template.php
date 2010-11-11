@@ -51,15 +51,17 @@ Released   : 20100729
 			
 			<?php if (!empty($submenu)):?>
 			<ul>
+			<?php foreach ($submenu as $title => $options):?>
 				<li>
-					<h2>Submenu</h2>
+					<h2><?php echo $title;?></h2>
 					<ul>
-						<?php foreach ($submenu as $k => $v):?>
+						<?php foreach ($options as $k => $v):?>
 						<li><a href="<?php echo site_url(strtolower("{$page_title}/{$k}"));?>"><?php echo $v;?></a></li>
 						<?php endforeach;?>
 					</ul>
 				</li>	
-			</ul>			
+			<?php endforeach; ?>			
+			</ul>
 			<?php endif;?>
 		</div>
 		<!-- end #sidebar -->

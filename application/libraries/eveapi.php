@@ -87,27 +87,34 @@ class Eveapi
 	
 	public function get_reftypes()
 	{
-		$_reftypes = eveapi::from_xml($this->api->eve->RefTypes(), 'refTypes');
-		
-		$reftypes = array();
-		
-		foreach ($_reftypes as $reftype)
+        $CI =& get_instance();
+        
+		if ( ($reftypes = $CI->cache->get('evetool_reftypes')) === False )
 		{
-			$reftypes[$reftype['refTypeID']] = $reftype['refTypeName'];
-		}
-	
+		    $_reftypes = eveapi::from_xml($this->api->eve->RefTypes(), 'refTypes');
+		
+		    $reftypes = array();
+		
+		    foreach ($_reftypes as $reftype)
+		    {
+			    $reftypes[$reftype['refTypeID']] = $reftype['refTypeName'];
+		    }
+        }
+        
+		$CI->cache->set('evetool_reftypes', $reftypes);
+		
 		return ($reftypes);
 	}
 	
 	public function get_skilltree()
 	{
         $CI =& get_instance();
-
-		$_skilltree = $this->api->eve->SkillTree();
-		$skilltree = array();
-
-		if ( ($this->skilltree = $CI->cache->get('evetool_skilltree')) === False )
+        
+		if ( ($skilltree = $CI->cache->get('evetool_skilltree')) === False )
 		{
+		    $_skilltree = $this->api->eve->SkillTree();
+		    $skilltree = array();
+		    
 		    foreach ($_skilltree->result->skillGroups as $group)
 		    {
 		        foreach ($group->skills as $skill)
@@ -120,7 +127,7 @@ class Eveapi
 		        }
 		    }
         }
-		$CI->cache->set('evetool_skilltree', $this->skilltree);
+        $CI->cache->set('evetool_skilltree', $skilltree);
 	
 		return ($skilltree);
 	}

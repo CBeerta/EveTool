@@ -9,7 +9,7 @@ class Characters extends Controller
 	{
 		parent::Controller();
 		
-		$this->submenu = $this->eveapi->load_characters();
+		$this->submenu = array('Skillsheets' => $this->eveapi->load_characters());
 	}
 	
 	public function _remap($method)

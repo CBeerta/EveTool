@@ -13,7 +13,7 @@
 
 <?php foreach ($data as $i):?>
 			<div class="post">
-				<h2 class="title"><a href="#"><?php echo $i['name']; ?></a></h2>
+				<h2 class="title"><a href="<?php echo site_url('skillsheet/'.$i['name']);?>"><?php echo $i['name']; ?></a></h2>
 				<div class="entry">
 					<p>
 					<!-- there is WAY to much php code right here. Not pretty -->
