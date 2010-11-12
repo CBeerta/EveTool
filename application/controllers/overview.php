@@ -64,7 +64,6 @@ class Overview extends Controller
 					'body' => $v->bodies[$messageid],
 				);
 			}
-					
 		}
 		
 		return ($output);

@@ -12,6 +12,8 @@ class Eveapi
 	private $api_credentials = Null;
 	
 	public $characters = array();
+
+    public $skip_characters = array();
 	
 	public function __construct()
 	{
@@ -22,6 +24,11 @@ class Eveapi
 			die("Unable to read config/characters.ini");
 		}
 		$this->api_credentials = parse_ini_file(APPPATH.'config/characters.ini');
+
+        if (isset($this->api_credentials['skip']))
+        {
+            $this->skip_characters = explode(':', $this->api_credentials['skip']);
+        }
 	}
 	
 	public static function from_xml($xml, $type, $to_merge = array())
@@ -71,6 +78,11 @@ class Eveapi
 			
 			foreach ($account->result->characters as $character)
 			{
+                if (in_array((string) $character->name, $this->skip_characters))
+                {
+                    continue;
+                }
+
 				$this->characters[(string) $character->name] = (object) array(
 					'name' => (string) $character->name,
 					'apiUser' => (int) $v,
