@@ -16,7 +16,7 @@
 <tr>
     <td>
         <a id="fb_character" href="<?php echo site_url('/fancybox/character/'.$row['charID']); ?>">       
-            <img src="<?php echo site_url("files/cache/char/{$row['charID']}/64/char.jpg"); ?>" width="32" height="32">
+            <?php echo get_character_portrait($row['owner'], 32, 'entry'); ?>
         </a>
     </td>
 	<td style="text-align: left;">
@@ -48,4 +48,3 @@
 </tr>
 </table>
 <?php endforeach; ?>
-<div style="clear: both;">&nbsp;</div>

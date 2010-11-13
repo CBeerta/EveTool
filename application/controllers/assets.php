@@ -59,23 +59,49 @@ class Assets extends Controller
 		return ($data);
 	}
 
+	public function ajax_contents($itemID)
+	{
+		$characters = $this->eveapi->load_characters();
+	    
+        $assets = $this->eveapi->load_assets($characters, True);
+
+        $contents = array();
+        $index = 0;
+        foreach ($assets[$itemID]['contents'] as $v)
+        {
+            ++$index;
+            $contents[$index] = $assets[$v];
+        }
+        masort($contents, array('flag', 'categoryName'));
+
+        $contents = array_merge(array($assets[$itemID]), $contents);
+
+        $this->load->view('snippets/assets_content', array('contents' => $contents));
+	}
+
 	
-	public function _remap($method)
+	public function index($offset = 0, $per_page = 20)
 	{
 		$data['page_title'] = $this->page_title;
 		$data['submenu'] = $this->submenu;
 		
-		$data['content'] = $this->$method();
+		$characters = $this->eveapi->load_characters();
+
+        $assets = $this->eveapi->load_assets($characters, False);
+
+		$total = count($assets);
+		$assets = array_slice($assets, $offset, $per_page, True);
+		$this->pagination->initialize(array('base_url' => site_url("/assets/index"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5));
+        
+        $data['content'] = $this->load->view('assets', array('assets' => $assets), True);
 		$this->load->view('template', $data);
-	}
-	
-	public function index()
-	{
-		return;
 	}
 
 	public function journal()
 	{
+		$data['page_title'] = $this->page_title;
+		$data['submenu'] = $this->submenu;
+		
 		$api = $this->eveapi->api;
 		$characters = $this->eveapi->load_characters();
 		
@@ -87,11 +113,16 @@ class Assets extends Controller
 			$walletjournal = array_merge($walletjournal, eveapi::from_xml($api->char->WalletJournal(), 'entries'));
 		}
 		masort($walletjournal, array('unixdate'));
-		return ($this->load->view('walletdailyjournal', $this->_get_daily_walletjournal($walletjournal), True));
+		
+		$data['content'] = $this->load->view('walletdailyjournal', $this->_get_daily_walletjournal($walletjournal), True);
+		$this->load->view('template', $data);
 	}
 	
 	public function transactions($offset = 0, $per_page = 20)
 	{
+		$data['page_title'] = $this->page_title;
+		$data['submenu'] = $this->submenu;
+		
 		$api = $this->eveapi->api;
 		$characters = $this->eveapi->load_characters();
 		
@@ -108,7 +139,8 @@ class Assets extends Controller
 		$data['translist'] = array_slice($transactionlist, $offset, $per_page, True);
 		$this->pagination->initialize(array('base_url' => site_url("/assets/transactions"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5));
 
-		return ($this->load->view('transactionlist', $data, True));
+		$data['content'] = $this->load->view('transactionlist', $data, True);
+		$this->load->view('template', $data);
 	}
 
 }

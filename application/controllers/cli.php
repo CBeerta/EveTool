@@ -27,7 +27,7 @@ class Cli extends Controller
 		$what_to_update = array (
 			'Account Balance' => 'AccountBalance',
 			'Skill in Training' => 'SkillInTraining',
-			'Character Sheet' => 'Charactersheet',
+			'Character Sheet' => 'CharacterSheet',
 			'Skill Queue' => 'SkillQueue',
 			/* 'Wallet Transactions' => 'WalletTransactions', */ /* this is somehow borked by ccp currently, frequently throws an error */
 			'Wallet Journal' => 'WalletJournal',

@@ -50,6 +50,7 @@ class Market extends Controller
 	            	'remaining' => $order['volRemaining'],
 	            	'total' => $order['volEntered'],
 	            	'charID' => $order['charID'],
+	            	'owner' => $char,
 	            	'ends' => api_time_to_complete($issued),
 	            	'location' => locationid_to_name($order['stationID']),
 	            	'locationid' => $order['stationID'],

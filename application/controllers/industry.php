@@ -74,8 +74,9 @@ class Industry extends Controller
 	                    'ends' => api_time_to_complete((string) $job['endProductionTime']),
 	                    'endtime' => $endtime,
 	                    'installerID' => (int) $job['installerID'],
-	                    'location' => (int) $job['outputLocationID']);
-	
+	                    'installer' => $char,
+                    );
+
 	            if ($job['activityID'] == 1 && $job['completedStatus'] == 0)
 	            {
 	                // Special Case, Means Job is still running

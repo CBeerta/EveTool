@@ -1,13 +1,3 @@
-<!--
-<div id="buttan">
-Days to show: 
-<?php echo anchor("industry/jobs/7", "7");?>, 
-<?php echo anchor("industry/jobs/14", "14");?>, 
-<?php echo anchor("industry/jobs/30", "30");?>,
-<?php echo anchor("industry/jobs/999999", "all");?>
-</div>
--->
-<div id="content">
 <table width="100%">
 <caption>Industry Jobs<!-- for the last <?php echo $max_days; ?> days--></caption>
 <tr>
@@ -23,7 +13,7 @@ Days to show:
 <tr>
     <td>
         <a id="fb_character" href="<?php echo site_url('/fancybox/character/'.$row['installerID']); ?>">
-            <?php echo get_character_portrait($row['installerID'], 32); ?>
+            <?php echo get_character_portrait($row['installer'], 32); ?>
         </a>
     </td>
 	<td style="text-align: left;">
@@ -37,7 +27,7 @@ Days to show:
     <td><?php echo $row['amount']; ?></td>
     <td><?php echo $row['ends']; ?></td>
     <td>
-		<a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$row['location']); ?>"><?php echo locationid_to_name($row['location']);?></a>
+		<a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$row['outputLocationID']); ?>"><?php echo locationid_to_name($row['outputLocationID']);?></a>
     </td>
 <tr>
 <?php endforeach; ?>
@@ -47,4 +37,3 @@ Days to show:
     </td>
 </tr>
 </table>
-</div>

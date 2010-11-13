@@ -75,7 +75,11 @@ td.light {
     text-align: right;
     background: #bcbcbc;
 }
-
+img.get_character_portrait#entry {
+    float: left;
+    vertical-align: left;
+    margin: 5px;
+}
 
 img {
 	border: 0px;

@@ -81,35 +81,6 @@ function api_time_to_complete($endTime)
 }
 
 
-function surrounding_systems($system, $maxDepth = 1, $currentDepth = 1)
-{
-    $CI =& get_instance();
-    $CI->load->database();
-	
-	$q = $CI->db->query('
-		SELECT 
-			a.solarSystemName 
-		FROM 
-			mapSolarSystems a, 
-			mapSolarSystems b, 
-			mapSolarSystemJumps j 
-		WHERE 
-			a.solarsystemID = j.fromSolarSystemID AND 
-			b.solarSystemID = j.toSolarSystemID AND 
-			b.solarSystemName = ?;', $system);
-			
-	
-	foreach ($q->result_array()  as $row)
-	{
-		$systems[] = $row['solarSystemName'];
-		if ($currentDepth < $maxDepth && $row['solarSystemName'] != $system)
-		{
-			$systems = array_merge($systems, surroundingSystems($row['solarSystemName'], $maxDepth, $currentDepth + 1));
-		}
-	}
-	
-	return (array_unique($systems));
-}
 
 /**
  * Return the Region Name for a $regionID
@@ -138,12 +109,12 @@ function regionid_to_name($regionID)
 }
 
 /**
- * Return the Location as a HTML snippet
+ * Return the Location Name
  * 
  * @access public
  * @param  string
 **/
-function locationid_to_name($locationID)
+function locationid_to_name($locationID, $shorten = False)
 {
 
     if (empty($locationID))
@@ -152,17 +123,11 @@ function locationid_to_name($locationID)
     }
     
     $CI =& get_instance();
-    
-    $api = $CI->eveapi->api;
-    $_stationlist = $api->eve->ConquerableStationList();
-    
-	$stationlist = array();    
-    foreach ($_stationlist->result->outposts as $station)
+    $stationlist = $CI->eveapi->get_stationlist();
+
+    if (isset($stationlist[(int) $locationID]))
     {
-    	if ((int) $station->stationID == $locationID)
-	    {
-	    	return ((string) $station->stationName);
-	    }
+        return ($stationlist[(int) $locationID]['stationName']);
     }
     
     $CI->load->database();
@@ -177,17 +142,32 @@ function locationid_to_name($locationID)
     $row = $q->row();
     if (count($row)>0)
     {
+        if ($shorten)
+        {
+            $name = explode('-', $row->itemName);
+            return ("{$name[0]} - {$name[1]}");
+        }
         return($row->itemName);
     }
     return ('Unknown');
 }
 
 
-function get_character_portrait($name, $size = 64)
+function get_character_portrait($name, $size = 64, $css_id = 'portrait')
 {
     if (is_numeric($name))
     {
         $id = $name;
+    }
+    else if (is_object($name))
+    {
+        $id = $name->characterID;
+        $charname = $name->name;
+    }
+    else if (is_array($name))
+    {
+        $id = $name['characterID'];
+        $charname = $name['name'];
     }
     else
     {
@@ -197,8 +177,8 @@ function get_character_portrait($name, $size = 64)
     
     $CI =& get_instance();
     
-    $url  = '<img src="';
-    if ($size < 64) 
+    $url  = "<img class='get_character_portrait' id='{$css_id}' src='";
+    if ($size < 64)
     {
         $url .= site_url("files/cache/char/{$id}/64/char.jpg");
     }
@@ -206,12 +186,13 @@ function get_character_portrait($name, $size = 64)
     {
         $url .= site_url("files/cache/char/{$id}/{$size}/char.jpg");
     }
-    $url .= "\" width=\"{$size}\" height=\"{$size}\"";
-    if (!empty($CI->eveapi->corp_members[$id]))
+    $url .= "' width='{$size}' height='{$size}'";
+
+    
+    if (!empty($charname))
     {
-        $i = $CI->eveapi->corp_members[$id];
-        $url .= " name=\"{$i->name}\"";
-        $url .= " title=\"{$i->name}\"";
+        $url .= " name=\"{$charname}\"";
+        $url .= " title=\"{$charname}\"";
     }
     $url .= ">";
     return ($url);
@@ -275,7 +256,7 @@ function get_icon_url($type, $size = 64, $background = 'black')
     else if (!empty($row->categoryID) && $row->categoryID == 9)
     {
         //blueprint
-        return ("/files/itemdb/blueprints/blueprints/64_64/{$row->typeID}.png");
+        return ("/files/itemdb/blueprints/64_64/{$row->typeID}.png");
     }
     else if (isset($row->iconFile) && !empty($row->iconFile))
     {
@@ -312,6 +293,7 @@ function slot_icon($flag)
     }
 }
 
+/*
 function get_user_config($acctID, $keyName)
 {
     $CI =& get_instance();
@@ -374,6 +356,39 @@ function is_public()
         return (False);
     }
 }
+*/
+
+/**
+function surrounding_systems($system, $maxDepth = 1, $currentDepth = 1)
+{
+    $CI =& get_instance();
+    $CI->load->database();
+	
+	$q = $CI->db->query('
+		SELECT 
+			a.solarSystemName 
+		FROM 
+			mapSolarSystems a, 
+			mapSolarSystems b, 
+			mapSolarSystemJumps j 
+		WHERE 
+			a.solarsystemID = j.fromSolarSystemID AND 
+			b.solarSystemID = j.toSolarSystemID AND 
+			b.solarSystemName = ?;', $system);
+			
+	
+	foreach ($q->result_array()  as $row)
+	{
+		$systems[] = $row['solarSystemName'];
+		if ($currentDepth < $maxDepth && $row['solarSystemName'] != $system)
+		{
+			$systems = array_merge($systems, surroundingSystems($row['solarSystemName'], $maxDepth, $currentDepth + 1));
+		}
+	}
+	
+	return (array_unique($systems));
+}
+**/
 
 
 ?>
