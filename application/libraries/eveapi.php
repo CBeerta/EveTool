@@ -165,6 +165,7 @@ class Eveapi
                     'flag' => (int) $asset->flag,
                     'singleton' => (int) $asset->singleton,
                     'containerID' => Null,
+                    'container' => Null,
                     'owner' => $char,
                     'contents' => array(),
                     );
@@ -187,6 +188,7 @@ class Eveapi
                                 'flag' => (int) $content->flag,
                                 'singleton' => (int) $content->singleton,
                                 'containerID' => $container,
+                                'container' => $assets[$container],
                                 'locationID' => $assets[$container]['locationID'],
                                 'owner' => $char,
                                 );
@@ -229,6 +231,10 @@ class Eveapi
         foreach ($assets as $k => $v)
         {
             $assets[$k] = array_merge($v, $types[$v['typeID']]);
+            if ($assets[$k]['container'] !== Null)
+            {
+                $assets[$k]['container'] = array_merge($assets[$k]['container'], $types[$assets[$k]['container']['typeID']]);
+            }
 
         }
 		$CI->cache->set($cache_key, $assets);

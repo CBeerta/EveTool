@@ -2,9 +2,23 @@
 
 class Assets extends Controller
 {
+    /**
+    * Page Title
+    **/
 	public $page_title = 'Assets';
+
+	/**
+	* Contents for the sidebar submenu
+	**/
 	public $submenu = array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal'));
 
+    /**
+    *
+    * Load the Template and add submenus
+    *
+    * @access private
+    * @param array $data contains the stuff handed over to the template
+    **/
 	private function _template($data)
 	{
 		$characters = $this->eveapi->load_characters();
@@ -19,7 +33,14 @@ class Assets extends Controller
 		$data['search'] = (object) array('url' => 'assets/search', 'header' => 'Search Assets');
 		$this->load->view('template', $data);
 	}
-    
+
+    /**
+    * 
+    * Rebuild the wallet xml to a daily array
+    *
+    * @access private
+    * @param object AleXML of the wallet
+    **/    
 	private function _get_daily_walletjournal($wallet)
 	{
 		$data = array();
@@ -74,6 +95,13 @@ class Assets extends Controller
 		return ($data);
 	}
 
+    /**
+    *
+    * Loads the ajax snippet to display asset contents
+    *
+    * @access public
+    * @param int $itemID ID of the container to look into
+    **/
 	public function ajax_contents($itemID)
 	{
 		$characters = $this->eveapi->load_characters();
@@ -90,29 +118,43 @@ class Assets extends Controller
         masort($contents, array('flag', 'categoryName'));
 
         $contents = array_merge(array($assets[$itemID]), $contents);
-
         $this->load->view('snippets/assets_content', array('contents' => $contents));
 	}
 
+    /**
+    *
+    * Display Assets fo All Characters or a specific Character
+    *
+    * @access public
+    * @param string $character All for all, otherwise Charname
+    **/
 	public function index($character = 'All', $offset = 0, $per_page = 20)
 	{
 		$characters = $this->eveapi->load_characters();
 
         if ($character == 'All' || !in_array($character, $characters))
         {
+    		$data['caption'] = "Assets for All Characters";
             $assets = $this->eveapi->load_assets($characters, False);
         }
         else
         {
+    		$data['caption'] = "Assets for {$character}";
             $assets = $this->eveapi->load_assets(array($character), False);
         }
         
 		$total = count($assets);
-		$assets = array_slice($assets, $offset, $per_page, True);
+		$data['assets'] = array_slice($assets, $offset, $per_page, True);
 		$this->pagination->initialize(array('base_url' => site_url("/assets/index/{$character}"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5, 'uri_segment' => 4));
-        $this->_template(array('content' => $this->load->view('assets', array('assets' => $assets), True)));
+        $this->_template(array('content' => $this->load->view('assets', $data, True)));
 	}
 
+    /**
+    *
+    * Search for assets
+    *
+    * @access public
+    **/
 	public function search()
 	{
 		$data['page_title'] = $this->page_title;
@@ -147,6 +189,12 @@ class Assets extends Controller
         $this->_template(array('content' => $this->load->view('assets', $data, True)));
 	}
 
+    /**
+    *
+    * Wallet Journal as daily view
+    *
+    * @access public
+    **/
 	public function journal()
 	{
 		$api = $this->eveapi->api;
@@ -164,7 +212,13 @@ class Assets extends Controller
 		$data['content'] = $this->load->view('walletdailyjournal', $this->_get_daily_walletjournal($walletjournal), True);
         $this->_template($data);
 	}
-	
+
+    /**
+    *
+    * Wallet Transactions
+    *
+    * @access public
+    **/
 	public function transactions($offset = 0, $per_page = 20)
 	{
 		$api = $this->eveapi->api;
