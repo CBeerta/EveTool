@@ -205,15 +205,15 @@ function icon_url($type, $size = 64, $options = array())
         $type = (object) $type;    
     }
     
-    if (isset($type->techlevel) && $type->techlevel == 2)
+    if (isset($type->techlevel) && $type->techlevel > 1)
     {
-        $style = "style=\"background-image: url(".get_icon_url($type, $size).");\"";
+        $style = "style=\"background-image: url("._get_icon_url($type, $size).");\"";
         $url = site_url("/files/images/t2_{$size}.png");
     }
     else
     {
         $style = '';
-        $url = get_icon_url($type, $size);
+        $url = _get_icon_url($type, $size);
     }
     $opts = '';
     foreach ($options as $k => $v)
@@ -223,7 +223,7 @@ function icon_url($type, $size = 64, $options = array())
     return ("<img {$style} class=\"invtype\" width=\"{$size}\" height=\"{$size}\" title=\"{$type->typeName}\" {$opts} src=\"{$url}\" />");
 }
 
-function get_icon_url($type, $size = 64, $background = 'black')
+function _get_icon_url($type, $size = 64, $background = 'black')
 {
     if (empty($type))
     {

@@ -209,8 +209,8 @@ class Eveapi
                 invTypes.mass,
                 invCategories.categoryName,
 		        (SELECT iconFile FROM eveIcons WHERE iconID=invTypes.iconID ) AS iconFile,
-		        invGroups.categoryID/*,
-			    (SELECT IF(COUNT(valueInt)>0, valueInt, 1) FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel*/
+		        invGroups.categoryID,
+			    (SELECT valueInt FROM dgmTypeAttributes WHERE typeID=invTypes.typeID AND attributeID=422) AS techlevel
             FROM 
                 invTypes,
                 invGroups,

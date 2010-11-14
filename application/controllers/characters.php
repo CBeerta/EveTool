@@ -1,5 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Character Information Pages
+ *
+ *
+ * @author Claus Beerta <claus@beerta.de>
+ * @todo Add Certificates
+ */
 class Characters extends Controller
 {
 	public $page_title = 'Characters';
@@ -9,20 +16,17 @@ class Characters extends Controller
 	{
 		parent::Controller();
 		
-		$this->submenu = array('Skillsheets' => $this->eveapi->load_characters());
+		//$this->submenu = array('Skillsheets' => $this->eveapi->load_characters());
 	}
-	
-	public function _remap($method)
-	{
-		$data['page_title'] = $this->page_title;
-		//$data['submenu'] = $this->submenu;
-		
-		$data['content'] = $this->$method();
-		$this->load->view('template', $data);
-	}
-	
+
+	/**
+	* Blog style display of all characters
+	*
+	*
+	**/
 	public function index()
 	{
+		$data['page_title'] = $this->page_title;
 		$api = $this->eveapi->api;
 		$characters = $this->eveapi->load_characters();
 		
@@ -77,7 +81,89 @@ class Characters extends Controller
 			$global['totalsp'] += $charinfo[$char->name]['extra_info']['skillPointsTotal'];
 		}		
 		masort($charinfo, array('isTraning', 'balance'));
-		return ($this->load->view('charoverview', array('data' => $charinfo, 'global' => $global), True));
+		$data['content'] = $this->load->view('charoverview', array('data' => $charinfo, 'global' => $global), True);
+		$this->load->view('template', $data);
+	}
+
+
+    /**
+    * Display characters ship abilities
+    *
+    * @access public
+    * @param string $character to show ships of
+    **/
+	public function ships($character)
+	{
+		$data['page_title'] = $this->page_title;
+        $canfly = $has = array();
+
+		$api = $this->eveapi->api;
+		if (!in_array($character, $this->eveapi->load_characters()))
+		{
+		    die("<h1>Char {$character} not found</h1>");
+	    }
+	    $char = $this->eveapi->characters[$character];
+		$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+		
+		$_charsheet = $api->char->CharacterSheet();
+		foreach ($_charsheet->result->skills as $skill)
+		{
+            $has[$skill->typeID] = $skill->level;
+        }
+
+        $q = $this->db->query("
+            SELECT
+                t.*,
+                g.*,
+                r.*,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 182) AS skill1req,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 183) AS skill2req,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 184) AS skill3req,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 277) AS skill1level,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 278) AS skill2level,
+                (SELECT IFNULL(valueInt, valueFloat) FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID = 279) AS skill3level,
+                (SELECT valueInt FROM dgmTypeAttributes WHERE typeID=t.typeID AND attributeID=422) AS techlevel
+            FROM    
+                invTypes AS t,
+                invGroups AS g,
+                chrRaces AS r
+            WHERE
+                g.groupID=t.groupID AND
+                r.raceID=t.raceID AND
+                g.categoryID=6 AND
+                t.published=1
+            ORDER BY
+                groupName, raceName, typeName ASC
+            ");
+
+        foreach ($q->result_array() as $ship)
+        {
+            $canflythis = False;
+            foreach (array(1,2,3) as $l)
+            {
+                if (!is_numeric($ship["skill{$l}req"]))
+                {
+                    continue;
+                }
+                if (isset($has[$ship["skill{$l}req"]]) && $has[$ship["skill{$l}req"]] >= $ship["skill{$l}level"])
+                {
+                    $canflythis = True;
+                }
+                else
+                {
+                    $canflythis = False;
+                    break;
+                }
+            }
+            
+            if ($canflythis === True)
+            {
+                $canfly[$ship['groupName']][$ship['raceName']][] = $ship;
+            }
+        }
+        
+		$data['content'] = $this->load->view('ships', array('canfly' => $canfly, 'character' => $character), True);
+		$this->load->view('template', $data);
 	}
 
 }

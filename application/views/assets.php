@@ -1,5 +1,5 @@
 <div id="content">
-<table>
+<table width="100%">
 <?php foreach ($assets as $k => $v): ?>
     <?php if ($v['containerID'] != Null) continue; ?>
     <tr>
@@ -10,7 +10,7 @@
     </td>
 	<td style="text-align: left;">
         <a id="fb_item" href="<?php echo site_url('/fancybox/item/'.$v['typeID']); ?>">       
-    	    <img src="<?php echo get_icon_url($v,32);?>">
+    	   <?php echo icon_url($v,32);?>
 	    </a>
     </td>
     <td><?php echo $v['typeName']; ?></td>
