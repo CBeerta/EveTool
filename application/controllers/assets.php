@@ -5,6 +5,21 @@ class Assets extends Controller
 	public $page_title = 'Assets';
 	public $submenu = array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal'));
 
+	private function _template($data)
+	{
+		$characters = $this->eveapi->load_characters();
+        $menu = array();
+		foreach ($characters as $v)
+		{
+		    $menu["index/{$v}"] = $v;
+		}
+		$data['submenu'] = array_merge(array('Inventory' => $menu), $this->submenu);
+		$data['page_title'] = 'Assets'; 
+
+		$data['search'] = (object) array('url' => 'assets/search', 'header' => 'Search Assets');
+		$this->load->view('template', $data);
+	}
+    
 	private function _get_daily_walletjournal($wallet)
 	{
 		$data = array();
@@ -79,31 +94,63 @@ class Assets extends Controller
         $this->load->view('snippets/assets_content', array('contents' => $contents));
 	}
 
-	
-	public function index($offset = 0, $per_page = 20)
+	public function index($character = 'All', $offset = 0, $per_page = 20)
+	{
+		$characters = $this->eveapi->load_characters();
+
+        if ($character == 'All' || !in_array($character, $characters))
+        {
+            $assets = $this->eveapi->load_assets($characters, False);
+        }
+        else
+        {
+            $assets = $this->eveapi->load_assets(array($character), False);
+        }
+        
+		$total = count($assets);
+		$assets = array_slice($assets, $offset, $per_page, True);
+		$this->pagination->initialize(array('base_url' => site_url("/assets/index/{$character}"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5, 'uri_segment' => 4));
+        $this->_template(array('content' => $this->load->view('assets', array('assets' => $assets), True)));
+	}
+
+	public function search()
 	{
 		$data['page_title'] = $this->page_title;
 		$data['submenu'] = $this->submenu;
-		
+
 		$characters = $this->eveapi->load_characters();
 
-        $assets = $this->eveapi->load_assets($characters, False);
+        $assets = $this->eveapi->load_assets($characters, True);
 
-		$total = count($assets);
-		$assets = array_slice($assets, $offset, $per_page, True);
-		$this->pagination->initialize(array('base_url' => site_url("/assets/index"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5));
-        
-        $data['content'] = $this->load->view('assets', array('assets' => $assets), True);
-		$this->load->view('template', $data);
+        $search = $this->input->post('s');
+        $found = array();
+
+        foreach ($assets as $k => $v)
+        {
+            foreach (array('typeName', 'groupName', 'categoryName' /*, 'description' */) as $field)
+            {
+                similar_text(strtolower($v[$field]), strtolower($search), &$percent);
+                if ($percent > 80)
+                {
+                    $found[$k] = $v;
+                }
+                else if (strpos(strtolower($v[$field]), strtolower($search)) !== False)
+                {
+                    $found[$k] = $v;
+                }
+            }
+        }
+        $data['assets'] = $found;
+        $data['show_contents'] = True;
+        $data['caption'] = "Results for '{$search}'";
+
+        $this->_template(array('content' => $this->load->view('assets', $data, True)));
 	}
 
 	public function journal()
 	{
-		$data['page_title'] = $this->page_title;
-		$data['submenu'] = $this->submenu;
-		
 		$api = $this->eveapi->api;
-		$characters = $this->eveapi->load_characters();
+		$this->eveapi->load_characters();
 		
 		$walletjournal = array();
 		
@@ -115,16 +162,13 @@ class Assets extends Controller
 		masort($walletjournal, array('unixdate'));
 		
 		$data['content'] = $this->load->view('walletdailyjournal', $this->_get_daily_walletjournal($walletjournal), True);
-		$this->load->view('template', $data);
+        $this->_template($data);
 	}
 	
 	public function transactions($offset = 0, $per_page = 20)
 	{
-		$data['page_title'] = $this->page_title;
-		$data['submenu'] = $this->submenu;
-		
 		$api = $this->eveapi->api;
-		$characters = $this->eveapi->load_characters();
+		$this->eveapi->load_characters();
 		
 		$transactionlist = array();
 		
@@ -140,7 +184,7 @@ class Assets extends Controller
 		$this->pagination->initialize(array('base_url' => site_url("/assets/transactions"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5));
 
 		$data['content'] = $this->load->view('transactionlist', $data, True);
-		$this->load->view('template', $data);
+        $this->_template($data);
 	}
 
 }

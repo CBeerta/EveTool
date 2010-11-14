@@ -51,7 +51,7 @@ $autoload['libraries'] = array('eveapi', 'session', 'pagination', 'database', 'c
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'eve', 'random_functions', 'inventory', 'igb');
+$autoload['helper'] = array('url', 'eve', 'random_functions', 'inventory', 'igb', 'form');
 
 
 /*

@@ -15,7 +15,7 @@ Released   : 20100729
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>evetool - <?php echo $page_title; ?></title>
+<title>evetool&sup2; - <?php echo $page_title; ?></title>
 <link href="/files/eve.css" rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript" src="<?php echo site_url('/files/jquery.js');?>"></script>
 <script type="text/javascript" src="<?php echo site_url('/files/fancybox/jquery.fancybox-1.2.5.pack.js');?>"></script>
@@ -34,7 +34,7 @@ Released   : 20100729
 			<div id="menu">
 				<ul>
 					<?php foreach (array('Overview', 'Characters', 'Market', 'Industry', 'Assets') as $v):?>
-					<li<?php if ($page_title == $v): ?> class="current_page_item"<?php endif;?>><a href="<?php echo site_url(strtolower($v));?>"><?php echo $v;?></a></li>
+					<li<?php if ($page_title == $v): ?> class="current_page_item"<?php endif;?>><a href="<?php echo site_url(strtolower("{$v}/index"));?>"><?php echo $v;?></a></li>
 					<?php endforeach;?>
 				</ul>
 			</div>
@@ -51,12 +51,26 @@ Released   : 20100729
 			
 			<?php if (!empty($submenu)):?>
 			<ul>
+			    <?php if (isset($search)): ?>
+				<li>
+					<h2><?php echo $search->header;?></h2>
+					<div id="search" >
+						<?php echo form_open($search->url); ?>
+							<div>
+								<input type="text" name="s" id="search-text" value="" />
+								<input type="submit" id="search-submit" value="GO" />
+							</div>
+						<?php echo form_close(); ?>
+					</div>
+					<div style="clear: both;">&nbsp;</div>
+				</li>
+				<?php endif; ?>
 			<?php foreach ($submenu as $title => $options):?>
 				<li>
 					<h2><?php echo $title;?></h2>
 					<ul>
 						<?php foreach ($options as $k => $v):?>
-						<li><a href="<?php echo site_url(strtolower("{$page_title}/{$k}"));?>"><?php echo $v;?></a></li>
+						<li><a href="<?php echo site_url(strtolower("{$page_title}")."/{$k}");?>"><?php echo $v;?></a></li>
 						<?php endforeach;?>
 					</ul>
 				</li>	

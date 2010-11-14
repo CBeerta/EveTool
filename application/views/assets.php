@@ -1,7 +1,8 @@
 <div id="content">
 <table width="100%">
+<caption><?php echo isset($caption) ? $caption : 'Assets for all Characters'; ?></caption>
 <?php foreach ($assets as $k => $v): ?>
-    <?php if ($v['containerID'] != Null) continue; ?>
+    <?php if ($v['containerID'] != Null && !$show_contents) continue; ?>
     <tr>
     <td>
         <a id="fb_character" href="<?php echo site_url('/fancybox/character/'.$v['owner']->characterID); ?>">
@@ -19,8 +20,10 @@
         <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$v['locationID']); ?>"><?php echo locationid_to_name($v['locationID']);?></a>
     </td>
     <td>
-        <?php if (count($v['contents']) > 0): ?>
+        <?php if (isset($v['contents']) && count($v['contents']) > 0): ?>
         <a id="fb_assets_content" href="<?php echo site_url('/assets/ajax_contents/'.$v['itemID']); ?>"><img src="/files/itemdb/icons/32_32/icon03_13.png"></a>
+        <?php elseif (isset($v['containerID'])): ?>
+        <a id="fb_assets_content" href="<?php echo site_url('/assets/ajax_contents/'.$v['containerID']); ?>"><img src="/files/itemdb/icons/32_32/icon03_13.png"></a>
         <?php else: ?>
         &nbsp;
         <?php endif; ?>
