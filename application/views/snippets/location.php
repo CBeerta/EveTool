@@ -1,7 +1,7 @@
 <?php //print_r($loc); ?>
 <table width="99%" id="location_snippet">
 		<th colspan="2">
-			<img align="right" style="background: url('<?php echo get_icon_url($loc, 64);?>');" width="64" height="64" src="<?php echo site_url("/files/images/overlay-64.png"); ?>">
+			<img align="right" style="background: url('<?php echo _get_icon_url($loc, 64);?>');" width="64" height="64" src="<?php echo site_url("/files/images/overlay-64.png"); ?>">
 			<h1>
 			    <?php echo $loc['stationName']; ?>
 			    <?php if (igb_trusted()): ?>

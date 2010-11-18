@@ -29,7 +29,7 @@ class Eveapi
     public $skip_characters = array();
 
 	/**
-	* Constructor, initialized Ali api, and loads configuration
+	* Constructor, initialized Ale api, and loads configuration
 	*
 	* @access public
 	**/
@@ -50,12 +50,14 @@ class Eveapi
 	}
 
 	/**
-	* Convert an ale simplexml object t oan array
+	*
+	* Convert an ale simplexml object to an array
 	*
 	* @access public
 	* @param object Ale XML Object
 	* @param string
 	* @param array An Array to merge with each dataset
+	* 
 	**/
 	public static function from_xml($xml, $type, $to_merge = array())
 	{
@@ -81,6 +83,7 @@ class Eveapi
 	/**
 	* Load Characters from all accounts (skipping the ignored ones)
 	*
+	* @access public
 	**/
 	public function load_characters()
 	{
@@ -130,10 +133,13 @@ class Eveapi
 
 
     /** 
+    *
     * Load assets from api for charaters, and merge them with inftypes, then cache
     *
+    * @access public
     * @params object $characters Characters to pull assets fo
     * @params book $with_contents Wether to load container contents or not
+    *
     **/
 	public function load_assets($characters, $with_contents = True)
 	{
@@ -242,7 +248,10 @@ class Eveapi
 	}
 
 	/**
+    *
 	* Load reftypes from eveapi and cache them
+	*
+	* @access public
 	*
 	**/
 	public function get_reftypes()
@@ -266,6 +275,13 @@ class Eveapi
 		return ($reftypes);
 	}
 	
+	/**
+    *
+	* Load skilltree and cache
+	*
+	* @access public
+	*
+	**/
 	public function get_skilltree()
 	{
         $CI =& get_instance();
@@ -292,6 +308,12 @@ class Eveapi
 		return ($skilltree);
 	}
 
+    /**
+    *
+    * Load Player Conquerable Stationlist and cache 
+    *
+    * @access public
+    **/
 	public function get_stationlist()
     {
         $CI =& get_instance();
@@ -314,20 +336,32 @@ class Eveapi
 
         return ($stationlist);
     }
-	
+
+
+	/**
+	*
+	* Extract additional info frm the charactersheet
+	*
+    * @todo Do we need this in here, or have it as helper?
+    * @todo Needs to extract more info
+    *
+    *
+    * @access public	
+    * @param object $charsheet AleXML of the character sheed
+    *
+    **/
 	public static function charsheet_extra_info($charsheet)
 	{
-        $data['skillsTotal'] = $data['skillPointsTotal'] = 0;
-        $data['skillsAtLevel'] = array_fill(0, 6, 0);
+        $data['skills_total'] = $data['skillpoints_total'] = 0;
+        $data['skills_at_level'] = array_fill(0, 6, 0);
         
-		$skillTree = array();        
 		
         //print '<pre>';
 		foreach ($charsheet->result->skills as $_skill)
 		{
 			$skill = $_skill->attributes();
 			//print_r($skill);
-            $data['skillPointsTotal'] += (int) $skill['skillpoints'];
+            $data['skillpoints_total'] += (int) $skill['skillpoints'];
 			/*            
             $s = $this->eveapi->skilltree[$skill['typeID']];
             if (!isset($skillTree[$s['groupID']]))
@@ -345,8 +379,8 @@ class Eveapi
             $skillTree[$s['groupID']]['groupSP'] += $skill['skillpoints'];
             $skillTree[$s['groupID']]['skillCount'] ++;
             */
-            $data['skillsTotal'] ++;
-          	$data['skillsAtLevel'][(int) $skill['level']] ++;
+            $data['skills_total'] ++;
+          	$data['skills_at_level'][(int) $skill['level']] ++;
 		}
 		
 		//print_r($data);

@@ -43,13 +43,28 @@ class Overview extends Controller
 		{
 			$api->setCredentials($v->apiUser, $v->apiKey, $v->characterID);
 			$message = $api->char->MailBodies(array('ids' => implode(',', $v->idlist)));
+			$_mailinglists = eveapi::from_xml($api->char->MailingLists(), 'mailingLists');
+
+            foreach ($_mailinglists as $list)
+            {
+                $mailinglists[$list['listID']] = $list['displayName'];
+            }
+
 			foreach ($message->result->messages as $_msg)
 			{
 				$mails[$k]->bodies[$_msg->messageID] = (string) $_msg;
 				
+				if (!empty($mails[$k]->headers[$_msg->messageID]['toListID']))
+				{
+				    $mails[$k]->headers[$_msg->messageID]['toList'] = $mailinglists[$mails[$k]->headers[$_msg->messageID]['toListID']];
+				}
+				else if (!empty($mails[$k]->headers[$_msg->messageID]['toCorpOrAllianceID']))
+				{
+				    $mails[$k]->headers[$_msg->messageID]['toList'] = 'Corp or Alliance';
+				}
 			}
 		}
-		
+
 		/*
 		* Now go through all the mails again, and rebuild the array to be traversable
 		*/
@@ -61,11 +76,11 @@ class Overview extends Controller
 				$output[$index] = (array) $v->headers[$messageid];
 				$output[$index] += array(
 					'for' => $k,
+					'forID' => $v->characterID,
 					'body' => $v->bodies[$messageid],
 				);
 			}
 		}
-		
 		return ($output);
 	}
 	
@@ -91,8 +106,8 @@ class Overview extends Controller
 		}
 		
 		$mails = $this->_add_mailbody($headers);
-		$mails = array_splice($mails, 0, 15);
 		masort($mails, array('unixsentDate'));
+		$mails = array_splice($mails, 0, 15);
 		return ($this->load->view('mails', array('mails' => $mails), True));
 	}
 

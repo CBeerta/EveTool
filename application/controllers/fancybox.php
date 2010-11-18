@@ -11,7 +11,7 @@ class Fancybox extends Controller
 {
     public function location($id)
     {
-		$playerStation = array();
+		$playerstation = array();
 		$query = "
 			SELECT
 				*
@@ -19,13 +19,15 @@ class Fancybox extends Controller
 			    mapConstellations AS con,
 				mapSolarSystems AS sol,
 				mapRegions AS reg";
+
+		$stationlist = $this->eveapi->get_stationlist();
 		
-		if (!empty($this->eveapi->stationlist[$id]))
+		if (!empty($stationlist[$id]))
 		{
-			$playerStation = $this->eveapi->stationlist[$id];
+			$playerstation = $stationlist[$id];
 			$query .= "
 			WHERE
-				sol.solarSystemID={$this->eveapi->stationlist[$id]['solarSystemID']} AND
+				sol.solarSystemID={$stationlist[$id]['solarSystemID']} AND
 				reg.regionID=sol.regionID";
 		}
 		else
@@ -41,8 +43,16 @@ class Fancybox extends Controller
 		
 		$res = $this->db->query ($query);
 		
-		$loc = array_merge((array) $res->row(), $playerStation);
-        $this->load->view('snippets/location', array('loc' => $loc));
+		$loc = array_merge((array) $res->row(), $playerstation);
+
+		if (empty($loc))
+		{
+		    print '<h1>Unable to find that Station</h1>';
+	    }
+	    else
+	    {
+            $this->load->view('snippets/location', array('loc' => $loc));
+        }
     }
     
     public function fitting_from_db($typeName, $assetItemID)

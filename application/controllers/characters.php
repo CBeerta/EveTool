@@ -9,15 +9,16 @@
  */
 class Characters extends Controller
 {
+    /**
+    * Page Title
+    **/
 	public $page_title = 'Characters';
+
+	/**
+	* Contains the sidebar menu
+	**/
 	public $submenu;
 
-	public function __construct()
-	{
-		parent::Controller();
-		
-		//$this->submenu = array('Skillsheets' => $this->eveapi->load_characters());
-	}
 
 	/**
 	* Blog style display of all characters
@@ -78,7 +79,7 @@ class Characters extends Controller
 			}
 			
 			$global['totalisk'] += $charinfo[$char->name]['balance'];
-			$global['totalsp'] += $charinfo[$char->name]['extra_info']['skillPointsTotal'];
+			$global['totalsp'] += $charinfo[$char->name]['extra_info']['skillpoints_total'];
 		}		
 		masort($charinfo, array('isTraning', 'balance'));
 		$data['content'] = $this->load->view('charoverview', array('data' => $charinfo, 'global' => $global), True);
