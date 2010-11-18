@@ -3,16 +3,6 @@
 class Assets extends Controller
 {
     /**
-    * Page Title
-    **/
-	public $page_title = 'Assets';
-
-	/**
-	* Contents for the sidebar submenu
-	**/
-	public $submenu = array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal'));
-
-    /**
     *
     * Load the Template and add submenus
     *
@@ -27,7 +17,7 @@ class Assets extends Controller
 		{
 		    $menu["index/{$v}"] = $v;
 		}
-		$data['submenu'] = array_merge(array('Inventory' => $menu), $this->submenu);
+		$data['submenu'] = array_merge(array('Inventory' => $menu), array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal')));
 		$data['page_title'] = 'Assets'; 
 
 		$data['search'] = (object) array('url' => 'assets/search', 'header' => 'Search Assets');

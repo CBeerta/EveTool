@@ -35,6 +35,7 @@ class Cli extends Controller
 			'Market Orders' => 'MarketOrders',
 			'Standings' => 'Standings',
             'Mail Headers' => 'MailMessages',
+            'Upcoming Calendar Events' => 'UpcomingCalendarEvents',
 		);
 
 		foreach ($this->eveapi->characters as $char)

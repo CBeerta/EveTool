@@ -2,18 +2,28 @@
 
 class Overview extends Controller
 {
-	public $page_title = 'Overview';
-	public $submenu = array('Sections' => array('evemail' => 'EveMail'));
-	
-	public function _remap($method)
+    /**
+    *
+    * Load the Template and add submenus
+    *
+    * @access private
+    * @param array $data contains the stuff handed over to the template
+    **/
+	private function _template($data)
 	{
-		$data['page_title'] = $this->page_title;
-		$data['submenu'] = $this->submenu;
-		
-		$data['content'] = $this->$method();
+    	$data['submenu'] = array('Sections' => array('index' => 'Eve Mail', 'events' => 'Events'));
+		$data['page_title'] = 'Overview'; 
+
 		$this->load->view('template', $data);
 	}
 	
+
+    /**
+    * Add Mailbodies to a MailMessages XML Dump
+    *
+    * @access private
+    * @param array $headers XML of headers to fill with bodies
+    **/	
 	private function _add_mailbody($headers)
 	{
 		$api = $this->eveapi->api;
@@ -86,15 +96,6 @@ class Overview extends Controller
 	
 	public function index()
 	{
-		$data['items'] = array(array('title' => 'Kyara Completed Station Spinning 5', 'to' => 'Eurybe', 'from' => 'EVE Skill Training', 'body' => 'Kyara has successfully Trained Station Spinning to Level 5'));
-		
-		$content = $this->load->view('home', $data, true);
-		
-		return ($content);
-	}
-	
-	public function evemail()
-	{
 		$data = $headers = array();
 		$api = $this->eveapi->api;
 		$characters = $this->eveapi->load_characters();
@@ -108,8 +109,50 @@ class Overview extends Controller
 		$mails = $this->_add_mailbody($headers);
 		masort($mails, array('unixsentDate'));
 		$mails = array_splice($mails, 0, 15);
-		return ($this->load->view('mails', array('mails' => $mails), True));
+        $this->_template(array('content' => $this->load->view('mails', array('mails' => $mails), True)));
 	}
+
+	public function events()
+	{
+		$data = $events = array();
+		$api = $this->eveapi->api;
+		$characters = $this->eveapi->load_characters();
+
+		foreach ($this->eveapi->characters as $char)
+		{
+			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+			$events = array_merge ($events, eveapi::from_xml($api->char->UpcomingCalendarEvents(), 'upcomingEvents', array('character' => $char)));
+		}
+
+        $eventidlist = array();
+		foreach($events as $k => $v)
+		{
+		    if (in_array($v['eventID'], $eventidlist))
+		    {   
+		        # remove dublicates
+		        unset($events[$k]);
+	        }
+		    $eventidlist[] = $v['eventID'];
+	    }
+		masort($events, array('unixeventDate'));
+		$events = array_splice($events, 0, 15);
+
+        $this->_template(array('content' => $this->load->view('events', array('events' => $events), True)));
+	}
+
+
+
+
+/*
+
+	public function index()
+	{
+		$data['items'] = array(array('title' => 'Kyara Completed Station Spinning 5', 'to' => 'Eurybe', 'from' => 'EVE Skill Training', 'body' => 'Kyara has successfully Trained Station Spinning to Level 5'));
+		
+		$content = $this->load->view('home', $data, true);
+        $this->_template(array('content' => $content));		
+	}
+*/	
 
 }
 

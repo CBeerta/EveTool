@@ -12,6 +12,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	color: #3C3D3F;
+	overflow-y: scroll; /* always show the scrollbar, i HATE content jumping around */
 }
 
 h1, h2, h3 {
@@ -75,7 +76,12 @@ td.light {
     text-align: right;
     background: #bcbcbc;
 }
-img.get_character_portrait#entry {
+img.get_character_portrait#left {
+    float: left;
+    vertical-align: left;
+    margin: 5px;
+}
+img.get_character_portrait#right {
     float: left;
     vertical-align: left;
     margin: 5px;

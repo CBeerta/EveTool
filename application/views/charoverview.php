@@ -17,7 +17,7 @@
 				<div class="entry">
 					<p>
 					<!-- there is WAY to much php code right here. Not pretty -->
-                    <?php echo get_character_portrait($i, 64, 'entry'); ?>
+                    <?php echo get_character_portrait($i, 64, 'left'); ?>
 					<?php echo $i['name']; ?> (<i><?php echo $i['corporationName']; ?><?php if (!empty($i['allianceName'])): echo ' / '.$i['allianceName']; endif;?></i>)
 					<?php if (!empty($i['trainingTypeID'])):?>
 					is currently Training <b><?php echo $i['trainingTypeName']['typeName']; ?></b> to Level <b><?php echo $i['trainingToLevel']; ?></b>. 
