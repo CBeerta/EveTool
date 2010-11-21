@@ -64,7 +64,9 @@ class Overview extends Controller
 			{
 				$mails[$k]->bodies[$_msg->messageID] = (string) $_msg;
 				
-				if (!empty($mails[$k]->headers[$_msg->messageID]['toListID']))
+				if (!empty($mails[$k]->headers[$_msg->messageID]['toListID']) && 
+                    isset($mailinglists[$mails[$k]->headers[$_msg->messageID]['toListID']])
+                    )
 				{
 				    $mails[$k]->headers[$_msg->messageID]['toList'] = $mailinglists[$mails[$k]->headers[$_msg->messageID]['toListID']];
 				}
@@ -105,9 +107,21 @@ class Overview extends Controller
 			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
 			$headers = array_merge($headers, eveapi::from_xml($api->char->MailMessages(), 'messages', array('character' => $char)));
 		}
-		
+
 		$mails = $this->_add_mailbody($headers);
 		masort($mails, array('unixsentDate'));
+		
+		$mailidlist = array();
+		foreach ($mails as $k => $v)
+		{
+    		    if (in_array($v['messageID'], $mailidlist))
+		    {   
+		        # remove dublicates
+		        unset($mails[$k]);
+	        }
+		    $mailidlist[] = $v['messageID'];
+		}
+		
 		$mails = array_splice($mails, 0, 15);
         $this->_template(array('content' => $this->load->view('mails', array('mails' => $mails), True)));
 	}

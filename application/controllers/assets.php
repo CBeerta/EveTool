@@ -35,7 +35,7 @@ class Assets extends Controller
 	{
 		$data = array();
         $daily = array();
-        
+
         $reftypes = $this->eveapi->get_reftypes();
         
         foreach ($wallet as $entry)
@@ -134,6 +134,7 @@ class Assets extends Controller
         }
         
 		$total = count($assets);
+		masort($assets, array('locationID', 'typeName'));
 		$data['assets'] = array_slice($assets, $offset, $per_page, True);
 		$this->pagination->initialize(array('base_url' => site_url("/assets/index/{$character}"), 'total_rows' => $total, 'per_page' => $per_page, 'num_links' => 5, 'uri_segment' => 4));
         $this->_template(array('content' => $this->load->view('assets', $data, True)));
@@ -147,9 +148,6 @@ class Assets extends Controller
     **/
 	public function search()
 	{
-		$data['page_title'] = $this->page_title;
-		$data['submenu'] = $this->submenu;
-
 		$characters = $this->eveapi->load_characters();
 
         $assets = $this->eveapi->load_assets($characters, True);

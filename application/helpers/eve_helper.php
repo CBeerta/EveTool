@@ -1,19 +1,19 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * These Functions are here to completely Trash the MySQL database.
- *
- * @todo Some Caching would be nice.
- * @package eve_helper
- */
+* These Functions are here to completely Trash the MySQL database.
+*
+* @todo Some Caching would be nice.
+* @package eve_helper
+*/
 
 /**
- * Convert a Timestamp from the Eve Api to something human readable
- * 
- * @access public
- * @param  string
- * @param  string
- */
+* Convert a Timestamp from the Eve Api to something human readable
+* 
+* @access public
+* @param  string
+* @param  string
+**/
 function api_time_print($time, $format = 'D d.m.Y H:i')
 {
     if (is_string($time))
@@ -29,11 +29,11 @@ function api_time_print($time, $format = 'D d.m.Y H:i')
 
 
 /**
- * Return the Duration from Now till $endTime
- * 
- * @access public
- * @param  string
- */
+* Return the Duration from Now till $endTime
+* 
+* @access public
+* @param  string
+**/
 function api_time_to_complete($endTime)
 {
 	$format = '%Y-%m-%d %H:%M:%S';
@@ -83,12 +83,12 @@ function api_time_to_complete($endTime)
 
 
 /**
- * Return the Region Name for a $regionID
- * 
- * @access public
- * @param  string
- *
- * @todo Convert to return a html snippet like locationid_snippet
+* Return the Region Name for a $regionID
+* 
+* @access public
+* @param  string
+*
+* @todo Convert to return a html snippet like locationid_snippet
 **/
 function regionid_to_name($regionID)
 {
@@ -109,10 +109,10 @@ function regionid_to_name($regionID)
 }
 
 /**
- * Return the Location Name
- * 
- * @access public
- * @param  string
+* Return the Location Name
+* 
+* @access public
+* @param  string
 **/
 function locationid_to_name($locationID, $shorten = False)
 {
@@ -152,7 +152,13 @@ function locationid_to_name($locationID, $shorten = False)
     return ('Unknown');
 }
 
-
+/**
+* Returns an '<img' string for a character
+* 
+* @access public
+* @param  string $name id or array/object with a character id
+*
+**/
 function get_character_portrait($name, $size = 64, $css_id = 'portrait')
 {
     if (is_numeric($name))
@@ -198,6 +204,15 @@ function get_character_portrait($name, $size = 64, $css_id = 'portrait')
     return ($url);
 }
 
+
+/**
+* Returns an '<img' string for a icon
+* 
+* @access public
+* @param  string $typeID arrach with the type of the item
+* @param  int $size size of the icon
+* @param  array $poptions additional options to put into the img url (like class or id)
+**/
 function icon_url($type, $size = 64, $options = array())
 {
     if (is_array($type))
@@ -223,7 +238,14 @@ function icon_url($type, $size = 64, $options = array())
     return ("<img {$style} class=\"invtype\" width=\"{$size}\" height=\"{$size}\" title=\"{$type->typeName}\" {$opts} src=\"{$url}\" />");
 }
 
-function _get_icon_url($type, $size = 64, $background = 'black')
+/**
+* Return the Path to the itemdb for icon types
+* 
+* @access public
+* @param  string $typeID arrach with the type of the item
+* @param  int $size size of the icon
+**/
+function _get_icon_url($type, $size = 64)
 {
     if (empty($type))
     {
@@ -273,7 +295,12 @@ function _get_icon_url($type, $size = 64, $background = 'black')
     }
 }
 
-
+/**
+* Return the right slot icon 
+* 
+* @access public
+* @param  int $flag flag of the item
+**/
 function slot_icon($flag)
 {
     switch (True)
@@ -292,6 +319,12 @@ function slot_icon($flag)
             return(array('/files/itemdb/icons/icons_items_png/64_64/icon03_13.png', 'Cargo'));
     }
 }
+
+
+
+
+
+
 
 /*
 function get_user_config($acctID, $keyName)

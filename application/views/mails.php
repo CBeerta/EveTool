@@ -1,3 +1,8 @@
+<!--
+<pre>
+<?php #print_r($mails); ?>
+</pre>
+-->
 <div id="content">
 <?php foreach ($mails as $item):?>
 <?php if ($item['senderID'] == $item['forID']) continue; # Skip mails that we sent?>

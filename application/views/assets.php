@@ -1,3 +1,6 @@
+<!--
+<?php #print_r($assets); ?>
+-->
 <div id="content">
 <table width="100%">
 <caption><?php echo isset($caption) ? $caption : 'Assets for all Characters'; ?></caption>

@@ -19,7 +19,6 @@ class Characters extends Controller
 	**/
 	public $submenu;
 
-
 	/**
 	* Blog style display of all characters
 	*
@@ -35,11 +34,17 @@ class Characters extends Controller
 		$skilltree = $this->eveapi->get_skilltree();
 		
 		$global['totalisk'] = $global['totalsp'] = 0;
+
+		$alerts = array();
 		
 		foreach ($this->eveapi->characters as $char)
 		{
 			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
-			
+			if (!isset($account_training[$char->apiUser]))
+			{
+    			$account_training[$char->apiUser] = 0;
+			}
+
 			if (!isset($charinfo[$char->name]))
 			{
 				$charinfo[$char->name] = (array) $char;
@@ -54,6 +59,7 @@ class Characters extends Controller
 				}
 				$charinfo[$char->name]['trainingTypeName'] = $skilltree[(string) $_training->result->trainingTypeID];
 				$charinfo[$char->name]['isTraning'] = 1;
+    			$account_training[$char->apiUser] = 1;
 			}
 			else
 			{
@@ -62,7 +68,8 @@ class Characters extends Controller
 
 			$_charsheet = $api->char->CharacterSheet();
 			$charinfo[$char->name]['extra_info'] = eveapi::charsheet_extra_info($_charsheet);
-			foreach (array('balance', 'corp', 'DoB', 'corporationName', 'allianceName', 'gender' ) as $n)
+
+			foreach (array('balance', 'corp', 'DoB', 'corporationName', 'allianceName', 'gender', 'cloneSkillPoints', 'cloneName' ) as $n)
 			{
 				$charinfo[$char->name][$n] = (string) $_charsheet->result->$n;
 			}
@@ -77,12 +84,26 @@ class Characters extends Controller
 				$charinfo[$char->name]['sex'] = 'She';
 				$charinfo[$char->name]['sex2'] = 'Her';
 			}
-			
+
+			if ($charinfo[$char->name]['cloneSkillPoints'] < $charinfo[$char->name]['extra_info']['skillpoints_total'])
+			{
+			    $alerts[] = "{$char->name} clone Outdated";
+			}
+
 			$global['totalisk'] += $charinfo[$char->name]['balance'];
 			$global['totalsp'] += $charinfo[$char->name]['extra_info']['skillpoints_total'];
 		}		
-		masort($charinfo, array('isTraning', 'balance'));
-		$data['content'] = $this->load->view('charoverview', array('data' => $charinfo, 'global' => $global), True);
+		
+		foreach ($account_training as $k => $v)
+		{
+		    if ($v == 0)
+		    {
+		        $alerts[] = "Account with ".implode(', ', $this->eveapi->accounts[$k])." Has no Character Training.";
+		    }
+		}
+		
+		masort($charinfo, array('name'));
+		$data['content'] = $this->load->view('charoverview', array('data' => $charinfo, 'global' => $global, 'alerts' => $alerts), True);
 		$this->load->view('template', $data);
 	}
 

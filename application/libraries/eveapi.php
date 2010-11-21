@@ -28,6 +28,11 @@ class Eveapi
     **/
     public $skip_characters = array();
 
+    /**
+    * List of Characters located on an account
+    **/
+    public $accounts = array();
+
 	/**
 	* Constructor, initialized Ale api, and loads configuration
 	*
@@ -116,6 +121,8 @@ class Eveapi
                 {
                     continue;
                 }
+
+                $this->accounts[(int) $v][] = $character->name;
 
 				$this->characters[(string) $character->name] = (object) array(
 					'name' => (string) $character->name,

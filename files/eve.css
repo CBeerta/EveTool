@@ -268,7 +268,7 @@ a:hover {
 .post .title a {
 	letter-spacing: -2px;
 	text-decoration: none;
-	text-transform: lowercase;
+	/* text-transform: lowercase; */
 	color: #414141;
 	border: none;
 }

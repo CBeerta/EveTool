@@ -47,14 +47,20 @@ class Cache {
 		}
     }
     
-    public function get($item)
+    public function get($key)
     {
-        return ($this->memcache->get($item));
+        return (unserialize($this->memcache->get($key)));
     }
     
-    public function set($item, $value, $flag = MEMCACHE_COMPRESSED, $expire = 86400)
+    public function set($key, $value, $flag = MEMCACHE_COMPRESSED, $expire = 86400)
     {
-        return ($this->memcache->set($item, $value, $flag, $expire));
+        $_value = serialize($value);
+        if (strlen($_value) > 1024*1024)
+        {
+            error_log("{$key} : {$value} exceends 1mb");
+            return false;
+        }
+        return ($this->memcache->set($key, $_value, $flag, $expire));
     }
     
 }

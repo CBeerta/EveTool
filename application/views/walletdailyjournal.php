@@ -1,3 +1,6 @@
+<!--
+<?php #print_r($daily); ?>
+-->
 <div id="content">
 <table width="100%">
     <caption>Wallet Journal, grouped by Day</caption>

@@ -1,4 +1,6 @@
-
+<!-- 
+<?php print_r($data); ?>
+-->
 <div id="content">
 
 	<div class="post">
@@ -10,6 +12,18 @@
 		</ul>
 		</p>
 	</div>
+<?php if(!empty($alerts)): ?>
+	<div class="post">
+		<h2>Alerts</h2>
+		<p>
+		<ul>
+        <?php foreach ($alerts as $alert): ?>
+            <li><?php echo $alert;?></li>
+	    <?php endforeach; ?>
+		</ul>
+		</p>
+	</div>
+<?php endif; ?>
 
 <?php foreach ($data as $i):?>
 			<div class="post">
