@@ -17,18 +17,16 @@ class Market extends Controller
 	public function index()
 	{
 		$orders = array();
-		$api = $this->eveapi->api;
-		$characters = $this->eveapi->load_characters();
 		
         $data['remaining']['buy'] = $data['total']['buy'] = $data['remainingPrice']['buy'] = $data['totalPrice']['buy'] = 0;
         $data['remaining']['sell'] = $data['total']['sell'] = $data['remainingPrice']['sell'] = $data['totalPrice']['sell'] = 0;
         $data['sell'] = $data['buy'] = array();
         $typeidlist = array();
 		
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
 		{
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
-			$market = $api->char->MarketOrders();
+			$this->eveapi->setCredentials($char);
+			$market = $this->eveapi->MarketOrders();
 			
 			foreach ($market->result->orders as $_order)
 			{

@@ -42,7 +42,7 @@
 					At <b><?php echo number_format($i['extra_info']['skillpoints_total']);?></b> Skillpoints <?php echo $i['sex']; ?> has a total of <b><?php echo $i['extra_info']['skills_total'];?></b> Skills Trained, <b><?php echo $i['extra_info']['skills_at_level'][5];?></b> of them at Level <b>5</b>.
 					<?php echo $i['sex2']; ?> Wallet currently sits at <b><?php echo number_format($i['balance']); ?></b> ISK.
 					</p>
-					<ul>
+					<ul style="clear: left;">
 					    <li><a href="<?php echo site_url("characters/ships/{$i['name']}");?>">Ships <?php echo $i['name']; ?> can fly.</a></li>
 					</ul>
 				</div>

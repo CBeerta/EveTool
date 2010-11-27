@@ -54,6 +54,21 @@ class Eveapi
         }
 	}
 
+
+    /**
+    * Handles calls to Ale, always assumes 'char' context in the api
+    *
+    * @access public
+    * @param $name name of the Function in Ale to call
+    * @param $arguments arguments to pass through
+    *
+    * @todo this could be used to actually load both char and corp stuff, and merge them?
+    */
+	public function __call($name, array $arguments)
+	{
+	    return $this->api->char->$name($arguments);
+	}
+
 	/**
 	*
 	* Convert an ale simplexml object to an array
@@ -64,11 +79,14 @@ class Eveapi
 	* @param array An Array to merge with each dataset
 	* 
 	**/
-	public static function from_xml($xml, $type, $to_merge = array())
+	public static function from_xml($xml, $to_merge = array())
 	{
 		$output = array();
 
-		foreach ($xml->result->$type as $row)
+        $children = $xml->result->children();
+        $name =  $children[0]->attributes()->name;
+
+		foreach ($xml->result->$name as $row)
 		{
 			$index = count($output);
 			foreach ($row->attributes() as $name => $value)
@@ -85,12 +103,30 @@ class Eveapi
 		return ($output);
 	}
 
+
+	/**
+    * Lazy setCredentials 
+    *
+    * @access public
+    * @param object character to authenticate as
+    **/
+    public function setCredentials($char)
+    {
+        if (!is_object($char))
+        {
+            die("\$char is not an object!");
+        }
+        
+        return ($this->api->setCredentials($char->apiUser, $char->apiKey, $char->characterID));
+    }
+	
+
 	/**
 	* Load Characters from all accounts (skipping the ignored ones)
 	*
 	* @access public
 	**/
-	public function load_characters()
+	public function characters()
 	{
 		foreach ($this->api_credentials['apiuser'] as $k => $v)
 		{
@@ -135,7 +171,7 @@ class Eveapi
 			}
 		}
 		ksort($this->characters);			
-		return (array_keys($this->characters));
+		return ($this->characters);
 	}
 
 
@@ -148,7 +184,7 @@ class Eveapi
     * @params book $with_contents Wether to load container contents or not
     *
     **/
-	public function load_assets($characters, $with_contents = True)
+	public function assets($characters, $with_contents = True)
 	{
 	    $CI =& get_instance();
 	    $cache_key = 'evetool_'.md5(implode(':', $characters)).'_'.$with_contents;
@@ -261,13 +297,13 @@ class Eveapi
 	* @access public
 	*
 	**/
-	public function get_reftypes()
+	public function reftypes()
 	{
         $CI =& get_instance();
         
 		if ( ($reftypes = $CI->cache->get('evetool_reftypes')) === False )
 		{
-		    $_reftypes = eveapi::from_xml($this->api->eve->RefTypes(), 'refTypes');
+		    $_reftypes = eveapi::from_xml($this->api->eve->RefTypes());
 		
 		    $reftypes = array();
 		
@@ -289,7 +325,7 @@ class Eveapi
 	* @access public
 	*
 	**/
-	public function get_skilltree()
+	public function skilltree()
 	{
         $CI =& get_instance();
         
@@ -321,7 +357,7 @@ class Eveapi
     *
     * @access public
     **/
-	public function get_stationlist()
+	public function stationlist()
     {
         $CI =& get_instance();
 

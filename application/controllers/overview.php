@@ -26,7 +26,6 @@ class Overview extends Controller
     **/	
 	private function _add_mailbody($headers)
 	{
-		$api = $this->eveapi->api;
 		$mails = $output = array();
 
 		/*
@@ -51,9 +50,9 @@ class Overview extends Controller
 		*/
 		foreach ($mails as $k => $v)
 		{
-			$api->setCredentials($v->apiUser, $v->apiKey, $v->characterID);
-			$message = $api->char->MailBodies(array('ids' => implode(',', $v->idlist)));
-			$_mailinglists = eveapi::from_xml($api->char->MailingLists(), 'mailingLists');
+			$this->eveapi->setCredentials($v);
+			$message = $this->eveapi->api->char->MailBodies(array('ids' => implode(',', $v->idlist)));
+			$_mailinglists = eveapi::from_xml($this->eveapi->MailingLists(), 'mailingLists');
 
             foreach ($_mailinglists as $list)
             {
@@ -99,13 +98,11 @@ class Overview extends Controller
 	public function index()
 	{
 		$data = $headers = array();
-		$api = $this->eveapi->api;
-		$characters = $this->eveapi->load_characters();
 
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
 		{
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
-			$headers = array_merge($headers, eveapi::from_xml($api->char->MailMessages(), 'messages', array('character' => $char)));
+			$this->eveapi->setCredentials($char);
+			$headers = array_merge($headers, eveapi::from_xml($this->eveapi->MailMessages(), array('character' => $char)));
 		}
 
 		$mails = $this->_add_mailbody($headers);
@@ -129,13 +126,11 @@ class Overview extends Controller
 	public function events()
 	{
 		$data = $events = array();
-		$api = $this->eveapi->api;
-		$characters = $this->eveapi->load_characters();
 
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
 		{
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
-			$events = array_merge ($events, eveapi::from_xml($api->char->UpcomingCalendarEvents(), 'upcomingEvents', array('character' => $char)));
+			$this->eveapi->setCredentials($char);
+			$events = array_merge ($events, eveapi::from_xml($this->eveapi->UpcomingCalendarEvents(), array('character' => $char)));
 		}
 
         $eventidlist = array();

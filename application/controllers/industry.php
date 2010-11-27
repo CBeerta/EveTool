@@ -47,17 +47,14 @@ class Industry extends Controller
     public function index($offset = 0, $per_page = 15)
 	{
 		$data['page_title'] = $this->page_title;
-		//$data['submenu'] = $this->submenu;
 		
         $index = 0;
         $data['data'] = array();
-		$api = $this->eveapi->api;
-		$characters = $this->eveapi->load_characters();
 
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
 		{
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
-			$jobs = $api->char->IndustryJobs();
+			$this->eveapi->setCredentials($char);
+			$jobs = $this->eveapi->IndustryJobs();
 			
 			foreach ($jobs->result->jobs as $_job)
 			{

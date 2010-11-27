@@ -11,13 +11,13 @@ class Assets extends Controller
     **/
 	private function _template($data)
 	{
-		$characters = $this->eveapi->load_characters();
+		$characters = array_keys($this->eveapi->characters());
         $menu = array();
 		foreach ($characters as $v)
 		{
 		    $menu["index/{$v}"] = $v;
 		}
-		$data['submenu'] = array_merge(array('Inventory' => $menu), array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal')));
+		$data['submenu'] = array_merge(array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal')), array('Assets' => $menu));
 		$data['page_title'] = 'Assets'; 
 
 		$data['search'] = (object) array('url' => 'assets/search', 'header' => 'Search Assets');
@@ -36,8 +36,8 @@ class Assets extends Controller
 		$data = array();
         $daily = array();
 
-        $reftypes = $this->eveapi->get_reftypes();
-        
+        $reftypes = $this->eveapi->reftypes();
+
         foreach ($wallet as $entry)
         {
             $day = api_time_print($entry['date'], 'Y-m-d');
@@ -70,18 +70,12 @@ class Assets extends Controller
                 $daily[$day][$entry['refTypeID']]['income'] += $entry['amount'];
                 $total[$day]['income'] += $entry['amount'];
             }
-			
-			if (!isset($balance[$day]))
-			{
-				/* Wallet journal is chronoligcally ordered, so we just want the topmost daily entry as that is the "last for that day" */
-				$balance[$day] = $entry['balance'];
-			}
         }
+        krsort($daily);		
 
         $data['daily'] = $daily;
         $data['total'] = $total;
-		$data['balance'] = $balance;
-		
+
 		return ($data);
 	}
 
@@ -94,9 +88,9 @@ class Assets extends Controller
     **/
 	public function ajax_contents($itemID)
 	{
-		$characters = $this->eveapi->load_characters();
+		$characters = array_keys($this->eveapi->characters());
 	    
-        $assets = $this->eveapi->load_assets($characters, True);
+        $assets = $this->eveapi->assets($characters, True);
 
         $contents = array();
         $index = 0;
@@ -120,17 +114,17 @@ class Assets extends Controller
     **/
 	public function index($character = 'All', $offset = 0, $per_page = 20)
 	{
-		$characters = $this->eveapi->load_characters();
+		$characters = array_keys($this->eveapi->characters());
 
         if ($character == 'All' || !in_array($character, $characters))
         {
     		$data['caption'] = "Assets for All Characters";
-            $assets = $this->eveapi->load_assets($characters, False);
+            $assets = $this->eveapi->assets($characters, False);
         }
         else
         {
     		$data['caption'] = "Assets for {$character}";
-            $assets = $this->eveapi->load_assets(array($character), False);
+            $assets = $this->eveapi->assets(array($character), False);
         }
         
 		$total = count($assets);
@@ -148,9 +142,9 @@ class Assets extends Controller
     **/
 	public function search()
 	{
-		$characters = $this->eveapi->load_characters();
+		$characters = array_keys($this->eveapi->characters());
 
-        $assets = $this->eveapi->load_assets($characters, True);
+        $assets = $this->eveapi->assets($characters, True);
 
         $search = $this->input->post('s');
         $found = array();
@@ -185,17 +179,14 @@ class Assets extends Controller
     **/
 	public function journal()
 	{
-		$api = $this->eveapi->api;
-		$this->eveapi->load_characters();
-		
 		$walletjournal = array();
 		
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
 		{
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
-			$walletjournal = array_merge($walletjournal, eveapi::from_xml($api->char->WalletJournal(), 'entries'));
+			$this->eveapi->setCredentials($char);
+			$walletjournal = array_merge($walletjournal, eveapi::from_xml($this->eveapi->WalletJournal(), array('char' => $char)));
 		}
-		masort($walletjournal, array('unixdate'));
+		#masort($walletjournal, array('unixdate'));
 		
 		$data['content'] = $this->load->view('walletdailyjournal', $this->_get_daily_walletjournal($walletjournal), True);
         $this->_template($data);
@@ -209,15 +200,12 @@ class Assets extends Controller
     **/
 	public function transactions($offset = 0, $per_page = 20)
 	{
-		$api = $this->eveapi->api;
-		$this->eveapi->load_characters();
-		
 		$transactionlist = array();
 		
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
 		{
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
-			$transactionlist = array_merge($transactionlist, eveapi::from_xml($api->char->WalletTransactions(), 'transactions', array('char' => $char)));
+			$this->eveapi->setCredentials($char);
+			$transactionlist = array_merge($transactionlist, eveapi::from_xml($this->eveapi->WalletTransactions(), array('char' => $char)));
 		}
 		
 		masort($transactionlist, array('unixtransactionDateTime'));
@@ -230,6 +218,5 @@ class Assets extends Controller
 	}
 
 }
-
 
 ?>

@@ -27,19 +27,17 @@ class Characters extends Controller
 	public function index()
 	{
 		$data['page_title'] = $this->page_title;
-		$api = $this->eveapi->api;
-		$characters = $this->eveapi->load_characters();
 		
 		$charinfo = array();
-		$skilltree = $this->eveapi->get_skilltree();
+		$skilltree = $this->eveapi->skilltree();
 		
 		$global['totalisk'] = $global['totalsp'] = 0;
 
 		$alerts = array();
 		
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
 		{
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+			$this->eveapi->setCredentials($char);
 			if (!isset($account_training[$char->apiUser]))
 			{
     			$account_training[$char->apiUser] = 0;
@@ -50,7 +48,7 @@ class Characters extends Controller
 				$charinfo[$char->name] = (array) $char;
 			}
 
-			$_training = $api->char->SkillInTraining();
+			$_training = $this->eveapi->SkillInTraining();
 			if ((string) $_training->result->skillInTraining > 0)
 			{
 				foreach (array('trainingTypeID', 'trainingToLevel', 'trainingStartTime', 'trainingEndTime' ) as $n)
@@ -66,7 +64,7 @@ class Characters extends Controller
 				$charinfo[$char->name]['isTraning'] = -1;
 			}
 
-			$_charsheet = $api->char->CharacterSheet();
+			$_charsheet = $this->eveapi->CharacterSheet();
 			$charinfo[$char->name]['extra_info'] = eveapi::charsheet_extra_info($_charsheet);
 
 			foreach (array('balance', 'corp', 'DoB', 'corporationName', 'allianceName', 'gender', 'cloneSkillPoints', 'cloneName' ) as $n)
@@ -119,15 +117,14 @@ class Characters extends Controller
 		$data['page_title'] = $this->page_title;
         $canfly = $has = array();
 
-		$api = $this->eveapi->api;
-		if (!in_array($character, $this->eveapi->load_characters()))
+		if (!in_array($character, array_keys($this->eveapi->characters())))
 		{
 		    die("<h1>Char {$character} not found</h1>");
 	    }
 	    $char = $this->eveapi->characters[$character];
-		$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+		$this->eveapi->setCredentials($char);
 		
-		$_charsheet = $api->char->CharacterSheet();
+		$_charsheet = $this->eveapi->CharacterSheet();
 		foreach ($_charsheet->result->skills as $skill)
 		{
             $has[$skill->typeID] = $skill->level;

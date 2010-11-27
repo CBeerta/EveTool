@@ -50,7 +50,7 @@ function api_time_to_complete($endTime)
 	$diff = ($end - gmmktime());
 	if ($diff <= 0)
 	{
-		return("Done: ".date('D, j M Y G:i', $end));
+		return("Done: ".date('D, j M Y', $end));
 	}
 	
     $info = array();
@@ -114,7 +114,7 @@ function regionid_to_name($regionID)
 * @access public
 * @param  string
 **/
-function locationid_to_name($locationID, $shorten = False)
+function locationid_to_name($locationID, $shorten = True)
 {
 
     if (empty($locationID))
@@ -123,7 +123,7 @@ function locationid_to_name($locationID, $shorten = False)
     }
     
     $CI =& get_instance();
-    $stationlist = $CI->eveapi->get_stationlist();
+    $stationlist = $CI->eveapi->stationlist();
 
     if (isset($stationlist[(int) $locationID]))
     {
@@ -144,8 +144,11 @@ function locationid_to_name($locationID, $shorten = False)
     {
         if ($shorten)
         {
-            $name = explode('-', $row->itemName);
-            return ("{$name[0]} - {$name[1]}");
+            preg_match('#^(.+( - Moon)?) - .*$#', $row->itemName, $matches);
+            if (isset($matches[1]))
+            {
+                return ($matches[1]);
+            }
         }
         return($row->itemName);
     }
