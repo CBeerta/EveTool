@@ -17,9 +17,6 @@ class Cli extends Controller
      */
 	public function cron_update()
 	{
-        $api = $this->eveapi->api;
-        $characters = $this->eveapi->load_characters();
-
 		print date('r')." - Updating XML Cache:\n";
 	
 		$index = 0;
@@ -38,14 +35,14 @@ class Cli extends Controller
             'Upcoming Calendar Events' => 'UpcomingCalendarEvents',
 		);
 
-		foreach ($this->eveapi->characters as $char)
+		foreach ($this->eveapi->characters() as $char)
         {
-			$api->setCredentials($char->apiUser, $char->apiKey, $char->characterID);
+			$this->eveapi->setCredentials($char);
             print " - {$char->name}: ";
             foreach ($what_to_update as $k => $v)
             {
                 print ".. {$k}";
-                $res = $api->char->$v();
+                $res = $this->eveapi->api->char->$v();
             }
             print "\n";
         }

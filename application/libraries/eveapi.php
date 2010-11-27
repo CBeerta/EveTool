@@ -62,7 +62,7 @@ class Eveapi
     * @param $name name of the Function in Ale to call
     * @param $arguments arguments to pass through
     *
-    * @todo this could be used to actually load both char and corp stuff, and merge them?
+    * @TODO this could be used to actually load both char and corp stuff, and merge them?
     */
 	public function __call($name, array $arguments)
 	{
@@ -171,7 +171,7 @@ class Eveapi
 			}
 		}
 		ksort($this->characters);			
-		return ($this->characters);
+		return($this->characters);
 	}
 
 
@@ -380,57 +380,82 @@ class Eveapi
         return ($stationlist);
     }
 
-
 	/**
 	*
-	* Extract additional info frm the charactersheet
+	* Pull Charactersheet  and enhance it with some additional info
 	*
-    * @todo Do we need this in here, or have it as helper?
-    * @todo Needs to extract more info
-    *
-    *
     * @access public	
-    * @param object $charsheet AleXML of the character sheed
     *
     **/
-	public static function charsheet_extra_info($charsheet)
-	{
+    public function CharacterSheet()
+    {
+#       print '<pre>';
+        $data = array();
+        
+	    $charsheet = $this->api->char->CharacterSheet();
+        //$skilltree = $this->skilltree();
+
+        $data['queue'] = eveapi::from_xml($this->SkillQueue());
+        $data['skills_in_queue'] = count($data['queue']);
+
+	    foreach ($charsheet->result->children() as $v)
+	    {
+	        if (count($v->children()) > 0)
+	        {
+	            continue;
+            }
+	        $data[$v->getName()] = (string) $v;
+	    }
+
         $data['skills_total'] = $data['skillpoints_total'] = 0;
         $data['skills_at_level'] = array_fill(0, 6, 0);
-        
-		
-        //print '<pre>';
+        $data['skills'] = array();
+
 		foreach ($charsheet->result->skills as $_skill)
 		{
 			$skill = $_skill->attributes();
-			//print_r($skill);
+			$data['skills'][(int) $skill->typeID] = (object) array('skillpoints' => (int) $skill->skillpoints, 'level' => (int) $skill->level);
             $data['skillpoints_total'] += (int) $skill['skillpoints'];
-			/*            
-            $s = $this->eveapi->skilltree[$skill['typeID']];
-            if (!isset($skillTree[$s['groupID']]))
+            
+/*
+            if (!isset($skilltree[$s['groupID']]))
             {
-                $skillTree[$s['groupID']] = array('groupSP' => 0, 'skillCount' => 0);
+                $skilltree[$s['groupID']] = array('groupSP' => 0, 'skillCount' => 0);
             }
 
-            $skillTree[$s['groupID']]['skills'][$skill['typeID']] = array(
+            $skilltree[$s['groupID']]['skills'][$skill['typeID']] = array(
                 'typeID' => $skill['typeID'],
                 'skillpoints' => $skill['skillpoints'],
                 'rank' => $s['rank'],
                 'typeName' => $s['typeName'],
                 'description' => $s['description'],
                 'level' => $skill['level']);
-            $skillTree[$s['groupID']]['groupSP'] += $skill['skillpoints'];
-            $skillTree[$s['groupID']]['skillCount'] ++;
-            */
+            $skilltree[$s['groupID']]['groupSP'] += $skill['skillpoints'];
+            $skilltree[$s['groupID']]['skillCount'] ++;
+*/
+
             $data['skills_total'] ++;
           	$data['skills_at_level'][(int) $skill['level']] ++;
 		}
 		
-		//print_r($data);
-        
-        //die();
-		return ($data);
-	}
+		if ($data['gender'] == 'Male')
+		{
+			$data['sex'] = 'He';
+			$data['sex2'] = 'His';
+		}
+		else
+		{
+			$data['sex'] = 'She';
+			$data['sex2'] = 'Her';
+		}
+
+#       print_r($skilltree);
+#		print_r($data);
+#		die();
+		
+        return ($data);
+    }
+
 }
 
 

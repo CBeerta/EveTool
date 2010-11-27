@@ -38,6 +38,8 @@ class Characters extends Controller
 		foreach ($this->eveapi->characters() as $char)
 		{
 			$this->eveapi->setCredentials($char);
+			$charsheet = $this->eveapi->CharacterSheet();
+			
 			if (!isset($account_training[$char->apiUser]))
 			{
     			$account_training[$char->apiUser] = 0;
@@ -58,38 +60,28 @@ class Characters extends Controller
 				$charinfo[$char->name]['trainingTypeName'] = $skilltree[(string) $_training->result->trainingTypeID];
 				$charinfo[$char->name]['isTraning'] = 1;
     			$account_training[$char->apiUser] = 1;
+
+    			$skills_in_queue = $charsheet['skills_in_queue'];
+    			$endtime = strtotime($charsheet['queue'][$skills_in_queue - 1]['endTime']);
+                if ($endtime < (time() + 24 * 60 * 60))
+                {
+                    $alerts[] = "{$char->name} has free time in her Training Queue";
+                }
 			}
 			else
 			{
 				$charinfo[$char->name]['isTraning'] = -1;
 			}
 
-			$_charsheet = $this->eveapi->CharacterSheet();
-			$charinfo[$char->name]['extra_info'] = eveapi::charsheet_extra_info($_charsheet);
+            $charinfo[$char->name] = array_merge($charinfo[$char->name], $charsheet);
 
-			foreach (array('balance', 'corp', 'DoB', 'corporationName', 'allianceName', 'gender', 'cloneSkillPoints', 'cloneName' ) as $n)
-			{
-				$charinfo[$char->name][$n] = (string) $_charsheet->result->$n;
-			}
-			
-			if ($charinfo[$char->name]['gender'] == 'Male')
-			{
-				$charinfo[$char->name]['sex'] = 'He';
-				$charinfo[$char->name]['sex2'] = 'His';
-			}
-			else
-			{
-				$charinfo[$char->name]['sex'] = 'She';
-				$charinfo[$char->name]['sex2'] = 'Her';
-			}
-
-			if ($charinfo[$char->name]['cloneSkillPoints'] < $charinfo[$char->name]['extra_info']['skillpoints_total'])
+			if ($charinfo[$char->name]['cloneSkillPoints'] < $charinfo[$char->name]['skillpoints_total'])
 			{
 			    $alerts[] = "{$char->name} clone Outdated";
 			}
 
 			$global['totalisk'] += $charinfo[$char->name]['balance'];
-			$global['totalsp'] += $charinfo[$char->name]['extra_info']['skillpoints_total'];
+			$global['totalsp'] += $charinfo[$char->name]['skillpoints_total'];
 		}		
 		
 		foreach ($account_training as $k => $v)
@@ -124,11 +116,7 @@ class Characters extends Controller
 	    $char = $this->eveapi->characters[$character];
 		$this->eveapi->setCredentials($char);
 		
-		$_charsheet = $this->eveapi->CharacterSheet();
-		foreach ($_charsheet->result->skills as $skill)
-		{
-            $has[$skill->typeID] = $skill->level;
-        }
+		$charsheet = $this->eveapi->CharacterSheet();
 
         $q = $this->db->query("
             SELECT
@@ -164,7 +152,10 @@ class Characters extends Controller
                 {
                     continue;
                 }
-                if (isset($has[$ship["skill{$l}req"]]) && $has[$ship["skill{$l}req"]] >= $ship["skill{$l}level"])
+                
+                if (isset($charsheet['skills'][$ship["skill{$l}req"]]) && 
+                    $charsheet['skills'][$ship["skill{$l}req"]]->level >= $ship["skill{$l}level"]
+                    )
                 {
                     $canflythis = True;
                 }
