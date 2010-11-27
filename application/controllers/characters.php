@@ -10,14 +10,26 @@
 class Characters extends Controller
 {
     /**
-    * Page Title
+    *
+    * Load the Template and add submenus
+    *
+    * @access private
+    * @param array $data contains the stuff handed over to the template
     **/
-	public $page_title = 'Characters';
+	private function _template($data)
+	{
+		$characters = array_keys($this->eveapi->characters());
+        $menu = array();
+		foreach ($characters as $v)
+		{
+		    $menu["index/{$v}"] = $v;
+		}
+		//$data['submenu'] = array();
+		$data['page_title'] = 'Characters'; 
 
-	/**
-	* Contains the sidebar menu
-	**/
-	public $submenu;
+		//$data['search'] = (object) array('url' => 'assets/search', 'header' => 'Search Assets');
+		$this->load->view('template', $data);
+	}
 
 	/**
 	* Blog style display of all characters
@@ -26,8 +38,6 @@ class Characters extends Controller
 	**/
 	public function index()
 	{
-		$data['page_title'] = $this->page_title;
-		
 		$charinfo = array();
 		$skilltree = $this->eveapi->skilltree();
 		
@@ -41,39 +51,15 @@ class Characters extends Controller
 			$charsheet = $this->eveapi->CharacterSheet();
 			
 			if (!isset($account_training[$char->apiUser]))
-			{
+			{   // if unset, set to 0
     			$account_training[$char->apiUser] = 0;
 			}
+			if ($charsheet['isTraining'])
+			{   // found a char that is training on this account
+			    $account_training[$char->apiUser] = 1;
+		    }
 
-			if (!isset($charinfo[$char->name]))
-			{
-				$charinfo[$char->name] = (array) $char;
-			}
-
-			$_training = $this->eveapi->SkillInTraining();
-			if ((string) $_training->result->skillInTraining > 0)
-			{
-				foreach (array('trainingTypeID', 'trainingToLevel', 'trainingStartTime', 'trainingEndTime' ) as $n)
-				{
-					$charinfo[$char->name][$n] = (string) $_training->result->$n;
-				}
-				$charinfo[$char->name]['trainingTypeName'] = $skilltree[(string) $_training->result->trainingTypeID];
-				$charinfo[$char->name]['isTraning'] = 1;
-    			$account_training[$char->apiUser] = 1;
-
-    			$skills_in_queue = $charsheet['skills_in_queue'];
-    			$endtime = strtotime($charsheet['queue'][$skills_in_queue - 1]['endTime']);
-                if ($endtime < (time() + 24 * 60 * 60))
-                {
-                    $alerts[] = "{$char->name} has free time in her Training Queue";
-                }
-			}
-			else
-			{
-				$charinfo[$char->name]['isTraning'] = -1;
-			}
-
-            $charinfo[$char->name] = array_merge($charinfo[$char->name], $charsheet);
+            $charinfo[$char->name] = array_merge((array) $char, $charsheet);
 
 			if ($charinfo[$char->name]['cloneSkillPoints'] < $charinfo[$char->name]['skillpoints_total'])
 			{
@@ -83,7 +69,7 @@ class Characters extends Controller
 			$global['totalisk'] += $charinfo[$char->name]['balance'];
 			$global['totalsp'] += $charinfo[$char->name]['skillpoints_total'];
 		}		
-		
+
 		foreach ($account_training as $k => $v)
 		{
 		    if ($v == 0)
@@ -91,12 +77,31 @@ class Characters extends Controller
 		        $alerts[] = "Account with ".implode(', ', $this->eveapi->accounts[$k])." Has no Character Training.";
 		    }
 		}
-		
+
 		masort($charinfo, array('name'));
-		$data['content'] = $this->load->view('charoverview', array('data' => $charinfo, 'global' => $global, 'alerts' => $alerts), True);
-		$this->load->view('template', $data);
+        $this->_template(array('content' => $this->load->view('charoverview', array('data' => $charinfo, 'global' => $global, 'alerts' => $alerts), True)));
 	}
 
+    /**
+    * Display Charactersheet
+    *
+    * @access public
+    * @param string $character to show ships of
+    **/
+	public function sheet($character)
+	{
+
+		if (!in_array($character, array_keys($this->eveapi->characters())))
+		{
+		    die("<h1>Char {$character} not found</h1>");
+	    }
+	    $char = $this->eveapi->characters[$character];
+		$this->eveapi->setCredentials($char);
+
+		$data = $this->eveapi->CharacterSheet();
+	
+        $this->_template(array('content' => $this->load->view('skilltree', $data, True)));
+    }
 
     /**
     * Display characters ship abilities
@@ -106,7 +111,6 @@ class Characters extends Controller
     **/
 	public function ships($character)
 	{
-		$data['page_title'] = $this->page_title;
         $canfly = $has = array();
 
 		if (!in_array($character, array_keys($this->eveapi->characters())))
@@ -172,9 +176,8 @@ class Characters extends Controller
             }
         }
         
-		$data['content'] = $this->load->view('ships', array('canfly' => $canfly, 'character' => $character), True);
-		$this->load->view('template', $data);
-	}
+        $this->_template(array('content' => $this->load->view('ships', array('canfly' => $canfly, 'character' => $character), True)));
+    }
 
 }
 

@@ -44,7 +44,7 @@ ul, ol {
 }
 
 a {
-	text-decoration: underline;
+	text-decoration: none;
 	color: #EB1D1D;
 }
 
@@ -82,7 +82,7 @@ img.get_character_portrait#left {
     margin: 5px;
 }
 img.get_character_portrait#right {
-    float: left;
+    float: right;
     vertical-align: left;
     margin: 5px;
 }
@@ -265,7 +265,7 @@ a:hover {
 	padding: 0px 0px 0px 0px;
 }
 
-.post .title a {
+.post .title {
 	letter-spacing: -2px;
 	text-decoration: none;
 	/* text-transform: lowercase; */
@@ -396,7 +396,8 @@ a#fb_location,
 a#fb_character,
 a#fb_item,
 a#fb_fitting {
-        color: #8BD80E;
+        color: #F94900;
+        text-decoration: none;
 }
 
 #character_snippet,

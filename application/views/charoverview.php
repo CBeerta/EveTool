@@ -4,7 +4,7 @@
 <div id="content">
 
 	<div class="post">
-		<h2>Totals</h2>
+		<h2 class="title">Totals</h2>
 		<p>
 		<ul>
 		<li>You currently have <b><?php echo number_format($global['totalisk']);?></b> ISK total on all Characters.
@@ -27,14 +27,13 @@
 
 <?php foreach ($data as $i):?>
 			<div class="post">
-				<h2 class="title"><a href="<?php echo site_url('skillsheet/'.$i['name']);?>"><?php echo $i['name']; ?></a></h2>
+				<h2 class="title"><?php echo $i['name']; ?><?php echo get_character_portrait($i, 64, 'left'); ?></h2>
 				<div class="entry">
 					<p>
 					<!-- there is WAY to much php code right here. Not pretty -->
-                    <?php echo get_character_portrait($i, 64, 'left'); ?>
 					<?php echo $i['name']; ?> (<i><?php echo $i['corporationName']; ?><?php if (!empty($i['allianceName'])): echo ' / '.$i['allianceName']; endif;?></i>)
-					<?php if (!empty($i['trainingTypeID'])):?>
-					is currently Training <b><?php echo $i['trainingTypeName']['typeName']; ?></b> to Level <b><?php echo $i['trainingToLevel']; ?></b>. 
+					<?php if ($i['isTraining']):?>
+					is currently Training <b><?php echo $i['trainingTypeName']; ?></b> to Level <b><?php echo $i['trainingToLevel']; ?></b>. 
 					<?php echo $i['sex']; ?> started Training <?php echo api_time_print($i['trainingStartTime']);?> and will finish <?php echo api_time_print($i['trainingEndTime']);?> (<b><?php echo api_time_to_complete($i['trainingEndTime']);?></b>).
 					<?php else: ?>
 					is currently <b>not</b> Training a Skill.
@@ -43,7 +42,8 @@
 					<?php echo $i['sex2']; ?> Wallet currently sits at <b><?php echo number_format($i['balance']); ?></b> ISK.
 					</p>
 					<ul style="clear: left;">
-					    <li><a href="<?php echo site_url("characters/ships/{$i['name']}");?>">Ships <?php echo $i['name']; ?> can fly.</a></li>
+					    <li><a href="<?php echo site_url("characters/sheet/{$i['name']}");?>">Character Sheet</a></li>
+					    <li><a href="<?php echo site_url("characters/ships/{$i['name']}");?>">Ships <?php echo $i['name']; ?> can fly</a></li>
 					</ul>
 				</div>
 			</div>

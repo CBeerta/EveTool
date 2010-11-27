@@ -393,9 +393,16 @@ class Eveapi
         $data = array();
         
 	    $charsheet = $this->api->char->CharacterSheet();
-        //$skilltree = $this->skilltree();
+        $skilltree = $this->skilltree();
 
         $data['queue'] = eveapi::from_xml($this->SkillQueue());
+
+        foreach($data['queue'] as $k => $v)
+        {
+            $data['queue'][$k] = array_merge($data['queue'][$k], $skilltree[$v['typeID']]);
+        }
+
+
         $data['skills_in_queue'] = count($data['queue']);
 
 	    foreach ($charsheet->result->children() as $v)
@@ -414,29 +421,71 @@ class Eveapi
 		foreach ($charsheet->result->skills as $_skill)
 		{
 			$skill = $_skill->attributes();
-			$data['skills'][(int) $skill->typeID] = (object) array('skillpoints' => (int) $skill->skillpoints, 'level' => (int) $skill->level);
+			$data['skills'][(int) $skill->typeID] = (object) array_merge($skilltree[(int) $skill->typeID], array('skillpoints' => (int) $skill->skillpoints, 'level' => (int) $skill->level));
             $data['skillpoints_total'] += (int) $skill['skillpoints'];
-            
-/*
-            if (!isset($skilltree[$s['groupID']]))
-            {
-                $skilltree[$s['groupID']] = array('groupSP' => 0, 'skillCount' => 0);
-            }
 
-            $skilltree[$s['groupID']]['skills'][$skill['typeID']] = array(
-                'typeID' => $skill['typeID'],
-                'skillpoints' => $skill['skillpoints'],
-                'rank' => $s['rank'],
-                'typeName' => $s['typeName'],
-                'description' => $s['description'],
-                'level' => $skill['level']);
-            $skilltree[$s['groupID']]['groupSP'] += $skill['skillpoints'];
-            $skilltree[$s['groupID']]['skillCount'] ++;
-*/
+            $groupID = $data['skills'][(int) $skill->typeID]->groupID;
+            
+            if (!isset($groups[$groupID]))
+            {
+                $groups[$groupID] = array('groupSP' => 0, 'skillCount' => 0);
+            }
+            $groups[$groupID]['groupSP'] += (int) $skill->skillpoints;
+            $groups[$groupID]['skillCount'] ++;
+            $groups[$groupID]['skills'][] = (int) $skill->typeID;
 
             $data['skills_total'] ++;
           	$data['skills_at_level'][(int) $skill['level']] ++;
 		}
+		$data['groups'] = $groups;
+
+        $attributes = array(
+            'intelligence' => array(3377,12376),
+            'charisma' => array(3376,12383),
+            'perception' => array(3379,12387),
+            'memory' => array(3378,12385),
+            'willpower' => array(3375,12386));
+
+		foreach (array_keys($attributes)  as $k)
+		{
+            $data['attributes'][$k] = (string) $charsheet->result->attributes->$k;
+		}
+
+
+		$training = $this->SkillInTraining();
+		if ((string) $training->result->skillInTraining > 0)
+		{
+			foreach (array('trainingTypeID', 'trainingToLevel', 'trainingStartTime', 'trainingEndTime' ) as $n)
+			{
+				$data[$n] = (string) $training->result->$n;
+			}
+			$data['trainingTypeName'] = $skilltree[(string) $training->result->trainingTypeID]['typeName'];
+		    $data['isTraining'] = True;
+		}
+		else
+		{
+		    $data['isTraining'] = False;
+		    $data['trainingTypeID'] = -1;
+	    }
+
+/* 
+        //FIXME is this even worh adding? will be gone soonish anyhow
+
+        foreach ($attributes as $attribute => $se)
+        {
+            $sll = isset($data[267]['skills'][$se[0]]['level']) ? $data[267]['skills'][$se[0]]['level'] : 0; // Learnings
+            $shl = isset($data[267]['skills'][$se[1]]['level']) ? $data[267]['skills'][$se[1]]['level'] : 0; // Advanced Learnings
+            //$enhancer = isset($charsheet['enhancers'][$attribute.'Bonus']['augmentatorValue']) ? $charsheet['enhancers'][$attribute.'Bonus']['augmentatorValue'] : 0;
+
+            $enhancer = 0;
+            $data['attributes'][$attribute] = number_format(($data['attributes'][$attribute] + $enhancer + $sll + $shl) * $learning, 2);
+
+            if ($enhancer > 0)
+            {
+                $data['attributes'][$attribute] .= " (+{$enhancer})";
+            }
+        }
+*/
 		
 		if ($data['gender'] == 'Male')
 		{
@@ -449,10 +498,6 @@ class Eveapi
 			$data['sex2'] = 'Her';
 		}
 
-#       print_r($skilltree);
-#		print_r($data);
-#		die();
-		
         return ($data);
     }
 

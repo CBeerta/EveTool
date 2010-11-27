@@ -1,6 +1,6 @@
 <table width="99%" id="location_snippet">
 		<th colspan="2">
-			<?php echo get_character_portrait($char, 64, 'left'); ?>
+			<?php echo get_character_portrait($char, 64, 'right'); ?>
 			<h1>
 			    <?php echo $char->characterName; ?>
 		    </h1>
