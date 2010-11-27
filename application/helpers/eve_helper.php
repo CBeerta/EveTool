@@ -189,11 +189,14 @@ function get_character_portrait($name, $size = 64, $css_id = 'portrait')
     $url  = "<img class='get_character_portrait' id='{$css_id}' src='";
     if ($size < 64)
     {
-        $url .= site_url("files/cache/char/{$id}/64/char.jpg");
+        //$url .= site_url("files/cache/char/{$id}/64/char.jpg");
+        $url .= "http://image.eveonline.com/Character/{$id}_64.jpg";
+
     }
     else
     {
-        $url .= site_url("files/cache/char/{$id}/{$size}/char.jpg");
+        //$url .= site_url("files/cache/char/{$id}/{$size}/char.jpg");
+        $url .= "http://image.eveonline.com/Character/{$id}_{$size}.jpg";
     }
     $url .= "' width='{$size}' height='{$size}'";
 

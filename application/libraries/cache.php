@@ -14,7 +14,8 @@
  * Empty Memcache class so we can just go ahead and use memcache functions even if it is not available
  *
  **/
-class NoMemcache {
+class NoMemcache 
+{
     function __call($name, $arguments)
     {
         return False;
@@ -22,14 +23,22 @@ class NoMemcache {
 }
 
 
-class Cache {
+class Cache 
+{
+    /**
+    * Memcache Object
+    **/
+    private $memcache;
 
-    public $memcache;
 
+    /**
+    * Setup memcache connection if possible, otherwise return empty NoMemcache class
+    *
+    *
+    **/
     public function __construct()
     {
         $CI =& get_instance();
-		$CI->config->load('evetool');
         
 		if (function_exists("memcache_connect"))
 		{
@@ -45,13 +54,21 @@ class Cache {
 		{
 			$this->memcache = new NoMemcache;
 		}
+
     }
     
+
+    /**
+    * Get something from the cache
+    **/
     public function get($key)
     {
         return (unserialize($this->memcache->get($key)));
     }
-    
+
+    /**
+    * Put somehting into the cache
+    **/
     public function set($key, $value, $flag = MEMCACHE_COMPRESSED, $expire = 86400)
     {
         $_value = serialize($value);

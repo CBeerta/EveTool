@@ -13,6 +13,12 @@
 */
 $config['base_url']	= "http://eurybe.local:9080";
 
+/**
+* Memcache Host
+**/
+$config['memcache_host'] = 'localhost:11211';
+
+
 /*
 |--------------------------------------------------------------------------
 | Index File

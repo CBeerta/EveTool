@@ -79,7 +79,7 @@ $autoload['plugin'] = array();
 |
 */
 
-$autoload['config'] = array('evetool');
+$autoload['config'] = array();
 
 
 /*
