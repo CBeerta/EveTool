@@ -1,5 +1,5 @@
 <!--
-<?php print_r($daily); ?>
+<?php #print_r($daily); ?>
 -->
 <div id="content">
 <table width="100%">

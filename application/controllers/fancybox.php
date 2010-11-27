@@ -20,7 +20,7 @@ class Fancybox extends Controller
 				mapSolarSystems AS sol,
 				mapRegions AS reg";
 
-		$stationlist = $this->eveapi->get_stationlist();
+		$stationlist = $this->eveapi->stationlist();
 		
 		if (!empty($stationlist[$id]))
 		{
@@ -62,7 +62,7 @@ class Fancybox extends Controller
     
     public function character($id)
     {
-        $this->load->view('snippets/character', array());
+        $this->load->view('snippets/character', array('char' => get_character_info($id)));
     }
     
     public function item($id)

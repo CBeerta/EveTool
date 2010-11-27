@@ -211,6 +211,18 @@ function get_character_portrait($name, $size = 64, $css_id = 'portrait')
 }
 
 
+function get_character_info($charID)
+{
+    $CI =& get_instance();
+    $xml = $CI->eveapi->api->eve->CharacterInfo(array('characterID' => $charID));
+
+    if (isset($xml->result))
+    {
+        return $xml->result;
+    }
+    return Null;
+}
+
 /**
 * Returns an '<img' string for a icon
 * 

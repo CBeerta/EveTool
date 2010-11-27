@@ -97,6 +97,8 @@ class Overview extends Controller
 	
 	public function index()
 	{
+	    // FIXME: We should first limit the headers to 10, before we pull _ALL_ mailbodies to improve performance
+	    
 		$data = $headers = array();
 
 		foreach ($this->eveapi->characters() as $char)
@@ -111,15 +113,15 @@ class Overview extends Controller
 		$mailidlist = array();
 		foreach ($mails as $k => $v)
 		{
-    		    if (in_array($v['messageID'], $mailidlist))
+		    if (in_array($v['messageID'], $mailidlist))
 		    {   
 		        # remove dublicates
 		        unset($mails[$k]);
 	        }
 		    $mailidlist[] = $v['messageID'];
 		}
+		$mails = array_splice($mails, 0, 10);
 		
-		$mails = array_splice($mails, 0, 15);
         $this->_template(array('content' => $this->load->view('mails', array('mails' => $mails), True)));
 	}
 
