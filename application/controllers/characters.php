@@ -16,7 +16,7 @@ class Characters extends Controller
     * @access private
     * @param array $data contains the stuff handed over to the template
     **/
-	private function _template($data)
+	private function _template($data, $current_char = False)
 	{
 		$characters = array_keys($this->eveapi->characters());
         $menu = array();
@@ -24,10 +24,15 @@ class Characters extends Controller
 		{
 		    $menu["index/{$v}"] = $v;
 		}
-		//$data['submenu'] = array();
-		$data['page_title'] = 'Characters'; 
 
-		//$data['search'] = (object) array('url' => 'assets/search', 'header' => 'Search Assets');
+		$data['page_title'] = "Characters"; 
+
+		if ($current_char)
+		{
+    		$data['submenu'] = array("Details on {$current_char}" => array("ships/{$current_char}" => "Ship Capabilites", "sheet/{$current_char}" => "Character Sheet"));
+    		$data['page_sub_title'] = $current_char; 
+		}
+
 		$this->load->view('template', $data);
 	}
 
@@ -100,7 +105,7 @@ class Characters extends Controller
 
 		$data = $this->eveapi->CharacterSheet();
 	
-        $this->_template(array('content' => $this->load->view('skilltree', $data, True)));
+        $this->_template(array('content' => $this->load->view('skilltree', $data, True)), $character);
     }
 
     /**
@@ -176,7 +181,7 @@ class Characters extends Controller
             }
         }
         
-        $this->_template(array('content' => $this->load->view('ships', array('canfly' => $canfly, 'character' => $character), True)));
+        $this->_template(array('content' => $this->load->view('ships', array('canfly' => $canfly, 'character' => $character), True)), $character);
     }
 
 }

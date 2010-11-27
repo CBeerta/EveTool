@@ -1,3 +1,4 @@
+<div id="content">
 <table width="100%">
 <caption>Ships <?php echo $character; ?> is Skilled to Fly.</caption>
 <?php foreach(array_keys($canfly) as $groupName): ?>
@@ -27,4 +28,4 @@
     <?php endforeach;?>
 <?php endforeach; ?>
 </table>
-
+</div>
