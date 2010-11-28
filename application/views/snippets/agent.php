@@ -9,11 +9,7 @@
         <div style="font-size: 300%;"><?php echo $agent->level; ?></div>
 	    <div style="padding-left:3px"><b>Q <?echo $agent->quality; ?></b></div>
 	</td>
-	<td width="68">
-        <a id="fb_character" style="color: black;" href="<?php echo site_url('/fancybox/character/'.$agent->itemID); ?>">
-    	    <?php echo get_character_portrait($agent->itemID, 64); ?>
-	    </a>
-	</td>
+	<td width="68"><?php echo get_character_portrait($agent->itemID, 64); ?></td>
 	<td valign="top" style="padding-left:5px" id="left">
 	    <b>Corporation</b>: <?php echo $agent->corpName; ?> / <?php echo $agent->division; ?> <br>
 	    <b>Faction</b>: <?php echo $agent->faction; ?> -<b> Region</b>: <?php echo $agent->region; ?> - <b>System</b>: <?php echo $agent->systemName; ?> (<font color="<?php ($agent->security < 0.5) ? 'red' : 'black'; ?>"><?php echo $agent->security;?></font>)<br>
