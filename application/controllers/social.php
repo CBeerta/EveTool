@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Overview extends Controller
+class Social  extends Controller
 {
     /**
     *
@@ -12,7 +12,7 @@ class Overview extends Controller
 	private function _template($data)
 	{
     	$data['submenu'] = array('Sections' => array('index' => 'Eve Mail', 'events' => 'Events'));
-		$data['page_title'] = 'Overview'; 
+		$data['page_title'] = 'Social'; 
 
 		$this->load->view('template', $data);
 	}

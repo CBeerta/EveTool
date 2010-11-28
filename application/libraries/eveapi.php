@@ -33,6 +33,11 @@ class Eveapi
     **/
     public $accounts = array();
 
+    /**
+    * Currently Authenticated Character ID
+    **/
+    public $current_characterID = False;
+
 	/**
 	* Constructor, initialized Ale api, and loads configuration
 	*
@@ -117,6 +122,7 @@ class Eveapi
             die("\$char is not an object!");
         }
         
+        $this->current_characterID = $char->characterID;
         return ($this->api->setCredentials($char->apiUser, $char->apiKey, $char->characterID));
     }
 	
@@ -378,6 +384,78 @@ class Eveapi
         $CI->cache->set('evetool_stationlist', $stationlist);
 
         return ($stationlist);
+    }
+
+    /**
+    * Return All available EVE Regions
+    *
+    * @access public
+    **/
+    public function eve_regions()
+    {
+        $CI =& get_instance();
+        $q = $CI->db->query('SELECT regionID,regionName,factionID FROM mapRegions ORDER BY regionName;');
+        $regions = array();
+        foreach ( $q->result() as $row )
+        {
+            $regions[$row->regionID] = $row->regionName;
+        }
+        return ($regions);
+    }
+
+    /**
+    * Return All available NPC Corporations
+    *
+    * @access public
+    **/
+    public function npc_corps()
+    {
+        $CI =& get_instance();
+
+        if (($corps = $CI->cache->get("evetool_npc_corps")) === False)
+        {
+            $q = $CI->db->query('SELECT corporationID,itemName FROM crpNPCCorporations,eveNames WHERE crpNPCCorporations.corporationID=eveNames.itemID ORDER BY itemName;');
+            $corps = array();
+            foreach ( $q->result() as $row )
+            {
+                $corps[$row->corporationID] = $row->itemName;
+            }
+            $CI->cache->set("evetool_npc_corps", $corps);
+        }
+        return ($corps);
+    }
+
+
+	/**
+	*
+	* Find the skill level for the currently authenticated character
+	*
+    * @access public	
+    * @param int $skillID ID of the skill to find
+    **/
+    public function skill_level($skillID)
+    {
+        $CI =& get_instance();
+
+        $mckey = "evetool_skill_level_{$this->current_characterID}_{$skillID}";
+        $level = 0;
+
+        if ($this->current_characterID !== False && ($level = $CI->cache->get($mckey)) === False)
+        {
+	        $charsheet = $this->api->char->CharacterSheet();
+
+		    foreach ($charsheet->result->skills as $skill)
+		    {
+		        if ($skill->typeID == $skillID)
+		        {
+		            $level = $skill->level;
+                    $CI->cache->set($mckey, $level);
+		            break;
+	            }
+            }
+        }
+
+        return ($level);
     }
 
 	/**

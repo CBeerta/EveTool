@@ -20,18 +20,35 @@ class Characters extends Controller
 	{
 		$characters = array_keys($this->eveapi->characters());
         $menu = array();
-		foreach ($characters as $v)
-		{
-		    $menu["index/{$v}"] = $v;
-		}
 
 		$data['page_title'] = "Characters"; 
 
+        foreach ($characters as $char)
+        {
+            $menu[$char] = array(
+    		        "ships/{$char}" => "Ship Capabilites", 
+    		        "sheet/{$char}" => "Character Sheet",
+    		        "standings/{$char}" => "Standings",
+		        );
+        }
+
+        $data['submenu'] = $menu;
+
+
 		if ($current_char)
 		{
-    		$data['submenu'] = array("Details on {$current_char}" => array("ships/{$current_char}" => "Ship Capabilites", "sheet/{$current_char}" => "Character Sheet"));
     		$data['page_sub_title'] = $current_char; 
+/***
+    		$data['submenu'] = array("Details on {$current_char}" => 
+    		    array(
+    		        "ships/{$current_char}" => "Ship Capabilites", 
+    		        "sheet/{$current_char}" => "Character Sheet",
+    		        "agents/{$current_char}" => "Agents",
+		        )
+	        );
+***/
 		}
+
 
 		$this->load->view('template', $data);
 	}
@@ -108,6 +125,228 @@ class Characters extends Controller
         $this->_template(array('content' => $this->load->view('skilltree', $data, True)), $character);
     }
 
+    
+    /**
+    *
+    * Agent Finder
+    *
+    * @access public
+    * @param string $character to show Agents of
+    *
+    **/
+	public function agentfinder($character, $id = 1000146)
+	{
+	    $this->load->library('agents');
+
+		if (!in_array($character, array_keys($this->eveapi->characters())))
+		{
+		    die("<h1>Char {$character} not found</h1>");
+	    }
+	    $char = $this->eveapi->characters[$character];
+		$this->eveapi->setCredentials($char);
+
+        if ($this->input->post('corp') > 0)
+        {
+            $id = $this->input->post('corp');
+        }
+
+        $data['corpid'] = $id; 
+        $filter = array('1=1');
+        if (Agents::is_faction($id))
+        {
+            redirect("/characters/faction/{$character}/{$id}");
+            exit;
+        }
+
+        $corpinfo = array_shift(Agents::is_npccorp($id));
+        $data['divisions'] = array('0' => '-') + Agents::divisions($id);
+
+        $standings = $this->eveapi->Standings();
+        foreach (array('agents', 'factions', 'NPCCorporations') as $type)
+        {
+            foreach ($standings->result->characterNPCStandings->$type as $row)
+            {
+                if ( $row->fromID == $id || $row->fromID == $corpinfo->factionID)
+                {
+                    $data['corpstanding'] = number_format((((0.04*$this->eveapi->skill_level(3359))*(10-$row->standing))+$row->standing), 2);
+                }
+            }
+        }
+
+        $data['regions'] = array('0' => '-') + $this->eveapi->eve_regions();
+        $data['corps'] = array('0' => '-') + $this->eveapi->npc_corps();
+        
+        // Process Filter Rules form $_POST
+        $data['show_available'] = is_string($this->input->post('show_available')) ? True : False;
+        $data['show_hisec'] = is_string($this->input->post('show_hisec')) ? True : False;
+
+        $data['selected_division'] = 0;
+        if ($this->input->post('division') >= 1000)
+        {
+            $data['selected_division'] = $this->input->post('division');
+            switch ($this->input->post('division'))
+            {
+                case '1001':
+                    $filter[] = "agtAgents.divisionID IN (6,9,10,19,21)";
+                    break;
+                case '1002':
+                    $filter[] = "agtAgents.divisionID IN (4,7,12,16,20)";
+                    break;
+                default: //the retarded clicked the '-'
+                    break;
+            }
+        }
+        else if ($this->input->post('division') > 0)
+        {
+            $data['selected_division'] = $this->input->post('division');
+            $filter[] = "agtAgents.divisionID={$data['selected_division']}";
+        }
+        $data['selected_level'] = 0;
+        if ($this->input->post('level') > 0)
+        {
+            $data['selected_level'] = $this->input->post('level');
+            $filter[] = "agtAgents.level = {$data['selected_level']}";
+        }
+        $data['selected_region'] = 0;
+        if ($this->input->post('region') > 0)
+        {
+            $data['selected_region'] = $this->input->post('region');
+            $filter[] = "station.regionID = {$data['selected_region']}";
+        }
+        if ($data['show_hisec'])
+        {
+            $filter[] = "ROUND(SolarSystems.security,1) >= 0.5";
+        }
+        if ($data['show_available'] && isset($data['corpstanding']))
+        {
+            $filter[] = "((agtAgents.level - 1) * 2 + agtAgents.quality / 20) < {$data['corpstanding']}";
+            $filter[] = "agtAgentTypes.agentTypeID NOT IN (6)"; // Only show basic Agent types, not StoryLine Agents
+        }
+        $data['agents'] = Agents::is_npccorp($id, $filter);
+        $data['character'] = $character;
+
+        $this->_template(array('content' => $this->load->view('agents', $data, True)), $character);
+    }
+
+    /**
+    *
+    * NPC Standings
+    *
+    * @access public
+    * @param string $character to show Standings of
+    *
+    **/
+    public function standings($character)
+    {
+	    $this->load->library('agents');
+
+		if (!in_array($character, array_keys($this->eveapi->characters())))
+		{
+		    die("<h1>Char {$character} not found</h1>");
+	    }
+	    $char = $this->eveapi->characters[$character];
+		$this->eveapi->setCredentials($char);
+
+        $data = array();
+
+        $rawstandings = $this->eveapi->Standings();
+        $standings = array();
+
+        foreach (array('NPCCorporations', 'factions', 'agents') as $type)
+        {
+            foreach ($rawstandings->result->characterNPCStandings->$type as $row)
+            {
+                $direction =  isset($row->toName) ? 'towards' : 'from';
+                $title = "{$direction} ".ucfirst($type);
+
+                $name = isset($row->toName) ? $row->toName : $row->fromName; 
+                $id = isset($row->toID) ? $row->toID : $row->fromID;    
+
+                if ($row->standing >= 0)
+                {
+					// calculate real standing after skills:        
+					// (((0.04*Connections level)*(10-Base Agent Standing))+Base Agent Standing)
+                    $realstanding = number_format((((0.04*$this->eveapi->skill_level(3359))*(10-$row->standing))+$row->standing), 2);
+                }
+                else
+                {
+					// <effective standing> = <raw standing> + (( 10 - <raw standing> ) x ( <level of diplomacy> x 0.04 ))
+					$realstanding = number_format($row->standing + (( 10.0 - $row->standing ) * ( 0.04 * $this->eveapi->skill_level(3357) )), 2);
+                }
+
+                $standing = isset($row->toName) ? $row->standing : "{$realstanding} ({$row->standing})";
+                
+                if ( $row->standing > 5.0)
+                {
+                    $sta_icon = 'sta_high.png';
+                }
+                elseif ( $row->standing > 0.0)
+                {
+                    $sta_icon = 'sta_good.png';
+                }
+                elseif ( $row->standing < 5.0)
+                {
+                    $sta_icon = 'sta_horrible.png';
+                }
+                elseif ( $row->standing < 0.0)
+                {
+                    $sta_icon = 'sta_bad.png';
+                }
+
+                $agent_info = Agents::is_agent($id) ? Agents::agent_snippet($id) : '';
+                
+                $standings[$title][] = array(
+                    'name' => $name,
+                    'id' => $id,
+                    'standing' => $standing,
+					'realstanding' => $realstanding,
+                    'agent_info' => $agent_info,
+                    'sta_icon' => $sta_icon,
+                );
+            }
+        	masort($standings[$title], array('realstanding', 'name'));
+        }
+
+        $data['standings'] = $standings;
+        $data['character'] = $character;
+        
+        $this->_template(array('content' => $this->load->view('standings', $data, True)), $character);
+    }
+
+
+    /**
+    *
+    * Faction Display
+    *
+    * @access public
+    * @param string $character to show Agents of
+    *
+    **/
+	public function faction($character, $id)
+	{
+	    $this->load->library('agents');
+
+        $q = $this->db->query ("
+            SELECT 
+                corporationID,
+                itemName 
+            FROM 
+                crpNPCCorporations,
+                eveNames 
+            WHERE
+                factionID = ? AND
+                corporationID = eveNames.itemID
+            ORDER BY itemName;
+            ", $id);
+
+        $data['corps'] = $q->result();
+        $data['faction'] = Agents::is_faction($id);
+        $data['character'] = $character;
+      
+        $this->_template(array('content' => $this->load->view('faction', $data, True)), $character);
+	}
+
+    
     /**
     * Display characters ship abilities
     *

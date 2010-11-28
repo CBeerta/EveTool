@@ -19,7 +19,7 @@ h1, h2, h3 {
 	margin: 0;
 	padding: 0;
 	font-weight: normal;
-	color: #FF3000;
+	/* color: #FF3000; */
 }
 
 h1 {
@@ -31,6 +31,8 @@ h2 {
 }
 
 h3{
+    background-color: #eee;
+    padding: 2px;
 	font-size: 1.6em;
 }
 
@@ -307,11 +309,11 @@ a:hover {
 
 #sidebar li ul {
 	margin: 0px;
-	padding-bottom: 30px;
+	padding-bottom: 15px;
 }
 
 #sidebar li li {
-	line-height: 35px;
+	/*line-height: 35px;*/
 	/*border-bottom: 1px solid #BBBBBB;*/
 	border-left: none;
 	text-align: left;
@@ -378,6 +380,17 @@ a:hover {
 
 #footer a {
 	color: #6B4A45;
+}
+
+/**
+ * Skilltree specifics
+ */
+.newsTitleImage
+{
+  left: 5px;
+  float: left;
+  margin-right: -40px;
+  position: relative;
 }
 
 /**
