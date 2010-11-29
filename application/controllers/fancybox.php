@@ -62,7 +62,15 @@ class Fancybox extends Controller
     
     public function character($id)
     {
-        $this->load->view('snippets/character', array('char' => get_character_info($id)));
+        $this->load->library("agents");
+        if (Agents::is_agent($id))
+        {
+            die("is an agent");
+        }
+        else
+        {
+            $this->load->view('snippets/character', array('char' => get_character_info($id)));
+        }
     }
     
     public function item($id)

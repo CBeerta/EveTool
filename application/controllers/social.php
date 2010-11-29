@@ -11,7 +11,7 @@ class Social  extends Controller
     **/
 	private function _template($data)
 	{
-    	$data['submenu'] = array('Sections' => array('index' => 'Eve Mail', 'events' => 'Events'));
+    	$data['submenu'] = array('Sections' => array('index' => 'Eve Mail', 'events' => 'Events', 'contacts' => 'Contactlist'));
 		$data['page_title'] = 'Social'; 
 
 		$this->load->view('template', $data);
@@ -151,9 +151,22 @@ class Social  extends Controller
         $this->_template(array('content' => $this->load->view('events', array('events' => $events), True)));
 	}
 
+	public function contacts()
+	{
+		$data = array();
+        $contacts = array();
 
+		foreach ($this->eveapi->characters() as $char)
+		{
+			$this->eveapi->setCredentials($char);
+			$contacts[$char->name] = eveapi::from_xml($this->eveapi->ContactList());
+			masort($contacts[$char->name], array('contactName'));
+		}
 
+        $this->_template(array('content' => $this->load->view('contactlist', array('contacts' => $contacts), True)));
+    }
 
+    
 /*
 
 	public function index()
