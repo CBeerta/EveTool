@@ -55,30 +55,102 @@ function get_slots($itemNames)
     return($data);
 }
 
-
+/**
+*
+* Load a single invType. This function should be avoided! better to use array_add_invtypes
+*
+* @access public
+* @param string $type typeID or typeName 
+*
+**/
 function get_inv_type($type)
 {
     if (empty($type))
     {
         return False;
     }
+
+    $CI =& get_instance();
+
+    if ( !is_array($type) && ($_mc = $CI->cache->get('invtype_'.$type)))
+    {
+        return ($_mc);
+    }
+
+    if (is_numeric($type))
+    {
+        $where = "invTypes.typeID = {$type}";
+    }
+    else
+    {
+        $where = "invTypes.typeName = {$type}";
+    }
+
+    if (($invtype =db_load_invtype($where)))
+    {
+        $CI->cache->set('invtype_'.$invtype->typeID, $invtype, 0, 604800);
+    }
+    else
+    {
+        return (new emptyInvType);
+    }
+}
+
+
+/**
+*
+* Insert invTypes into an array $data. Source array has to have a field $typeID
+*
+* @access public
+* @param array $data Array to will
+*
+**/
+function array_add_invtypes(array $data)
+{
+
+    if (empty($data))
+    {
+        return ($data);
+    }
+    
+    $typeid_list = array();
+    $ret = array();
+    foreach ($data as $row)
+    {
+        if (isset($row['typeID']))
+        {
+            $typeid_list[] = $row['typeID'];
+        }
+    }
+    $typeid_list = array_unique($typeid_list);
+    sort($typeid_list);
+
+    $invtypes = db_load_invtype("invTypes.typeID IN (".implode(',', $typeid_list).")");
+
+    foreach ($data as $k => $v)
+    {
+        $ret[$k] = array_merge($v, (array) $invtypes[$v['typeID']]);
+    }
+
+    return ($ret);
+}
+
+/**
+*
+* Load invtypes from the database
+*
+* @access public
+* @param string $where where clause to use 
+*
+**/
+function db_load_invtype($where)
+{
     $CI =& get_instance();
     $CI->load->database();
 
     $trace = debug_backtrace();
-    error_log(date('c')." get_inv_type({$type}) called by: {$trace[0]['file']} -> {$trace[1]['function']}");
-    if (($_mc = $CI->cache->get('invtype_'.$type)))
-    {
-        return ($_mc);
-    }
-    if (is_numeric($type))
-    {
-        $type_select = 'typeID';
-    }
-    else
-    {
-        $type_select = 'typeName';
-    }
+    error_log(date('c')." db_load_invtype({$where}) called by: {$trace[0]['file']} -> {$trace[2]['function']}");
+
     $q = $CI->db->query("
         SELECT 
             invTypes.typeName,
@@ -97,19 +169,24 @@ function get_inv_type($type)
             invGroups,
             invCategories
         WHERE 
-            invTypes.{$type_select} = ? AND 
+            {$where} AND
             invTypes.groupID=invGroups.groupID AND 
-            invCategories.categoryID=invGroups.categoryID;"
-        , $type);
-    $row = $q->row();
-    if (count($row) == 1)
+            invCategories.categoryID=invGroups.categoryID;");
+    if ($q->num_rows() == 1)
     {
-        $CI->cache->set('invtype_'.$row->typeID, $row, 0, 604800);
+        $row = $q->row();
         return ($row);
     }
-    else
+    else if ($q->num_rows() >= 1)
     {
-        return (new emptyInvType);
+        $invtypes = array();
+        foreach ($q->result() as $row)
+        {
+            $invtypes[$row->typeID] = $row;
+        }
+        return ($invtypes);
     }
+
+    return False;
 }
 ?>

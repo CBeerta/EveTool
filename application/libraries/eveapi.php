@@ -253,6 +253,7 @@ class Eveapi
                 }
             }
         }
+
         sort($typeidlist);
         $typeidlist = array_unique($typeidlist);
         $q = $CI->db->query("

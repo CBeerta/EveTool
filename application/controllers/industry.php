@@ -64,6 +64,7 @@ class Industry extends Controller
 	            
 	            $data['data'][$index] = array(
 	            		'outputTypeID' => (int) $job['outputTypeID'],
+	            		'typeID' => (int) $job['outputTypeID'],
 	                    'status' => Industry::statusid_to_string((int) $job['completedStatus']),
 	                    'activity' => Industry::activityid_to_string((int) $job['activityID']),
 	                    'amount' => (int) $job['runs'],
@@ -87,13 +88,9 @@ class Industry extends Controller
         
         $data['data'] = array_slice($data['data'], $offset, $per_page, True);
         $this->pagination->initialize(array('base_url' => site_url("/industry/index"), 'total_rows' => $index, 'per_page' => $per_page, 'num_links' => 5));
-        
-        foreach ($data['data'] as $k => $v)
-        {
-        	/* Add the invType stuff after we truncate the info for pagination, to reduce database queries */
-        	$data['data'][$k] += (array) get_inv_type($v['outputTypeID']);
-        }
-		
+
+        $data['data'] = array_add_invtypes($data['data']);
+        		
 		$data['content'] = $this->load->view('industry_jobs', $data, true);
 		$this->load->view('template', $data);
 	}

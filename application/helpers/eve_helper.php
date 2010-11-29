@@ -34,9 +34,8 @@ function api_time_print($time, $format = 'D d.m.Y H:i')
 * @access public
 * @param  string
 **/
-function api_time_to_complete($endTime)
+function api_time_to_complete($endTime, $format = 'j.n.Y')
 {
-	$format = '%Y-%m-%d %H:%M:%S';
 
     if (is_string($endTime))
     {
@@ -50,7 +49,7 @@ function api_time_to_complete($endTime)
 	$diff = ($end - gmmktime());
 	if ($diff <= 0)
 	{
-		return("Done: ".date('D, j M Y', $end));
+		return("D: ".date($format, $end));
 	}
 	
     $info = array();
