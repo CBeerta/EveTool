@@ -89,6 +89,7 @@ function get_inv_type($type)
     if (($invtype =db_load_invtype($where)))
     {
         $CI->cache->set('invtype_'.$invtype->typeID, $invtype, 0, 604800);
+        return ($invtype);
     }
     else
     {
