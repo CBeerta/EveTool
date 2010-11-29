@@ -2,6 +2,9 @@
 <?php #print_r($daily); ?>
 -->
 <div id="content">
+<?php if (!empty($error)): ?>
+    <div class="error">Unable to load Wallet Journal for : <?php echo implode(', ', $error);?></div>
+<?php endif ; ?>
 <table width="100%">
     <caption>Wallet Journal, grouped by Day</caption>
     <tr>
@@ -22,12 +25,6 @@
             <td style="text-align: right;"><font class="income"><?php echo number_format($type['income'], 2); ?></font></td>
         </tr>
         <?php endforeach;?>
-    <!--
-	<tr>
-		<td colspan="2" style="text-align: right;">Balance:</td>
-		<td style="text-align: right; font-weight: bold;"><?php //echo number_format($balance[$k], 2); ?></td>
-	</tr>
-	-->
     <tr><td colspan="3">&nbsp;</td></tr>
     <?php endforeach;?>
 </table>

@@ -180,13 +180,20 @@ class Assets extends Controller
 	public function journal()
 	{
 		$walletjournal = array();
+		$data['error'] = array();
 		
 		foreach ($this->eveapi->characters() as $char)
 		{
 			$this->eveapi->setCredentials($char);
-			$walletjournal = array_merge($walletjournal, eveapi::from_xml($this->eveapi->WalletJournal(), array('char' => $char)));
+			try
+			{// Wallet Journal api is wierd, sometimes just throws an "exhausted" error
+    			$walletjournal = array_merge($walletjournal, eveapi::from_xml($this->eveapi->WalletJournal(), array('char' => $char)));
+			}
+			catch (Exception $e)
+			{
+			    $data['error'][] = $char->name;
+			}
 		}
-		#masort($walletjournal, array('unixdate'));
 		
 		$data['content'] = $this->load->view('walletdailyjournal', $this->_get_daily_walletjournal($walletjournal), True);
         $this->_template($data);
@@ -198,14 +205,22 @@ class Assets extends Controller
     *
     * @access public
     **/
-	public function transactions($offset = 0, $per_page = 20)
+	public function transactions($offset = 0, $per_page = 15)
 	{
 		$transactionlist = array();
+		$data['error'] = array();
 		
 		foreach ($this->eveapi->characters() as $char)
 		{
 			$this->eveapi->setCredentials($char);
-			$transactionlist = array_merge($transactionlist, eveapi::from_xml($this->eveapi->WalletTransactions(), array('char' => $char)));
+			try
+			{ // Wallet Transactions api is wierd, sometimes just throws an "exhausted" error
+    			$transactionlist = array_merge($transactionlist, eveapi::from_xml($this->eveapi->WalletTransactions(), array('char' => $char)));
+			}
+			catch (Exception $e)
+			{
+			    $data['error'][] = $char->name;
+			}
 		}
 		
 		masort($transactionlist, array('unixtransactionDateTime'));
