@@ -10,6 +10,7 @@ class emptyInvType
     public $groupID = -1;
     public $categoryID = -1;
     public $groupName = 'Unknown';
+    public $categoryName = 'Unknown';
 }
 
 function get_slots($itemNames)
@@ -113,8 +114,8 @@ function array_add_invtypes(array $data)
     {
         return ($data);
     }
-    
-    $typeid_list = array();
+
+    $typeid_list = array('34','35','36'); # retarded fix to prevent db_load_inventory to return an object
     $ret = array();
     foreach ($data as $row)
     {
@@ -126,11 +127,18 @@ function array_add_invtypes(array $data)
     $typeid_list = array_unique($typeid_list);
     sort($typeid_list);
 
-    $invtypes = db_load_invtype("invTypes.typeID IN (".implode(',', $typeid_list).")");
 
+    $invtypes = db_load_invtype("invTypes.typeID IN (".implode(',', $typeid_list).")");
     foreach ($data as $k => $v)
     {
-        $ret[$k] = array_merge($v, (array) $invtypes[$v['typeID']]);
+        if (!isset($invtypes[$v['typeID']]))
+        {
+            $ret[$k] = array_merge($v, (array) new emptyInvType);
+        }
+        else
+        {
+            $ret[$k] = array_merge($v, (array) $invtypes[$v['typeID']]);
+        }
     }
 
     return ($ret);

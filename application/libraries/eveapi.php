@@ -353,6 +353,9 @@ class Eveapi
 		        }
 		    }
         }
+        // FIXME temp fix for the ore industrial skill
+        $skilltree[3184] = array('typeName' => 'ORE Industrial', 'description' => 'ORE Industrial', 'groupID' => '257', 'rank' => '4');
+        
         $CI->cache->set('evetool_skilltree', $skilltree);
 	
 		return ($skilltree);
@@ -478,7 +481,10 @@ class Eveapi
 
         foreach($data['queue'] as $k => $v)
         {
-            $data['queue'][$k] = array_merge($data['queue'][$k], $skilltree[$v['typeID']]);
+            if (!empty($skilltree[$v['typeID']]))
+            {
+                $data['queue'][$k] = array_merge($data['queue'][$k], $skilltree[$v['typeID']]);
+            }
         }
 
 

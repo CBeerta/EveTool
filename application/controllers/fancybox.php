@@ -65,7 +65,7 @@ class Fancybox extends Controller
         $this->load->library("agents");
         if (Agents::is_agent($id))
         {
-            die("is an agent");
+            echo Agents::agent_snippet($id);
         }
         else
         {

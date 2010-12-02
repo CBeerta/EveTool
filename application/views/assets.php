@@ -1,5 +1,5 @@
 <!--
-<?php #print_r($assets); ?>
+<?php print_r($assets); ?>
 -->
 <div id="content">
 <table width="100%">
@@ -7,6 +7,7 @@
 <tr>
     <th colspan="3">Item</th>
     <th>Amount</th>
+    <th>Volume</th>
     <th colspan="2">Location</th>
 </tr>
 <?php foreach ($assets as $k => $v): ?>
@@ -24,6 +25,7 @@
     </td>
     <td><?php echo $v['typeName']; ?></td>
     <td><?php echo number_format($v['quantity']); ?></td>
+    <td><?php echo number_format($v['quantity'] * $v['volume'], 1); ?> m&sup3;</td>
 	<td>
         <a id="fb_location" href="<?php echo site_url('/fancybox/location/'.$v['locationID']); ?>"><?php echo locationid_to_name($v['locationID']);?></a>
     </td>

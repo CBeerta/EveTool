@@ -17,7 +17,13 @@ class Assets extends Controller
 		{
 		    $menu["index/{$v}"] = $v;
 		}
-		$data['submenu'] = array_merge(array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal')), array('Assets' => $menu));
+		$data['submenu']['searches'] = array(
+		        'search/Mineral' => 'Minerals',
+		        'search/Ice Product' => 'Ice Product',
+		        'search/Salvaged Materials ' => 'Salvage',
+		        'search/Skill' => 'Skillbooks',
+	        );
+		$data['submenu'] += array_merge(array('Wallet' => array('transactions' => 'Transaction List', 'journal' => 'Daily Journal')), array('Assets' => $menu));
 		$data['page_title'] = 'Assets'; 
 
 		$data['search'] = (object) array('url' => 'assets/search', 'header' => 'Search Assets');
@@ -140,13 +146,13 @@ class Assets extends Controller
     *
     * @access public
     **/
-	public function search()
+	public function search($search = 'mineral')
 	{
 		$characters = array_keys($this->eveapi->characters());
 
         $assets = $this->eveapi->assets($characters, True);
 
-        $search = $this->input->post('s');
+        $search = is_string($this->input->post('s')) ? $this->input->post('s') : $search;
         $found = array();
 
         foreach ($assets as $k => $v)
@@ -166,7 +172,7 @@ class Assets extends Controller
         }
         $data['assets'] = $found;
         $data['show_contents'] = True;
-        $data['caption'] = "Results for '{$search}'";
+        $data['caption'] = "Results for '".urldecode($search)."'";
 
         $this->_template(array('content' => $this->load->view('assets', $data, True)));
 	}

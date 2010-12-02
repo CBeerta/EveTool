@@ -382,6 +382,17 @@ a:hover {
 	color: #6B4A45;
 }
 
+
+div.error {
+    border: 1px solid black;
+    font-size: 1.5em;
+    color: #aa1111;
+    background-color: #ffeeee;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
 /**
  * Skilltree specifics
  */

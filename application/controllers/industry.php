@@ -2,10 +2,29 @@
 
 class Industry extends Controller
 {
-	public $page_title = 'Industry';
-	public $submenu = array('jobs' => 'Industry Jobs');
 
-    static function statusid_to_string($status)
+    /**
+    *
+    * Load the Template and add submenus
+    *
+    * @access private
+    * @param array $data contains the stuff handed over to the template
+    **/
+	private function _template($data)
+	{
+		$characters = array_keys($this->eveapi->characters());
+        $menu = array();
+		foreach ($characters as $v)
+		{
+		    $menu["index/{$v}"] = $v;
+		}
+		$data['submenu'] = array('Sections' => array('index' => 'Industry Jobs'));
+		$data['page_title'] = 'Industry'; 
+
+		$this->load->view('template', $data);
+	}
+
+    static function _statusid_to_string($status)
     {
             $mapping = array(
                             0 => 'Failed',
@@ -17,9 +36,8 @@ class Industry extends Controller
             return ($mapping[$status]);
     }
     
-    static function activityid_to_string($activityID)
+    static function _activityid_to_string($activityID)
     {
-            /*
             $mapping = array(
                             0 => 'None',
                             1 => 'Manufacturing',
@@ -30,7 +48,7 @@ class Industry extends Controller
                             6 => 'Dublicating',
                             7 => 'Reverse Engineering',
                             8 => 'Inventing');
-             */
+/*
             $mapping = array(
                             0 => 'None',
                             1 => 'Prod',
@@ -41,13 +59,12 @@ class Industry extends Controller
                             6 => 'Dub',
                             7 => 'Rev',
                             8 => 'Inv');
+*/    
             return ($mapping[$activityID]);
     }
 
     public function index($offset = 0, $per_page = 15)
 	{
-		$data['page_title'] = $this->page_title;
-		
         $index = 0;
         $data['data'] = array();
 
@@ -65,8 +82,8 @@ class Industry extends Controller
 	            $data['data'][$index] = array(
 	            		'outputTypeID' => (int) $job['outputTypeID'],
 	            		'typeID' => (int) $job['outputTypeID'],
-	                    'status' => Industry::statusid_to_string((int) $job['completedStatus']),
-	                    'activity' => Industry::activityid_to_string((int) $job['activityID']),
+	                    'status' => Industry::_statusid_to_string((int) $job['completedStatus']),
+	                    'activity' => Industry::_activityid_to_string((int) $job['activityID']),
 	                    'amount' => (int) $job['runs'],
 	                    'outputLocationID' => (int) $job['outputLocationID'],
 	                    'ends' => api_time_to_complete((string) $job['endProductionTime']),
@@ -91,8 +108,22 @@ class Industry extends Controller
 
         $data['data'] = array_add_invtypes($data['data']);
         		
-		$data['content'] = $this->load->view('industry_jobs', $data, true);
-		$this->load->view('template', $data);
+        $this->_template(array('content' => $this->load->view('industry_jobs', $data, True)));
+	}
+
+	public function research()
+	{
+	    print '<pre>';
+		foreach ($this->eveapi->characters() as $char)
+		{
+			$this->eveapi->setCredentials($char);
+			$jobs = eveapi::from_xml($this->eveapi->Research());
+
+			print_r($jobs);
+        }
+
+        die();
+
 	}
 	
 }
