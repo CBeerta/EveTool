@@ -25,7 +25,8 @@ class Agents
                 NPCCorp.factionID,
         		station.stationID,
                 (SELECT factionName FROM chrFactions WHERE factionID=NPCCorp.factionID) AS faction,
-                ROUND( (agtAgents.level - 1) * 2 + agtAgents.quality / 20, 2) AS required_standing
+                (agtAgents.level - 1.0) * 2.0 + agtAgents.quality / 20.0 AS required_standing
+                /* ROUND( (agtAgents.level - 1) * 2 + agtAgents.quality / 20, 2) AS required_standing */
             FROM
                 eveNames,
                 invTypes,

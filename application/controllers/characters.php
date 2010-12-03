@@ -31,24 +31,12 @@ class Characters extends Controller
     		        "standings/{$char}" => "Standings",
 		        );
         }
-
         $data['submenu'] = $menu;
-
 
 		if ($current_char)
 		{
     		$data['page_sub_title'] = $current_char; 
-/***
-    		$data['submenu'] = array("Details on {$current_char}" => 
-    		    array(
-    		        "ships/{$current_char}" => "Ship Capabilites", 
-    		        "sheet/{$current_char}" => "Character Sheet",
-    		        "agents/{$current_char}" => "Agents",
-		        )
-	        );
-***/
 		}
-
 
 		$this->load->view('template', $data);
 	}
@@ -168,7 +156,17 @@ class Characters extends Controller
             {
                 if ( $row->fromID == $id || $row->fromID == $corpinfo->factionID)
                 {
-                    $data['corpstanding'] = number_format((((0.04*$this->eveapi->skill_level(3359))*(10-$row->standing))+$row->standing), 2);
+                    if ($row->standing >= 0)
+                    {
+					    // calculate real standing after skills:        
+					    // (((0.04*Connections level)*(10-Base Agent Standing))+Base Agent Standing)
+                        $data['corpstanding'] = number_format((((0.04*$this->eveapi->skill_level(3359))*(10-$row->standing))+$row->standing), 2);
+                    }
+                    else
+                    {
+					    // <effective standing> = <raw standing> + (( 10 - <raw standing> ) x ( <level of diplomacy> x 0.04 ))
+					    $data['corpstanding'] = number_format($row->standing + (( 10.0 - $row->standing ) * ( 0.04 * $this->eveapi->skill_level(3357) )), 2);
+                    }
                 }
             }
         }
@@ -219,7 +217,7 @@ class Characters extends Controller
         }
         if ($data['show_available'] && isset($data['corpstanding']))
         {
-            $filter[] = "((agtAgents.level - 1) * 2 + agtAgents.quality / 20) < {$data['corpstanding']}";
+            $filter[] = "((agtAgents.level - 1.0) * 2.0 + agtAgents.quality / 20.0) < {$data['corpstanding']}";
             $filter[] = "agtAgentTypes.agentTypeID NOT IN (6)"; // Only show basic Agent types, not StoryLine Agents
         }
         $data['agents'] = Agents::is_npccorp($id, $filter);
