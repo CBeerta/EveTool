@@ -47,9 +47,9 @@ $(document).ready(function() {
     $("a#fb_location").fancybox({ 'hideOnContentClick': false });
     $("a#fb_character").fancybox({ 'hideOnContentClick': false });
     $("a#fb_item").fancybox({ 'hideOnContentClick': false });
-    $("a#fb_fitting").fancybox({ 'hideOnContentClick': false, 'frameWidth': 850, 'frameHeight': 550});
-    $("a#fb_image").fancybox({ 'hideOnContentClick': false, 'frameWidth': 810, 'frameHeight': 360});
-    $("a#fb_assets_content").fancybox({ 'hideOnContentClick': false });
+    $("a#fb_fitting").fancybox({ 'hideOnContentClick': false, 'width': 850, 'height': 550});
+    $("a#fb_image").fancybox({ 'hideOnContentClick': false, 'width': 810, 'height': 360});
+    $("a#fb_assets_content").fancybox({ 'hideOnContentClick': false, 'width': '75%', 'height': '75%', 'autoDimensions': false });
 	
 	
 	// Navigation Effects
